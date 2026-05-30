@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Nexus Web Development — Build websites with AI</title>
-<meta name="description" content="Nexus Web Development lets you build modern websites and apps by chatting with AI. Login, deploy, and ship faster." />
+<title>Nexus Web AI builder | Build modern websites with AI</title>
+<link rel="icon" href="assets/logo.png" />
+<meta name="description" content="Nexus Web AI builder lets you build modern websites and apps by chatting with AI. Login, deploy, and ship faster." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
@@ -56,9 +57,7 @@
   }
   .logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:17px;letter-spacing:-0.01em}
   .logo-mark{
-    width:28px;height:28px;border-radius:8px;
-    background:var(--grad);
-    box-shadow:var(--glow);
+    width:48px;height:31px;border-radius:11px;
     display:grid;place-items:center;color:#0a0a0f;font-weight:800;font-size:14px;
   }
   .nav-links{display:flex;gap:32px;font-size:14px;color:var(--muted)}
@@ -275,14 +274,47 @@
     .cta-box{padding:50px 24px}
     .modal{padding:32px 24px}
   }
+
+  /* Legal Link Footer Container */
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .legal-link-btn {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .legal-link-btn:hover {
+    color: var(--accent);
+    background: rgba(200, 169, 106, 0.04);
+    border-color: rgba(200, 169, 106, 0.15);
+  }
 </style>
 </head>
 <body>
 
 <nav>
   <a href="#" class="logo">
-    <div class="logo-mark">N</div>
-    Nexus
+    <div class="logo-mark">
+      <img src="assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+    </div>
   </a>
   <div class="nav-links">
     <a href="#features">Features</a>
@@ -299,8 +331,8 @@
 
 <header class="hero">
   <div class="eyebrow"><span class="dot"></span>Beta Mode</div>
-  <h1>Build the web at the <span class="serif">speed of thought</span></h1>
-  <p class="sub">Nexus Web Development turns a single prompt into a production-ready website. Login, database, deploy — all included.</p>
+  <h1>Build your <span class="serif">DREAMS</span></h1>
+  <p class="sub">Nexus, Build Anything.</p>
 
   <div class="prompt-wrap">
     <div class="prompt-inner">
@@ -342,7 +374,7 @@
     <div class="card">
       <div class="card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
       <h3>Auth, baked in</h3>
-      <p>Email, Google, Apple, magic links — wire up sign-in for your users in a single sentence.</p>
+      <p>Email, Google, magic links — wire up sign-in for your users in a single sentence.</p>
     </div>
     <div class="card">
       <div class="card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></div>
@@ -438,7 +470,7 @@
   <div class="cta-box">
     <div class="section-eyebrow">Start building</div>
     <h2>Your next site is <span class="serif">one prompt away.</span></h2>
-    <p class="section-sub" style="margin-top:16px;margin-bottom:32px">Join thousands of founders, designers, and engineers who build with Nexus every day.</p>
+    <p class="section-sub" style="margin-top:16px;margin-bottom:32px">Be one of the first to build with Nexus.</p>
     <button class="btn btn-primary btn-lg" onclick="openModal('signup')">Get started — it's free</button>
   </div>
 </div>
@@ -446,7 +478,11 @@
 <footer>
   <div class="foot-wrap">
     <div>
-      <a href="#" class="logo" style="margin-bottom:14px"><div class="logo-mark">N</div> Nexus</a>
+      <a href="#" class="logo">
+    <div class="logo-mark">
+      <img src="assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+    </div>
+  </a>
       <p style="max-width:280px;line-height:1.55;margin-top:14px">Web development, reimagined. Build, deploy, and scale modern websites with a single conversation.</p>
     </div>
     <div>
@@ -464,8 +500,15 @@
   </div>
   <div class="foot-bottom">
     <div>© 2026 Nexus Web Development. All rights reserved.</div>
-    <div>Crafted with care.</div>
+    <div>Build Anything.</div>
   </div>
+
+  <div class="sidebar-footer">
+          <a href="legal.html" class="legal-link-btn" target="_blank">
+            Legal & Privacy Policy
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-top:-1px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+        </div>
 </footer>
 
 <div class="modal-overlay" id="authModal" onclick="if(event.target===this) closeModal()">
