@@ -1039,11 +1039,11 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
       // Replace the old corsproxy.io lines with your worker URL:
 if (provider === "github") {
   const target = "https://models.github.ai/inference/chat/completions";
-  endpoint = `https://nexus.workers.dev/?url=${encodeURIComponent(target)}`;
+  endpoint = `https://nexus.imcrabfr.workers.dev/?url=${encodeURIComponent(target)}`;
   headers["Authorization"] = `Bearer ${key}`;
 } else if (provider === "groq") {
   const target = "https://api.groq.com/openai/v1/chat/completions";
-  endpoint = `https://nexus.workers.dev/?url=${encodeURIComponent(target)}`;
+  endpoint = `https://nexus.imcrabfr.workers.dev/?url=${encodeURIComponent(target)}`;
   headers["Authorization"] = `Bearer ${key}`;
 }
       
