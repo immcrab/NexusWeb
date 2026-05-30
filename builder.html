@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Multi-Provider AI Canvas</title>
+<title>Nexus Web AI builder | Build modern websites with AI</title>
+<link rel="icon" href="assets/logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -18,27 +19,28 @@
     --muted:#8e8e9f;
     --accent:#c8a96a;
     --grad: linear-gradient(135deg,#e9d8a6 0%,#c8a96a 40%,#8c6f3f 100%);
-    --sidebar-width: 400px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
-    background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
+    background: radial-gradient(circle at top right, rgba(200,169,106,0.08), transparent 25%),
+                radial-gradient(circle at 15% 10%, rgba(120,90,200,0.06), transparent 20%),
+                var(--bg);
+    color:var(--text);font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;height:100vh;overflow:hidden;display:flex;flex-direction:column;
   }
   button, select, input, textarea{font-family:inherit;color:inherit;outline:none;}
   button{cursor:pointer;border:none;background:none;transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);}
   
-  /* Smooth click animation utility */
-  button:active { transform: scale(0.95); opacity: 0.85; }
+  button:active { transform: scale(0.98); opacity: 0.85; }
 
   /* TOP BAR */
   header{
-    height:56px;background:#09090f;border-bottom:1px solid var(--border);
-    display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:10;
+    height:44px;background:#09090f;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:10;
   }
-  .app-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .app-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
   .status-badge{
-    font-size:11px;padding:3px 8px;border-radius:999px;background:rgba(200,169,106,0.1);
+    font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(200,169,106,0.1);
     color:var(--accent);border:1px solid rgba(200,169,106,0.2);display:flex;align-items:center;gap:6px;
   }
   .pulse-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
@@ -46,88 +48,164 @@
 
   /* MAIN LAYOUT WITH STRUCTURAL TRANSITIONS */
   .workspace-container{
-    display:flex;flex:1;height:calc(100vh - 56px);width:100%;
+    display:flex;flex:1;height:calc(100vh - 44px);width:100%;
     position: relative; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* SIDEBAR / CHAT BLOCK */
   .chat-sidebar{
     width: 100%; background:var(--bg-sidebar); border-right:1px solid var(--border);
-    display:flex; flex-direction:column; justify-content:space-between; position:relative;
+    display:flex; flex-direction:column; position:relative;
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5;
+    overflow-y: auto;
   }
   
-  /* Split layout mode adjustments */
   .workspace-container.split-mode .chat-sidebar {
-    width: clamp(360px, 33.333vw, 450px);
+    width: clamp(340px, 24vw, 400px);
+  }
+
+  /* Compact Controls Wrapper */
+  .panel-scroller {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
   }
 
   /* Credentials & Usage Panels */
   .credentials-panel{
-    padding:16px;background:rgba(0,0,0,0.2);border-bottom:1px solid var(--border);
-    display:flex;flex-direction:column;gap:12px;
+    padding:12px; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    display:flex;flex-direction:column;gap:10px;
+    border:1px solid var(--border); border-radius:12px;
   }
   .cred-field{display:flex;flex-direction:column;gap:4px;}
-  .cred-field label{font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.05em;}
-  .cred-field select{
-    background:rgba(0,0,0,0.4);border:1px solid var(--border-strong);
-    border-radius:6px;padding:8px;font-size:13px;color:#fff;
-    transition: border 0.2s;
+  .cred-field label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;}
+  
+  .cred-field select,
+  .cred-field input{
+    background:rgba(0,0,0,0.35);border:1px solid var(--border-strong);
+    border-radius:8px;padding:8px 10px;font-size:12px;color:#fff;
+    transition: border 0.2s, transform 0.2s;
+    width: 100%;
   }
-  .cred-field select:focus { border-color: var(--accent); }
+  .cred-field select:focus,
+  .cred-field input:focus { border-color: var(--accent); }
+  
+  .key-info-row{display:flex;flex-direction:column;gap:4px;}
+  
+  .custom-dropdown{
+    position:relative;display:flex;align-items:center;justify-content:space-between;
+    background:rgba(0,0,0,0.35);border:1px solid var(--border-strong);
+    border-radius:8px;padding:8px 10px;color:#fff;cursor:pointer;
+    min-height:34px;user-select:none;
+  }
+  .custom-dropdown.open{border-color:var(--accent);}
+  .custom-dropdown .dropdown-value{font-size:12px;flex:1;}
+  .custom-dropdown .dropdown-icon{margin-left:8px;color:var(--muted);font-size:10px;}
+  
+  .dropdown-menu{
+    position:absolute;top:calc(100% + 4px);left:0;right:0;
+    background:rgba(10,10,15,0.98);border:1px solid var(--border-strong);
+    border-radius:8px;box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:20;
+    max-height:220px;overflow:auto;display:none;
+  }
+  .custom-dropdown.open .dropdown-menu{display:block;}
+  
+  .dropdown-item{
+    width:100%;text-align:left;padding:8px 10px;font-size:12px;color:#fff;
+    background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+    gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.02);
+  }
+  .dropdown-item:hover{background:rgba(255,255,255,0.04);}
+  .dropdown-item.disabled{color:var(--muted);cursor:default;}
+  .dropdown-item span{font-size:11px;color:var(--muted);white-space: nowrap;}
+  .dropdown-item .try-anyway-btn {
+    background: rgba(200, 169, 106, 0.15);
+    color: var(--accent);
+    border: 1px solid rgba(200, 169, 106, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .dropdown-item .try-anyway-btn:hover {
+    background: var(--grad);
+    color: #0a0a0f;
+  }
+  
+  .key-status{font-size:11px;color:var(--muted);line-height:1.4;}
+  .key-status span{display:inline-block;color:#fff;margin-right:4px;}
+  
+  .key-input-row{display:flex;gap:6px;}
+  .key-input-row input{flex:1;}
+  .key-input-row button{padding:0 12px; font-size:11px; height:32px; border-radius:8px;}
+  
+  .projects-panel{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;}
+  .projects-title{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:0.12em;font-weight:700;}
+  .project-card{background:rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.03);border-radius:8px;padding:8px;display:flex;justify-content:space-between;gap:8px;align-items:center;}
+  .project-card span{font-size:12px;color:#fff;flex:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+  .project-actions{display:flex;gap:4px;}
+  .project-actions button{font-size:10px;padding:4px 8px;border-radius:6px;}
+  .project-empty{font-size:11px;color:var(--muted); text-align: center; padding: 4px 0;}
+  
+  .share-banner{display:block;padding:8px 10px;border-radius:8px;border:1px solid rgba(200,169,106,0.2);background:rgba(200,169,106,0.04);color:#fff;font-size:11px;word-break:break-all;margin-top:4px;}
+  .share-banner a{color:var(--accent); text-decoration: none;}
+  .share-banner a:hover{text-decoration: underline;}
 
-  /* Dashboard Metrics Tracker */
+  .history-container{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px; min-height: 120px;}
+  .message{padding:10px;border-radius:8px;max-width:95%;font-size:12.5px;line-height:1.4; transform: scale(0.98); opacity: 0; animation: msgShow 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+
   .usage-dashboard {
-    background: rgba(200, 169, 106, 0.03);
-    border: 1px solid rgba(200, 169, 106, 0.1);
+    background: rgba(200, 169, 106, 0.02);
+    border: 1px solid rgba(200, 169, 106, 0.08);
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 8px 10px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
   }
   .usage-title {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--accent);
     text-transform: uppercase;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 2px;
   }
   .metric-row {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: 11px;
   }
   .metric-label { color: var(--muted); }
   .metric-value { font-family: 'Fira Code', monospace; color: #fff; font-weight: 500; }
   
-  .history-container{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px}
-  .message{padding:14px;border-radius:12px;max-width:90%;font-size:14px;line-height:1.5; transform: scale(0.98); opacity: 0; animation: msgShow 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);}
   @keyframes msgShow { to { transform: scale(1); opacity: 1; } }
   
   .message.user{background:var(--surface);border:1px solid var(--border);align-self:flex-end;color:#fff}
-  .message.assistant{background:rgba(200,169,106,0.02);border:1px solid rgba(200,169,106,0.08);align-self:flex-start}
+  .message.assistant{background:rgba(200,169,106,0.02);border:1px solid rgba(200,169,106,0.04);align-self:flex-start}
   
   .agent-status-box{
-    margin-top:8px;border-top:1px dashed var(--border);padding-top:8px;display:flex;
-    flex-direction:column;gap:6px;font-size:12.5px;color:var(--muted);
+    margin-top:4px;border-top:1px dashed var(--border);padding-top:6px;display:flex;
+    flex-direction:column;gap:4px;font-size:11px;color:var(--muted);
   }
-  .log-line{display:flex;align-items:center;gap:8px}
+  .log-line{display:flex;align-items:center;gap:6px}
 
-  .input-container{padding:16px;border-top:1px solid var(--border);background:#0d0d17}
+  .input-container{padding:12px;border-top:1px solid var(--border);background:#0d0d17; margin-top: auto;}
   .input-wrap{
-    background:rgba(0,0,0,0.2);border:1px solid var(--border-strong);border-radius:12px;
-    padding:10px;display:flex;flex-direction:column;gap:8px; transition: border 0.2s;
+    background:rgba(0,0,0,0.2);border:1px solid var(--border-strong);border-radius:8px;
+    padding:8px;display:flex;flex-direction:column;gap:6px; transition: border 0.2s;
   }
   .input-wrap:focus-within { border-color: var(--accent); }
   .input-wrap textarea{
-    width:100%;background:none;border:none;color:#fff;font-size:14px;resize:none;min-height:44px;
+    width:100%;background:none;border:none;color:#fff;font-size:12.5px;resize:none;min-height:38px;height: 38px;
   }
   .input-action-row{display:flex;justify-content:flex-end;align-items:center}
   .action-btn{
-    background:var(--grad);color:#0a0a0f;font-weight:600;padding:6px 14px;
-    border-radius:8px;font-size:13px;display:flex;align-items:center;gap:6px;
+    background:var(--grad);color:#0a0a0f;font-weight:600;padding:6px 12px;
+    border-radius:6px;font-size:12px;display:flex;align-items:center;gap:6px;
   }
 
   /* PREVIEW CANVAS (RIGHT 2/3) */
@@ -140,26 +218,37 @@
   }
   
   .canvas-header{
-    height:44px;background:#09090f;border-bottom:1px solid var(--border);
-    display:flex;align-items:center;justify-content: space-between; padding:0 20px;gap:8px;
+    height:40px;background:#09090f;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content: space-between; padding:0 16px;gap:8px;
   }
-  .header-left, .header-right { display: flex; align-items: center; gap: 8px; }
+  .header-left, .header-right { display: flex; align-items: center; gap: 6px; }
   
-  .tab-btn{font-size:13px;color:var(--muted);padding:6px 12px;border-radius:6px;font-weight:500;}
+  .tab-btn{font-size:12px;color:var(--muted);padding:4px 10px;border-radius:4px;font-weight:500;}
   .tab-btn:hover{color:var(--text);background:var(--surface)}
   .tab-btn.active{color:#fff;background:rgba(255,255,255,0.06);border:1px solid var(--border)}
 
   /* UTILITY UTILS: EXPORT ACTION ROW */
   .util-btn {
-    font-size: 12px; color: var(--muted); padding: 5px 10px; border-radius: 6px;
+    font-size: 11px; color: var(--muted); padding: 4px 8px; border-radius: 4px;
     border: 1px solid var(--border); background: rgba(255,255,255,0.01); display: flex; align-items: center; gap: 4px;
   }
   .util-btn:hover { color: #fff; border-color: var(--border-strong); background: var(--surface); }
+  .util-btn.active { color:#fff; background: rgba(255,255,255,0.08); border-color: var(--accent); }
+  .deploy-btn{background:var(--grad);color:#0a0a0f;font-weight:600;border:none;}
+  .deploy-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(200,169,106,0.15);}
 
   /* RESPONSIVE VIEWPORT STYLING WRAPPER */
   .view-viewport{
     flex:1;width:100%;position:relative; overflow: auto;
-    display: flex; align-items: center; justify-content: center; padding: 20px; background: #040407;
+    display: flex; align-items: center; justify-content: center; padding: 12px; background: #040407;
+  }
+
+  @media (max-width: 1040px) {
+    .workspace-container { flex-direction: column; }
+    .chat-sidebar, .preview-canvas { width:100%; }
+    .workspace-container.split-mode .chat-sidebar { width:100%; height: 40%; }
+    .preview-canvas { display:flex; flex: 1; }
+    .canvas-header { flex-wrap:wrap; height: auto; padding:8px; }
   }
   
   .viewport-wrapper {
@@ -170,38 +259,75 @@
   }
 
   /* Responsive Presets classes */
-  .viewport-wrapper.preset-phone { width: 375px; height: 812px; }
-  .viewport-wrapper.preset-tablet { width: 768px; height: 1024px; }
+  .viewport-wrapper.preset-phone { width: 375px; height: 100%; max-height: 720px; }
+  .viewport-wrapper.preset-tablet { width: 768px; height: 100%; max-height: 900px; }
   .viewport-wrapper.preset-desktop { width: 100%; height: 100%; }
 
   .canvas-frame{width:100%;height:100%;border:none;background:#fff;display:block}
   
   .code-view-container{
-    position: absolute; inset: 20px; display:none; background:#050508; border-radius: 8px;
-    border: 1px solid var(--border-strong); padding:20px; overflow:auto; font-family:'Fira Code',monospace; font-size:13px; color:#d4d4d8; line-height:1.6;
+    position: absolute; inset: 12px; display:none; background:#050508; border-radius: 8px;
+    border: 1px solid var(--border-strong); padding:12px; overflow:auto; font-family:'Fira Code',monospace; font-size:12px; color:#d4d4d8; line-height:1.5;
   }
   .code-area{width:100%;height:100%;background:none;border:none;resize:none;color:inherit;font-family:inherit}
 
   .initial-load-overlay{
     position:absolute;inset:0;background:#0a0a0f;z-index:100;
-    display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;
+    display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;
   }
   .initial-load-overlay.active{display:flex}
   .spinner{
-    width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);
-    border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;
+    width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--accent);
+    border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px;
   }
   @keyframes spin {to{transform:rotate(360deg)}}
+
+  /* Legal Link Footer Container Styling */
+  .sidebar-footer {
+    margin-top: 10px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .legal-link-btn {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .legal-link-btn:hover {
+    color: var(--accent);
+    background: rgba(200, 169, 106, 0.04);
+    border-color: rgba(200, 169, 106, 0.15);
+  }
+
+  .logo-mark{
+    width:48px;height:31px;border-radius:11px;
+    display:grid;place-items:center;color:#0a0a0f;font-weight:800;font-size:14px;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand-group">
-    <div class="app-title">
-      <span style="font-weight:800;color:var(--accent)">M</span> Multi-Engine Project Canvas
+  <a href="index.html" class="logo">
+    <div class="logo-mark">
+      <img src="assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
     </div>
-  </div>
+  </a>
   <div class="status-badge">
     <span class="pulse-dot"></span> <span id="runtimeStatus">Ready Workspace</span>
   </div>
@@ -209,38 +335,73 @@
 
 <div class="workspace-container" id="workspaceContainer">
   <aside class="chat-sidebar">
-    <div class="credentials-panel">
-      <div class="cred-field">
-        <label>Active Provider</label>
-        <select id="providerSelect" onchange="handleProviderChange()">
-          <option value="github">GitHub Models (Free Tier)</option>
-          <option value="groq">Groq Cloud (Free Tier)</option>
-        </select>
-      </div>
-      <div class="cred-field">
-        <label>Model Selector</label>
-        <select id="modelSelect"></select>
-      </div>
+    <div class="panel-scroller">
+      <div class="credentials-panel">
+        <div class="cred-field">
+          <label>Active Provider</label>
+          <select id="providerSelect" onchange="handleProviderChange()">
+            <option value="github">GitHub Models (Free Tier)</option>
+            <option value="groq">Groq Cloud (Free Tier)</option>
+          </select>
+        </div>
+        
+        <div class="cred-field">
+          <label>Active Engine Model</label>
+          <select id="modelSelect">
+            </select>
+        </div>
 
-      <div class="usage-dashboard">
-        <div class="usage-title">
-          <span>Usage Dashboard</span>
-          <span style="opacity:0.6; font-size:9px;">Session Total</span>
+        <div class="cred-field">
+          <label>Active API Host</label>
+          <div class="custom-dropdown" id="keyDropdown" onclick="handleKeyDropdownClick(event)" tabindex="0">
+            <span class="dropdown-value" id="keyLabel">Select server</span>
+            <span class="dropdown-icon">▼</span>
+            <div class="dropdown-menu" id="keyMenu"></div>
+          </div>
+          <div class="key-info-row">
+            <div class="key-status" id="keyStatus">Choose or add a key to begin.</div>
+          </div>
         </div>
-        <div class="metric-row">
-          <span class="metric-label">Last Call Tokens:</span>
-          <span class="metric-value" id="lblLastTokens">0</span>
+        <div class="cred-field">
+          <label>Add API Key</label>
+          <div class="key-input-row">
+            <input id="keyInput" placeholder="Paste a provider key" />
+            <button class="action-btn" onclick="addApiKey()">Add</button>
+          </div>
         </div>
-        <div class="metric-row">
-          <span class="metric-label">Estimated Remaining:</span>
-          <span class="metric-value" id="lblRemainingTokens" style="color: #69c88b;">Unlimited</span>
+        <div class="usage-dashboard">
+          <div class="usage-title">
+            <span>Usage Dashboard</span>
+            <span style="opacity:0.6; font-size:8px;">Session Total</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Last Call Tokens:</span>
+            <span class="metric-value" id="lblLastTokens">0</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Estimated Remaining:</span>
+            <span class="metric-value" id="lblRemainingTokens" style="color: #69c88b;">Unlimited</span>
+          </div>
         </div>
+        <div class="projects-panel">
+          <div class="projects-title">Saved Projects</div>
+          <div id="projectList"></div>
+          <div class="project-empty" id="projectEmpty">No saved projects yet.</div>
+        </div>
+        <div class="share-banner" id="shareBanner">Share link will appear after deployment.</div>
+      </div>
+      
+      <div class="sidebar-footer">
+        <a href="legal.html" class="legal-link-btn" target="_blank">
+          Legal & Privacy Policy
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-top:-1px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
       </div>
     </div>
 
     <div class="history-container" id="chatHistory">
       <div class="message assistant">
-        Your API credentials have been hardcoded successfully! Choose your preferred free layout generation model and enter your app guidelines below.
+        Your API credentials have been initialized. Choose your free generation model and prompt below.
       </div>
     </div>
 
@@ -250,7 +411,7 @@
         <div class="input-action-row">
           <button class="action-btn" onclick="submitRevisionPrompt()">
             Build Changes
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </div>
       </div>
@@ -268,7 +429,8 @@
         <button class="util-btn active" id="presetDesktop" onclick="changeOrientation('desktop')" title="Desktop View">Desktop</button>
         <button class="util-btn" id="presetTablet" onclick="changeOrientation('tablet')" title="Tablet View">Tablet</button>
         <button class="util-btn" id="presetPhone" onclick="changeOrientation('phone')" title="Mobile View">Mobile</button>
-        <div style="width: 1px; height: 16px; background: var(--border); margin: 0 4px;"></div>
+        <div style="width: 1px; height: 12px; background: var(--border); margin: 0 2px;"></div>
+        <button class="util-btn deploy-btn" onclick="createShareLink()" title="Deploy and share project">Deploy</button>
         <button class="util-btn" onclick="openLiveView()" style="border-color: rgba(200,169,106,0.3); color: var(--accent);">Open Live</button>
         <button class="util-btn" onclick="downloadCode()" style="background: rgba(255,255,255,0.04);">Download</button>
       </div>
@@ -277,8 +439,8 @@
     <div class="view-viewport">
       <div class="initial-load-overlay" id="globalWorkspaceLoader">
         <div class="spinner"></div>
-        <h3 style="font-size:18px;margin-bottom:8px">AI Engine Executing</h3>
-        <p id="agentLoaderMessage" style="color:var(--muted);font-size:14px;max-width:400px">Processing layout structures...</p>
+        <h3 style="font-size:14px;margin-bottom:4px">AI Engine Executing</h3>
+        <p id="agentLoaderMessage" style="color:var(--muted);font-size:12px;max-width:300px">Processing layout structures...</p>
       </div>
 
       <div class="viewport-wrapper preset-desktop" id="viewportWrapper">
@@ -291,26 +453,127 @@
     </div>
   </main>
 </div>
+</body>
+</html>
 
 <script type="module">
-  // ==========================================
-  // HARDCODED API CREDENTIAL STORAGE PARAMETERS
-  // ==========================================
-  const HARDCODED_GITHUB_KEY = "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";
-  const HARDCODED_GROQ_KEY = "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";
-  const PIXABAY_API_KEY = "56079063-eaaa92db4a95b635fdcc08ff9b";
+  let manualKeySelection = false;
+  const API_KEY_STORAGE = "mexusBuilderApiKeys";
+  const ACTIVE_KEY_STORAGE = "mexusBuilderActiveKeyIndex";
+  const PROJECT_STORAGE_KEY = "mexusBuilderProjects";
+  const SHARE_PARAM_NAME = "share";
 
-  // Catalog updated to prioritize exact-match free token endpoints compatible via proxy
-  const PROVIDER_MODELS = {
+  const DEFAULT_API_KEYS = {
     github: [
-      { name: "GPT-4o [Recommended / Optimized]", value: "openai/gpt-4o" },
-      { name: "GPT-4o mini [Fast / Reliable]", value: "openai/gpt-4o-mini" },
-      { name: "DeepSeek R1 [Reasoning / Free]", value: "deepseek-ai/deepseek-r1" },
-      { name: "Meta Llama 3.3 70B [Free]", value: "meta-llama-3.3-70b-instruct" }
+      { label: "Server One", key: "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", blockedUntil: null },
+      { label: "Server Two", key: "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", blockedUntil: null },
+      { label: "Server Three", key: "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", blockedUntil: null },
+      { label: "Server Four", key: "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", blockedUntil: null },
+      { label: "Server Five", key: "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", blockedUntil: null },
+      { label: "Server Six", key: "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", blockedUntil: null },
+      { label: "Server Seven", key: "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", blockedUntil: null },
+      { label: "Server Eight", key: "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", blockedUntil: null },
+      { label: "Server Nine", key: "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", blockedUntil: null }
     ],
     groq: [
-      { name: "Llama 3.3 70B Versatile [Recommended]", value: "llama-3.3-70b-versatile" },
-      { name: "DeepSeek R1 Distill Llama 70B", value: "deepseek-r1-distill-llama-70b" },
+      { label: "Groq Server One", key: "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", blockedUntil: null },
+      { label: "Groq Server Two", key: "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", blockedUntil: null }
+    ]
+  };
+
+  let apiKeyStore = loadApiKeyStore();
+  let activeKeyIndex = loadActiveKeyIndex();
+  let savedProjects = loadSavedProjects();
+  let currentShareId = null;
+
+  // Global loop interval to keep cooldown elements ticking down live 
+  setInterval(() => {
+    updateKeyStatusDisplay();
+    const provider = document.getElementById('providerSelect').value;
+    const dropdown = document.getElementById('keyDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      populateKeySelect(provider);
+    }
+  }, 1000);
+
+  function loadApiKeyStore() {
+    try {
+      const stored = localStorage.getItem(API_KEY_STORAGE);
+      if (stored) return JSON.parse(stored);
+    } catch (err) { console.warn("Unable to load saved API keys.", err); }
+    return JSON.parse(JSON.stringify(DEFAULT_API_KEYS));
+  }
+
+  function loadActiveKeyIndex() {
+    try {
+      const stored = localStorage.getItem(ACTIVE_KEY_STORAGE);
+      if (stored) return JSON.parse(stored);
+    } catch (err) { console.warn("Unable to load key index state.", err); }
+    return { github: 0, groq: 0 };
+  }
+
+  function saveApiKeyStore() {
+    localStorage.setItem(API_KEY_STORAGE, JSON.stringify(apiKeyStore));
+  }
+
+  function saveActiveKeyIndex() {
+    localStorage.setItem(ACTIVE_KEY_STORAGE, JSON.stringify(activeKeyIndex));
+  }
+
+  function loadSavedProjects() {
+    try {
+      const stored = localStorage.getItem(PROJECT_STORAGE_KEY);
+      if (stored) return JSON.parse(stored);
+    } catch (err) { console.warn("Unable to load saved projects.", err); }
+    return [];
+  }
+
+  function saveSavedProjects() {
+    localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(savedProjects));
+  }
+
+  function isKeyBlocked(keyEntry) {
+    return keyEntry?.blockedUntil && new Date(keyEntry.blockedUntil) > new Date();
+  }
+
+  function getBlockedSeconds(keyEntry) {
+    if (!isKeyBlocked(keyEntry)) return 0;
+    return Math.max(0, new Date(keyEntry.blockedUntil) - Date.now()) / 1000;
+  }
+
+  function formatDuration(ms) {
+    const totalSeconds = Math.ceil(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    if (minutes > 0) return `${minutes}m ${seconds}s`;
+    return `${seconds}s`;
+  }
+
+  function getSelectedKey(provider) {
+    const keys = apiKeyStore[provider] || [];
+    const index = Math.min(activeKeyIndex[provider] || 0, keys.length - 1);
+    return keys[index] || null;
+  }
+
+  function findNextAvailableKey(provider, skipIndex = null) {
+    const keys = apiKeyStore[provider] || [];
+    for (let i = 0; i < keys.length; i++) {
+      if (i === skipIndex) continue;
+      if (!isKeyBlocked(keys[i])) return i;
+    }
+    return null;
+  }
+
+  const PROVIDER_MODELS = {
+    github: [
+      { name: "GPT-4o [Recommended]", value: "openai/gpt-4o" },
+      { name: "GPT-4o mini [Fast]", value: "openai/gpt-4o-mini" },
+      { name: "DeepSeek R1 [Reasoning]", value: "deepseek-ai/deepseek-r1" },
+      { name: "Meta Llama 3.3 70B", value: "meta-llama-3.3-70b-instruct" }
+    ],
+    groq: [
+      { name: "Llama 3.3 70B Versatile", value: "llama-3.3-70b-versatile" },
+      { name: "DeepSeek R1 Distill 70B", value: "deepseek-r1-distill-llama-70b" },
       { name: "Llama 3.1 8B Instant", value: "llama-3.1-8b-instant" },
       { name: "Gemma 2 9B IT", value: "gemma2-9b-it" }
     ]
@@ -322,20 +585,14 @@
       content: `You are an elite frontend software engineering agent specializing in single-page applications.
 Your core objective is to output valid single-file web applications combining semantic modern HTML, layout utilities, beautiful color choices, and dynamic frontend interactions.
 
-CRITICAL REQUIREMENTS FOR IMAGE SOURCING:
-- Whenever you output an image tag, the src MUST be a live Pixabay image URL or another public image URL sourced from the request.
-- Use the Pixabay API key provided by the host to look up real images for the requested subject.
-- If the AI outputs any broken or local image path, replace it automatically with a valid Pixabay or fallback source URL.
-- Do not use emoji characters in the final generated HTML, image labels, or site copy.
-- WRAP EVERY IMAGE IN AN ANCHOR TAG linking to the image source for easy access.
+CRITICAL REQUIREMENTS FOR OUTPUT:
+- Do not include any <img> tags, background-image URLs, or external image assets in the generated HTML.
+- Use CSS, gradients, icons, text, and pure HTML illustrations instead of images.
+- Do not use emoji characters in the final generated HTML, labels, or site copy.
 
 CRITICAL ARCHITECTURE REQUIREMENTS:
 - You MUST construct fully functional websites using standard HTML, CSS, and JavaScript.
-- Include font links and accessible third-party image elements from Pixabay or other public sources to ensure polished presentation.
 - You must write raw clean JS code directly into script modules inside the page to run dynamic systems.
-- MAINTAIN CONSISTENT LAYOUTS: Use the same grid system, spacing, and structural patterns unless the user explicitly requests specific changes like "move this here" or "put that there".
-- DEFAULT RESPONSIVE DESIGN: All layouts should adapt smoothly to different screen sizes using CSS Grid or Flexbox with consistent breakpoints.
-- ADD SMOOTH TRANSITIONS: Include CSS transitions on images (opacity, transform) for hover effects and smooth animations.
 - OUTPUT SPECIFICATION: Return EXACTLY the updated production-ready HTML code document block starting with <!DOCTYPE html>. Do NOT provide prose outside the markdown block or separate code parts.`
     }
   ];
@@ -343,12 +600,11 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
   let calculatedCodeInstance = "";
 
   window.handleProviderChange = function() {
+    manualKeySelection = false;
     const provider = document.getElementById('providerSelect').value;
     const modelSelect = document.getElementById('modelSelect');
     const lblRemaining = document.getElementById('lblRemainingTokens');
-    
     modelSelect.innerHTML = '';
-    
     if (provider === 'github') {
       lblRemaining.textContent = "Rate Limited / Min";
       lblRemaining.style.color = "#c8a96a";
@@ -356,21 +612,305 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
       lblRemaining.textContent = "Unlimited (Free Tier)";
       lblRemaining.style.color = "#69c88b";
     }
-    
     PROVIDER_MODELS[provider].forEach(m => {
       const opt = document.createElement('option');
       opt.value = m.value;
       opt.textContent = m.name;
       modelSelect.appendChild(opt);
     });
+    populateKeySelect(provider);
+    updateKeyStatusDisplay();
   };
+
+  function populateKeySelect(provider) {
+    const keyMenu = document.getElementById('keyMenu');
+    const keyLabel = document.getElementById('keyLabel');
+    const keys = apiKeyStore[provider] || [];
+    
+    // Save current scroll position inside the menu so it doesn't jump every second
+    const oldScrollTop = keyMenu.scrollTop;
+    
+    keyMenu.innerHTML = '';
+    if (!keys.length) {
+      const emptyItem = document.createElement('div');
+      emptyItem.className = 'dropdown-item disabled';
+      emptyItem.textContent = 'No keys configured';
+      keyMenu.appendChild(emptyItem);
+      keyLabel.textContent = 'No server';
+      return;
+    }
+    const selectedIndex = Math.min(activeKeyIndex[provider] || 0, keys.length - 1);
+    keyLabel.textContent = keys[selectedIndex]?.label || `Server ${selectedIndex + 1}`;
+    
+    keys.forEach((entry, index) => {
+      const item = document.createElement('div');
+      const blocked = isKeyBlocked(entry);
+      item.className = `dropdown-item${blocked ? ' disabled' : ''}`;
+      
+      let statusString = 'active';
+      if (blocked) {
+        statusString = `${formatDuration(getBlockedSeconds(entry) * 1000)}`;
+      }
+      
+      let labelContainer = document.createElement('span');
+      labelContainer.innerHTML = `<strong>${entry.label}</strong>`;
+      labelContainer.style.flex = "1";
+      item.appendChild(labelContainer);
+
+      let timerContainer = document.createElement('span');
+      timerContainer.textContent = statusString;
+      timerContainer.style.marginRight = "6px";
+      if (blocked) {
+        timerContainer.style.color = "#ff6b6b";
+      } else {
+        timerContainer.style.color = "#69c88b";
+      }
+      item.appendChild(timerContainer);
+
+      if (blocked) {
+        let tryAnywayBtn = document.createElement('button');
+        tryAnywayBtn.type = 'button';
+        tryAnywayBtn.className = 'try-anyway-btn';
+        tryAnywayBtn.textContent = 'Try Anyway';
+        tryAnywayBtn.onclick = (e) => {
+          e.stopPropagation();
+          activeKeyIndex[provider] = index;
+          manualKeySelection = true;
+          saveActiveKeyIndex();
+          keyLabel.textContent = entry.label;
+          updateKeyStatusDisplay();
+          closeKeyMenu();
+        };
+        item.appendChild(tryAnywayBtn);
+      } else {
+        item.style.cursor = 'pointer';
+        item.onclick = () => {
+          activeKeyIndex[provider] = index;
+          manualKeySelection = true;
+          saveActiveKeyIndex();
+          keyLabel.textContent = entry.label;
+          updateKeyStatusDisplay();
+          closeKeyMenu();
+        };
+      }
+      
+      keyMenu.appendChild(item);
+    });
+    
+    keyMenu.scrollTop = oldScrollTop;
+  }
+
+  window.addApiKey = function() {
+    const provider = document.getElementById('providerSelect').value;
+    const rawKey = document.getElementById('keyInput').value.trim();
+    if (!rawKey) {
+      alert("Enter a valid API key before adding.");
+      return;
+    }
+    apiKeyStore[provider] = apiKeyStore[provider] || [];
+    apiKeyStore[provider].push({
+      label: `Server ${apiKeyStore[provider].length + 1}`,
+      key: rawKey,
+      blockedUntil: null
+    });
+    saveApiKeyStore();
+    document.getElementById('keyInput').value = '';
+    activeKeyIndex[provider] = apiKeyStore[provider].length - 1;
+    manualKeySelection = true;
+    saveActiveKeyIndex();
+    populateKeySelect(provider);
+    updateKeyStatusDisplay();
+  };
+
+  function updateKeyStatusDisplay() {
+    const provider = document.getElementById('providerSelect').value;
+    const keyEntry = getSelectedKey(provider);
+    const statusEl = document.getElementById('keyStatus');
+    if (!keyEntry) {
+      statusEl.textContent = 'No API key configured for the selected provider.';
+      return;
+    }
+    
+    if (isKeyBlocked(keyEntry)) {
+      statusEl.innerHTML = `<span style="color:#ff6b6b; font-weight:bold;">${keyEntry.label} (RATE LIMITED)</span><br><span style="font-size:11px;">Cooldown remaining: ${formatDuration(getBlockedSeconds(keyEntry) * 1000)}</span>`;
+    } else {
+      statusEl.innerHTML = `<span>Current: <strong>${keyEntry.label}</strong></span><br><span style="color:#69c88b;">● Active and ready</span>`;
+    }
+  }
+
+  function parseRetryAfter(header, body) {
+    if (header) {
+      const retrySeconds = parseInt(header, 10);
+      if (!isNaN(retrySeconds)) return retrySeconds;
+    }
+    const match = String(body).match(/retry-after\s*[:=]?\s*(\d+)/i);
+    return match ? Number(match[1]) : null;
+  }
+
+  function getNextKeyIndex(provider, currentIndex) {
+    const keys = apiKeyStore[provider] || [];
+    if (!keys.length) return null;
+    const len = keys.length;
+    let start = (Number.isInteger(currentIndex) ? (currentIndex + 1) % len : 0);
+    for (let i = 0; i < len; i++) {
+      const index = (start + i) % len;
+      if (!isKeyBlocked(keys[index])) return index;
+    }
+    return null;
+  }
+
+  function blockKey(provider, index, message, retrySeconds = 900) {
+    const keyEntry = apiKeyStore[provider]?.[index];
+    if (!keyEntry) return;
+    keyEntry.blockedUntil = new Date(Date.now() + retrySeconds * 1000).toISOString();
+    saveApiKeyStore();
+    if (activeKeyIndex[provider] === index) {
+      const nextIndex = getNextKeyIndex(provider, index);
+      if (nextIndex !== null) {
+        activeKeyIndex[provider] = nextIndex;
+        saveActiveKeyIndex();
+      }
+    }
+    populateKeySelect(provider);
+    updateKeyStatusDisplay();
+    appendChatMessage('assistant', `Key "${keyEntry.label}" hit a limit: ${message}. Blocked for ${formatDuration(retrySeconds * 1000)}.`);
+  }
+
+  function createProjectId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+
+  function saveProjectInstance(prompt, html, title) {
+    let sanitizedTitle = title;
+    if (!sanitizedTitle) {
+      const words = prompt.replace(/[^a-zA-Z0-9\s]/g, '').split(/\s+/).filter(w => w.length > 2);
+      if (words.length > 0) {
+        sanitizedTitle = words.slice(0, 3).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+      } else {
+        sanitizedTitle = prompt.replace(/\s+/g, ' ').trim().slice(0, 20) || "Untitled app";
+      }
+    }
+    
+    const id = currentShareId || createProjectId();
+    const existing = savedProjects.find(item => item.id === id);
+    const record = { id, title: sanitizedTitle, prompt, html, updatedAt: Date.now() };
+    if (existing) {
+      Object.assign(existing, record);
+    } else {
+      savedProjects.unshift(record);
+      if (savedProjects.length > 20) savedProjects.pop();
+    }
+    saveSavedProjects();
+    renderProjectList();
+    return id;
+  }
+
+  function renderProjectList() {
+    const container = document.getElementById('projectList');
+    const empty = document.getElementById('projectEmpty');
+    container.innerHTML = '';
+    if (!savedProjects.length) {
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    savedProjects.slice(0, 4).forEach(project => {
+      const card = document.createElement('div');
+      card.className = 'project-card';
+      const title = document.createElement('span');
+      title.textContent = project.title;
+      const actions = document.createElement('div');
+      actions.className = 'project-actions';
+      const open = document.createElement('button');
+      open.className = 'util-btn';
+      open.textContent = 'Open';
+      open.onclick = () => loadProjectById(project.id);
+      const remove = document.createElement('button');
+      remove.className = 'util-btn';
+      remove.textContent = 'Del';
+      remove.onclick = () => {
+        savedProjects = savedProjects.filter(item => item.id !== project.id);
+        saveSavedProjects();
+        renderProjectList();
+      };
+      actions.append(open, remove);
+      card.append(title, actions);
+      container.appendChild(card);
+    });
+  }
+
+  function loadProjectById(id) {
+    const project = savedProjects.find(item => item.id === id);
+    if (!project) {
+      alert("Saved project not found.");
+      return;
+    }
+    loadProject(project);
+  }
+
+  function loadProject(project) {
+    currentShareId = project.id;
+    document.getElementById('workspaceInput').value = project.prompt || '';
+    calculatedCodeInstance = project.html || '';
+    document.getElementById('previewFrame').srcdoc = calculatedCodeInstance;
+    document.getElementById('codeAreaView').value = calculatedCodeInstance;
+    document.getElementById('runtimeStatus').textContent = `Loaded: ${project.title}`;
+    setShareBanner(`${location.origin + location.pathname}?share=${project.id}`);
+  }
+
+  window.handleKeyDropdownClick = function(event) {
+    if (event.target.closest('.dropdown-item') || event.target.closest('.try-anyway-btn')) return;
+    const dropdown = document.getElementById('keyDropdown');
+    dropdown.classList.toggle('open');
+  };
+
+  window.closeKeyMenu = function() {
+    const dropdown = document.getElementById('keyDropdown');
+    if (dropdown) dropdown.classList.remove('open');
+  };
+
+  document.addEventListener('click', event => {
+    if (!event.target.closest('#keyDropdown')) {
+      closeKeyMenu();
+    }
+  });
+
+  window.createShareLink = function() {
+    if (!calculatedCodeInstance) {
+      alert("Build a project first, then deploy it.");
+      return;
+    }
+    const prompt = document.getElementById('workspaceInput').value.trim();
+    const id = saveProjectInstance(prompt, calculatedCodeInstance);
+    currentShareId = id;
+    const url = `${location.origin + location.pathname}?share=${id}`;
+    setShareBanner(url);
+    appendChatMessage('assistant', "Deploy ready. Link generated inside control panel banner.");
+  };
+
+  function setShareBanner(url) {
+    const banner = document.getElementById('shareBanner');
+    banner.innerHTML = `<a href="${url}" target="_blank" rel="noreferrer">${url}</a>`;
+  }
+
+  function loadSharedProjectFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has(SHARE_PARAM_NAME)) return;
+    const shareId = params.get(SHARE_PARAM_NAME);
+    const project = savedProjects.find(item => item.id === shareId);
+    if (project) {
+      loadProject(project);
+      appendChatMessage('assistant', "Shared project loaded from browser session storage configuration.");
+    } else {
+      document.getElementById('shareBanner').textContent = "Shared context key mapping not initialized locally.";
+    }
+  }
 
   window.switchCanvasTab = function(targetTab) {
     const pBtn = document.getElementById('btnPreview');
     const cBtn = document.getElementById('btnCode');
     const wrapper = document.getElementById('viewportWrapper');
     const codeContainer = document.getElementById('codeViewBlock');
-
     if (targetTab === 'preview') {
       pBtn.classList.add('active');
       cBtn.classList.remove('active');
@@ -384,24 +924,20 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
     }
   };
 
-  // Orientation Control Manager
   window.changeOrientation = function(targetOrientation) {
     const wrapper = document.getElementById('viewportWrapper');
     const presets = ['desktop', 'tablet', 'phone'];
-    
     presets.forEach(p => {
       wrapper.classList.remove(`preset-${p}`);
       document.getElementById(`preset${p.charAt(0).toUpperCase() + p.slice(1)}`).classList.remove('active');
     });
-    
     wrapper.classList.add(`preset-${targetOrientation}`);
     document.getElementById(`preset${targetOrientation.charAt(0).toUpperCase() + targetOrientation.slice(1)}`).classList.add('active');
   };
 
-  // Live View Window Exporter
   window.openLiveView = function() {
     if (!calculatedCodeInstance) {
-      alert("No active canvas code compiled yet. Write a prompt to begin!");
+      alert("No active canvas code compiled yet.");
       return;
     }
     const newWindow = window.open();
@@ -409,7 +945,6 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
     newWindow.document.close();
   };
 
-  // Download Build Handler
   window.downloadCode = function() {
     if (!calculatedCodeInstance) {
       alert("No active canvas code compiled yet.");
@@ -430,44 +965,34 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
     const statusText = document.getElementById('runtimeStatus');
     const loaderMsg = document.getElementById('agentLoaderMessage');
     const provider = document.getElementById('providerSelect').value;
-    
-    const activeKey = (provider === "groq") ? HARDCODED_GROQ_KEY : HARDCODED_GITHUB_KEY;
-
-    if(!activeKey || activeKey.includes("YOUR_")) {
-      alert(`Please replace the hardcoded placeholder string variable for your chosen provider: [ ${provider} ]`);
+    const selectedKey = getSelectedKey(provider);
+    if (!selectedKey?.key) {
+      alert(`Please add or select an API key for ${provider}.`);
       return;
     }
-    
-    // Shift layout from full screen chat into 1/3 chat / 2/3 view split mode dynamically
     if (!container.classList.contains('split-mode')) {
       container.classList.add('split-mode');
-      await delay(300); // Allow smooth CSS transition sequence to complete
+      await delay(300);
     }
-    
     loader.classList.add('active');
     statusText.textContent = "Pipeline Active...";
     appendChatMessage('user', userPromptText);
     const logsElement = createAgentLogContainer();
-    
     try {
       updateAgentLogStep(logsElement, "Initiating inference layout...");
       loaderMsg.textContent = "Contacting chosen inference pipeline...";
-      
       conversationalContext.push({ role: "user", content: userPromptText });
-
-      const rawAIResponse = await runMultiProviderRouter(conversationalContext, activeKey);
+      const rawAIResponse = await runMultiProviderRouter(conversationalContext, provider);
       calculatedCodeInstance = await sanitizeAndResolveHTML(rawAIResponse, userPromptText);
-      
-      updateAgentLogStep(logsElement, "Compiling interactions and rendering DOM environment...");
-      loaderMsg.textContent = "Injecting live interaction states and assets...";
-      await delay(600);
-
+      updateAgentLogStep(logsElement, "Compiling environment configuration structural variants...");
+      loaderMsg.textContent = "Injecting workspace context...";
+      await delay(400);
       document.getElementById('previewFrame').srcdoc = calculatedCodeInstance;
       document.getElementById('codeAreaView').value = calculatedCodeInstance;
-      
+      currentShareId = saveProjectInstance(userPromptText, calculatedCodeInstance);
+      setShareBanner(`${location.origin + location.pathname}?share=${currentShareId}`);
       conversationalContext.push({ role: "assistant", content: rawAIResponse });
-      appendChatMessage('assistant', "Code compiled and updated onto the workspace preview.");
-      
+      appendChatMessage('assistant', "Workspace view updated successfully.");
     } catch(err) {
       console.error(err);
       appendChatMessage('assistant', `Interface Error: ${err.message}`);
@@ -477,46 +1002,105 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
     }
   }
 
-  async function runMultiProviderRouter(payload, key) {
-    const provider = document.getElementById('providerSelect').value;
+  async function runMultiProviderRouter(payload, provider) {
     const model = document.getElementById('modelSelect').value;
+    const keys = apiKeyStore[provider] || [];
+    if (!keys.length) throw new Error(`No ${provider} API keys configured.`);
     
-    let endpoint = "";
-    let headers = { "Content-Type": "application/json" };
-    let bodyObj = { model: model, messages: payload };
-
-    if (provider === "github") {
-      const target = "https://models.github.ai/inference/chat/completions";
-      endpoint = "https://corsproxy.io/?" + encodeURIComponent(target);
-      headers["Authorization"] = `Bearer ${key}`;
-      bodyObj.temperature = 0.3;
-    } else if (provider === "groq") {
-      const target = "https://api.groq.com/openai/v1/chat/completions";
-      endpoint = "https://corsproxy.io/?" + encodeURIComponent(target);
-      headers["Authorization"] = `Bearer ${key}`;
-      bodyObj.temperature = 0.3;
-    }
-
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(bodyObj)
-    });
-
-    if(!res.ok) {
-      const info = await res.text();
-      throw new Error(`API response failure status code execution context: ${info}`);
-    }
-
-    const json = await res.json();
+    let selectedIndex = activeKeyIndex[provider] || 0;
     
-    if(json.usage) {
-      document.getElementById('lblLastTokens').textContent = json.usage.total_tokens || "N/A";
+    // If the user manually selected a key via 'Try Anyway', use exactly that key
+    const orderedIndices = [];
+    if (manualKeySelection) {
+      orderedIndices.push(selectedIndex);
     } else {
-      document.getElementById('lblLastTokens').textContent = "~" + (json.choices?.[0]?.message?.content?.length / 4).toFixed(0);
+      const nextRotated = getNextKeyIndex(provider, selectedIndex);
+      if (nextRotated !== null) {
+        selectedIndex = nextRotated;
+      }
+      const len = keys.length;
+      for (let offset = 0; offset < len; offset++) {
+        orderedIndices.push((selectedIndex + offset) % len);
+      }
     }
-
-    return json.choices?.[0]?.message?.content || "";
+    
+    for (const index of orderedIndices) {
+      const keyEntry = keys[index];
+      if (!keyEntry) continue;
+      
+      // If we are not in forced manual mode, skip blocked keys
+      if (!manualKeySelection && isKeyBlocked(keyEntry)) continue;
+      
+      const key = keyEntry.key;
+      let endpoint = "";
+      let headers = { "Content-Type": "application/json" };
+      let bodyObj = { model: model, messages: payload, temperature: 0.3 };
+      
+      if (provider === "github") {
+        const target = "https://models.github.ai/inference/chat/completions";
+        endpoint = "https://corsproxy.io/?" + encodeURIComponent(target);
+        headers["Authorization"] = `Bearer ${key}`;
+      } else if (provider === "groq") {
+        const target = "https://api.groq.com/openai/v1/chat/completions";
+        endpoint = "https://corsproxy.io/?" + encodeURIComponent(target);
+        headers["Authorization"] = `Bearer ${key}`;
+      }
+      
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(bodyObj)
+        });
+        
+        if (!res.ok) {
+          const info = await res.text();
+          
+          if (res.status === 429 || /rate limit|quota|limit/i.test(info)) {
+            const retry = parseRetryAfter(res.headers.get('retry-after'), info) || 900;
+            blockKey(provider, index, "Rate Limited", retry);
+            if (manualKeySelection) break; // Break out immediately if forced key fails
+            continue;
+          }
+          
+          if (res.status === 401 || /unauthorized|invalid/i.test(info)) {
+            blockKey(provider, index, "Unauthorized / Invalid Key", 864000);
+            if (manualKeySelection) break;
+            continue;
+          }
+          
+          console.warn(`Server ${index + 1} failed with status ${res.status}: ${info}`);
+          if (manualKeySelection) break;
+          continue;
+        }
+        
+        const json = await res.json();
+        if (json.usage) {
+          document.getElementById('lblLastTokens').textContent = json.usage.total_tokens || "N/A";
+        } else {
+          document.getElementById('lblLastTokens').textContent = "~" + (json.choices?.[0]?.message?.content?.length / 4).toFixed(0);
+        }
+        
+        // Key worked successfully: unblock it completely if it was blocked
+        keyEntry.blockedUntil = null;
+        saveApiKeyStore();
+        
+        activeKeyIndex[provider] = index;
+        manualKeySelection = false; 
+        saveActiveKeyIndex();
+        populateKeySelect(provider);
+        updateKeyStatusDisplay();
+        return json.choices?.[0]?.message?.content || "";
+        
+      } catch (fetchErr) {
+        console.error(`Network error on server ${index + 1}:`, fetchErr);
+        if (manualKeySelection) break;
+        continue;
+      }
+    }
+    
+    manualKeySelection = false; // Reset manual override flag if it fails
+    throw new Error(`All configured ${provider} API keys are either blocked or returning errors.`);
   }
 
   window.submitRevisionPrompt = function() {
@@ -536,259 +1120,31 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
     return rawMarkdownText;
   }
 
-  async function sanitizeAndResolveHTML(rawMarkdownText, promptText) {
+  async function sanitizeAndResolveHTML(rawMarkdownText) {
     const rawHTML = extractSanitizedHTML(rawMarkdownText);
-    return await resolveImageSources(rawHTML, promptText);
+    return removeImageAssets(rawHTML);
   }
 
-  async function resolveImageSources(html, promptText) {
+  function removeImageAssets(html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    const queryCandidates = buildSearchQueries(promptText);
-    const fallbackQuery = queryCandidates[0] || 'pink car';
-    const validUrlRegex = /^https?:\/\//i;
-    const placeholderPattern = /placehold|dummyimage|images?\//i;
-
-    // Recursively unwrap existing links from images (to re-wrap them properly)
-    const existingLinks = Array.from(doc.querySelectorAll('a img'));
-    existingLinks.forEach(img => {
-      const link = img.parentElement;
-      if (link && link.tagName === 'A') {
-        link.parentElement.replaceChild(img, link);
-      }
-    });
-
-    // Find ALL images anywhere in the document
-    const images = Array.from(doc.querySelectorAll('img'));
-    
-    for (const img of images) {
-      const source = (img.getAttribute('src') || '').trim();
-      const altText = (img.getAttribute('alt') || img.getAttribute('title') || '').trim();
-      const isBroken = !source || source.startsWith('data:') || !validUrlRegex.test(source) || placeholderPattern.test(source);
-      
-      if (isBroken) {
-        const query = altText || fallbackQuery;
-        const pixabayImage = await searchPixabayImage([query, fallbackQuery, 'pink car']);
-        img.setAttribute('src', pixabayImage);
-        img.removeAttribute('srcset');
-        img.setAttribute('loading', 'lazy');
-        img.setAttribute('data-image-url', pixabayImage);
-        img.style.transition = 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out';
-        img.onerror = () => {
-          if (!img.dataset.fallbackTried) {
-            img.dataset.fallbackTried = '1';
-            img.src = buildAlternateFallbackImageURL(query);
-          }
-        };
-        if (!altText) {
-          img.setAttribute('alt', query);
-        }
-      } else {
-        // Mark valid images with the source URL for linking
-        img.setAttribute('data-image-url', source);
-        img.style.transition = 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out';
-      }
-      
-      // Wrap every image in a link to its source
-      if (!img.parentElement || img.parentElement.tagName !== 'A') {
-        const imageUrl = img.getAttribute('data-image-url') || img.getAttribute('src');
-        const link = doc.createElement('a');
-        link.href = imageUrl;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.style.cssText = `
-          display: inline-block;
-          position: relative;
-          cursor: pointer;
-          transition: transform 0.2s ease-in-out;
-        `;
-        link.onmouseover = function() { this.style.transform = 'scale(1.02)'; };
-        link.onmouseout = function() { this.style.transform = 'scale(1)'; };
-        img.parentElement.replaceChild(link, img);
-        link.appendChild(img);
-      }
-    }
-
-    // Process background images in styles
-    for (const el of Array.from(doc.querySelectorAll('[style]'))) {
+    Array.from(doc.querySelectorAll('img')).forEach(img => img.remove());
+    Array.from(doc.querySelectorAll('[style]')).forEach(el => {
       const style = el.getAttribute('style') || '';
-      const match = /url\((['"]?)(.*?)\1\)/.exec(style);
-      if (match && match[2]) {
-        const urlValue = match[2];
-        const isBrokenBg = !validUrlRegex.test(urlValue) || placeholderPattern.test(urlValue) || urlValue.startsWith('data:');
-        if (isBrokenBg) {
-          const bgPixabay = await searchPixabayImage([fallbackQuery, 'car']);
-          el.setAttribute('style', style.replace(match[0], `url("${bgPixabay}")`));
-        }
-      }
-    }
-
-    // Add hero image if no images exist
-    if (!images.length && promptText) {
-      const query = fallbackQuery;
-      const heroLink = doc.createElement('a');
-      const hero = doc.createElement('img');
-      const heroImageUrl = (await searchPixabayImage([query, fallbackQuery, 'pink car'])) || buildFallbackImageURL(query);
-      
-      hero.src = heroImageUrl;
-      hero.alt = query;
-      hero.loading = 'lazy';
-      hero.setAttribute('data-image-url', heroImageUrl);
-      hero.style.cssText = 'width:100%;height:auto;object-fit:cover;display:block;margin:0 auto;transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;';
-      hero.onerror = () => {
-        if (!hero.dataset.fallbackTried) {
-          hero.dataset.fallbackTried = '1';
-          hero.src = buildAlternateFallbackImageURL(query);
-        }
-      };
-      
-      heroLink.href = heroImageUrl;
-      heroLink.target = '_blank';
-      heroLink.rel = 'noopener noreferrer';
-      heroLink.style.cssText = 'display:block;width:100%;';
-      heroLink.appendChild(hero);
-      
-      const target = doc.body || doc.documentElement;
-      target.insertBefore(heroLink, target.firstChild);
-    }
-
-    // ALWAYS INJECT WATERMARK TO THE BOTTOM OF THE DOM BODY
+      const cleaned = style.replace(/background(?:-image)?\s*:\s*url\((['"]?)(.*?)\1\)/gi, 'background: none');
+      if (cleaned !== style) el.setAttribute('style', cleaned.trim());
+    });
+    Array.from(doc.querySelectorAll('style')).forEach(styleTag => {
+      styleTag.textContent = styleTag.textContent.replace(/url\((['"]?)(.*?)\1\)/gi, 'none');
+    });
     if (doc.body) {
       const watermark = doc.createElement('div');
       watermark.id = "nexus-global-watermark";
       watermark.innerHTML = "Made on Nexus Web";
-      watermark.style.cssText = `
-        text-align: center !important;
-        padding: 20px 10px !important;
-        font-family: 'Inter', sans-serif !important;
-        font-size: 12px !important;
-        color: rgba(125, 125, 135, 0.7) !important;
-        letter-spacing: 0.05em !important;
-        background: rgba(0, 0, 0, 0.04) !important;
-        border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
-        clear: both !important;
-        display: block !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-      `;
+      watermark.style.cssText = "text-align: center !important; padding: 12px !important; font-family: sans-serif !important; font-size: 11px !important; color: rgba(125, 125, 135, 0.4) !important; width: 100% !important; box-sizing: border-box !important;";
       doc.body.appendChild(watermark);
     }
-
-    if (doc.documentElement) {
-      return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
-    }
-    return html;
-  }
-
-  async function searchPixabayImage(queries) {
-    const queryList = Array.isArray(queries) ? queries : [queries];
-    
-    for (let query of queryList) {
-      let desiredQuery = (query || '').trim();
-      if (!desiredQuery) continue;
-      
-      let cleanQuery = desiredQuery.replace(/[^a-zA-Z0-9 ]/g, ' ').replace(/\s+/g, '+');
-      let url = `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(cleanQuery)}&image_type=photo&orientation=horizontal&per_page=15&safesearch=true`;
-      
-      try {
-        let response = await fetch(url);
-        if (!response.ok) throw new Error('Primary API line down');
-        let data = await response.json();
-        
-        if (data.hits && data.hits.length > 0) {
-          const matchIndex = Math.floor(Math.random() * Math.min(5, data.hits.length));
-          return data.hits[matchIndex].largeImageURL || data.hits[matchIndex].webformatURL;
-        }
-      } catch (error) {
-        console.warn("Pixabay Direct Hit failed, trying proxy line...", error);
-        try {
-          const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-          let response = await fetch(proxyUrl);
-          let data = await response.json();
-          if (data.hits && data.hits.length > 0) {
-            return data.hits[0].largeImageURL || data.hits[0].webformatURL;
-          }
-        } catch (proxyError) {
-          console.error('All routing paths for Pixabay failed', proxyError);
-        }
-      }
-    }
-    
-    if (queryList.length > 0) {
-      const basicFallbackWord = queryList[0].split(/\s+/).slice(-2).join('+');
-      const backupUrl = `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(basicFallbackWord)}&image_type=photo&per_page=3&safesearch=true`;
-      try {
-        let response = await fetch(`https://corsproxy.io/?${encodeURIComponent(backupUrl)}`);
-        let data = await response.json();
-        if (data.hits && data.hits.length > 0) return data.hits[0].largeImageURL;
-      } catch(e) {}
-    }
-    
-    return 'https://loremflickr.com/1200/800/car,pink';
-  }
-
-  function buildFallbackImageURL(query) {
-    return `https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80`;
-  }
-  
-  function buildAlternateFallbackImageURL(query) {
-    const cleanTerm = (query || 'car').replace(/[^a-zA-Z0-9 -]/g, ' ').trim().replace(/\s+/g, ',');
-    return `https://loremflickr.com/1200/800/${cleanTerm}`;
-  }
-
-  function buildSearchQueries(promptText) {
-    const normalized = (promptText || '').toLowerCase().replace(/[^a-z0-9\s]/gi, ' ').replace(/\s+/g, ' ').trim();
-    const queries = [];
-
-    // Specific pattern matching for "black cat green eyes"
-    const blackCatGreen = /(black\s+cat|black\s+cats).*?(green\s+eye|green\s+eyes|emerald\s+eyes)|(?:green\s+eye|green\s+eyes|emerald\s+eyes).*?(black\s+cat|black\s+cats)/i;
-    if (blackCatGreen.test(promptText || '')) {
-      queries.push('black cat green eyes');
-    }
-
-    // Extract content after "about"
-    const aboutMatch = normalized.match(/(?:about|for|on)\s+(.+?)(?:\s+(?:website|site|webpage|page|app|with|and|show)|\s*$)/i);
-    if (aboutMatch && aboutMatch[1]) {
-      queries.push(aboutMatch[1].trim());
-    }
-
-    // Extract subject from website creation requests
-    const websiteMatch = normalized.match(/(?:make\s+me\s+a|make\s+me\s+an|make\s+me|build|create|design)\s+(?:a\s+)?(?:website|site|webpage|page|app)\s+(?:about\s+)?(.+?)(?:\s+(?:with|and|show|feature|include)|\s*$)/i);
-    if (websiteMatch && websiteMatch[1]) {
-      queries.push(websiteMatch[1].trim());
-    }
-
-    // Extract subjects for image-specific requests
-    const includeMatch = normalized.match(/(?:include|show|use|feature|add)\s+(?:an?\s+)?(?:image|photo|picture|photos|pictures)\s+(?:of\s+)?(.+?)(?:\s|$)/i);
-    if (includeMatch && includeMatch[1]) {
-      queries.push(includeMatch[1].trim());
-    }
-
-    // Extract main keywords from entire prompt
-    const mainKeywords = normalized
-      .replace(/\b(make me|make a|make an|build|create|design|website|webpage|page|site|app|please|add|include|show|that|for|with|about|and|the|a|an|on|of|image|photo|picture|photos|pictures|in|to|from)\b/gi, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .split(/\s+/)
-      .filter(w => w.length > 2)
-      .slice(0, 3);
-    
-    if (mainKeywords.length > 0) {
-      queries.push(...mainKeywords);
-    }
-
-    // Fallback extraction
-    if (!queries.length) {
-      const fallback = normalized
-        .replace(/\b(make me|make a|make an|build|create|design|website|webpage|page|site|app|please|add|include|show|that|for|with|about|and|the|a|an|on|of|image|photo|picture|photos|pictures|in|to|from)\b/gi, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-      if (fallback.length > 2) {
-        queries.push(fallback);
-      }
-    }
-
-    return [...new Set(queries)].filter(Boolean);
+    return doc.documentElement ? '<!DOCTYPE html>\n' + doc.documentElement.outerHTML : html;
   }
 
   function appendChatMessage(senderRole, narrative) {
@@ -819,6 +1175,8 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
   function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
   
   handleProviderChange();
+  renderProjectList();
+  loadSharedProjectFromQuery();
 </script>
 </body>
 </html>
