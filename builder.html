@@ -1036,15 +1036,16 @@ CRITICAL ARCHITECTURE REQUIREMENTS:
       let headers = { "Content-Type": "application/json" };
       let bodyObj = { model: model, messages: payload, temperature: 0.3 };
       
-      if (provider === "github") {
-        const target = "https://models.github.ai/inference/chat/completions";
-        endpoint = "https://corsproxy.io/?" + encodeURIComponent(target);
-        headers["Authorization"] = `Bearer ${key}`;
-      } else if (provider === "groq") {
-        const target = "https://api.groq.com/openai/v1/chat/completions";
-        endpoint = "https://corsproxy.io/?" + encodeURIComponent(target);
-        headers["Authorization"] = `Bearer ${key}`;
-      }
+      // Replace the old corsproxy.io lines with your worker URL:
+if (provider === "github") {
+  const target = "https://models.github.ai/inference/chat/completions";
+  endpoint = `https://nexus.workers.dev/?url=${encodeURIComponent(target)}`;
+  headers["Authorization"] = `Bearer ${key}`;
+} else if (provider === "groq") {
+  const target = "https://api.groq.com/openai/v1/chat/completions";
+  endpoint = `https://nexus.workers.dev/?url=${encodeURIComponent(target)}`;
+  headers["Authorization"] = `Bearer ${key}`;
+}
       
       try {
         const res = await fetch(endpoint, {
