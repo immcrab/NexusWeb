@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Multi-Provider AI Canvas</title>
+<title>Nexus Web AI builder | Build modern websites with AI</title>
+<link rel="icon" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -73,7 +74,17 @@
     display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 10;
   }
   .app-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .logo-mark { width: 24px; height: 24px; background: var(--grad); border-radius: 6px; display: grid; place-items: center; color: #0a0a0f; font-weight: 800; font-size: 12px; }
+  .logo-mark {
+    width: 48px;
+    height: 31px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    color: #0a0a0f;
+    font-weight: 800;
+    font-size: 14px;
+    background: none;
+  }
   .header-actions { display: flex; align-items: center; gap: 12px; }
   .status-badge {
     font-size: var(--font-size-sm); padding: 4px 10px; border-radius: 999px; background: var(--accent-glow);
@@ -87,6 +98,14 @@
     border-radius: 50%; color: var(--muted); background: var(--surface); border: 1px solid transparent;
   }
   .icon-btn:hover { color: var(--text); background: var(--surface-hover); border-color: var(--border); }
+
+  /* PROJECTS NAVIGATION INTERFACE ELEMENTS */
+  .projects-nav-btn {
+    font-size: var(--font-size-sm); color: var(--text); padding: 5px 11px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface); display: flex; align-items: center; gap: 6px;
+    text-decoration: none; font-weight: 500; transition: all var(--transition-fast);
+  }
+  .projects-nav-btn:hover { background: var(--surface-hover); border-color: var(--accent); }
 
   /* CONTAINER LAYOUT */
   .workspace-container { display: flex; flex: 1; height: calc(100vh - 44px); width: 100%; position: relative; }
@@ -195,7 +214,7 @@
   .settings-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
   .settings-title { font-size: var(--font-size-xs); font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
   .cred-field { display: flex; flex-direction: column; gap: 4px; }
-  .cred-field label { font-size: var(--font-size-xs); color: var(--muted); font-weight: 600; text-transform: uppercase; display: flex; justify-content: space-between; }
+  .cred-field label { font-size: var(--font-size-xs); color: var(--muted); font-weight: 600; text-transform: uppercase; display: flex; justify-content: justify-content; justify-content: space-between; }
   .cred-field select, .cred-field input { background: rgba(0,0,0,0.25); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px 10px; font-size: var(--font-size-sm); color: inherit; width: 100%; }
   .cred-field select:focus, .cred-field input:focus { border-color: var(--accent); }
   .key-input-row { display: flex; gap: 6px; }
@@ -210,11 +229,16 @@
 <body>
 
 <header>
-  <div class="app-title">
-    <div class="logo-mark">N</div>
-    Nexus Engineering Canvas
-  </div>
+  <a href="index.html" class="logo">
+    <div class="logo-mark">
+      <img src="assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+    </div>
+  </a>
   <div class="header-actions">
+    <a href="projects.html" class="projects-nav-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+      Projects
+    </a>
     <div class="status-badge">
       <span class="pulse-dot"></span> <span id="runtimeStatus">Workspace Edge Node</span>
     </div>
@@ -228,7 +252,7 @@
   <aside class="chat-sidebar" id="sidebarContainer">
     <div class="panel-scroller">
       <div class="panel-row">
-        <span>Active Infrastructure: <strong id="lblActiveNode">Cloudflare Worker</strong></span>
+        <span>Active Infrastructure: <strong id="lblActiveNode">Nexus</strong></span>
         <span>Tokens: <strong id="lblLastTokens">0</strong></span>
       </div>
     </div>
@@ -309,7 +333,7 @@
         <select id="themeStyleSelect" onchange="applyVisualConfigurations()">
           <option value="dark">Dark Space (Default)</option>
           <option value="light">Light Minimal</option>
-          <option value="hacker">Neo Hacker Matrix</option>
+          <option value="hacker">Hacker Terminal</option>
         </select>
       </div>
       <div class="cred-field">
@@ -504,7 +528,6 @@
   };
 
   // System Core Code Construction Compilation Path
-  // System Core Code Construction Compilation Path
   async function launchSystemBuildPipeline(userInstructionPrompt) {
     const globalLoaderOverlay = document.getElementById('globalWorkspaceLoader');
     const selectedProviderHub = document.getElementById('providerSelect').value;
@@ -550,8 +573,21 @@
       document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
 
       compilationMemory.push({ role: "assistant", content: coreResponseProseText });
-      postMessageToContainer('assistant', "Canvas render refreshed. Codebase synchronizations finalized structural execution paths.");
+
+      // 1. DYNAMIC CUSTOM SENTENCE LOGIC:
+      // Strip markdown code backticks blocks to cleanly extract the short status text summary sentence provided by the AI model.
+      let customSentenceSummary = coreResponseProseText.replace(/```html[\s\S]*?```/gi, '').replace(/```[\s\S]*?```/gi, '').trim();
+      if (!customSentenceSummary || customSentenceSummary.length < 5) {
+        customSentenceSummary = "Canvas layouts refreshed; generated modern components successfully via structural synthesis paths.";
+      } else if (customSentenceSummary.length > 180) {
+        customSentenceSummary = customSentenceSummary.substring(0, 177) + "...";
+      }
+
+      postMessageToContainer('assistant', customSentenceSummary);
       
+      // 2. AUTOMATIC LOCALSTORAGE PROJECT PERSISTENCE PIPELINE:
+      saveActiveProjectToLocalStorage(userInstructionPrompt, dynamicCalculatedHTML);
+
       if (dataPayloadJson.usage) document.getElementById('lblLastTokens').textContent = dataPayloadJson.usage.total_tokens;
 
     } catch (compilationError) {
@@ -568,6 +604,47 @@
     dynamicMessageCard.innerHTML = blockMessageCopy.replace(/\n/g, '<br>');
     historicalContainerBox.appendChild(dynamicMessageCard);
     historicalContainerBox.scrollTop = historicalContainerBox.scrollHeight;
+  }
+
+  // Local Storage Pipeline for individual project compilation states
+  function saveActiveProjectToLocalStorage(userPromptIntent, htmlPayload) {
+    try {
+      let registeredProjects = JSON.parse(localStorage.getItem('nexus_projects_manifest') || '[]');
+      
+      // Derive a friendly baseline name from the prompt context
+      let derivedTitle = userPromptIntent.split(/[.?!,]/)[0].substring(0, 35).trim();
+      if (!derivedTitle) derivedTitle = "Generated Project Layout";
+
+      const primaryUniqueId = "proj_" + Date.now();
+      const newProjectObject = {
+        id: primaryUniqueId,
+        name: derivedTitle,
+        timestamp: new Date().toLocaleString(),
+        sourceCode: htmlPayload
+      };
+
+      registeredProjects.unshift(newProjectObject);
+      localStorage.setItem('nexus_projects_manifest', JSON.stringify(registeredProjects));
+      
+      // Cache current workspace payload pointer as active environment session
+      localStorage.setItem('nexus_current_active_code', htmlPayload);
+      localStorage.setItem('nexus_current_active_title', derivedTitle);
+    } catch (err) {
+      console.error("Local project persistence error encountered:", err);
+    }
+  }
+
+  // Check if a specific project was loaded from projects.html to run inside the frame layout
+  function verifyActiveSessionLoadingState() {
+    const activeCachedCode = localStorage.getItem('nexus_current_active_code');
+    if (activeCachedCode) {
+      dynamicCalculatedHTML = activeCachedCode;
+      document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
+      document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
+      
+      const currentTitle = localStorage.getItem('nexus_current_active_title') || "Loaded Workspace";
+      postMessageToContainer('assistant', `Loaded external project: "<strong>${currentTitle}</strong>" successfully into the preview viewport memory workspace layout matrix.`);
+    }
   }
 
   window.triggerCodeDownload = () => {
@@ -588,6 +665,7 @@
   
   window.handleEndpointRotation();
   window.applyVisualConfigurations();
+  verifyActiveSessionLoadingState();
 </script>
 </body>
 </html>
