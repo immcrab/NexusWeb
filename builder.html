@@ -3,1181 +3,611 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Nexus Web AI builder | Build modern websites with AI</title>
-<link rel="icon" href="assets/logo.png" />
+<title>Multi-Provider AI Canvas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#06060a;
-    --bg-sidebar:#0b0b14;
-    --surface:rgba(255,255,255,0.03);
-    --border:rgba(255,255,255,0.06);
-    --border-strong:rgba(255,255,255,0.12);
-    --text:#f5f5f7;
-    --muted:#8e8e9f;
-    --accent:#c8a96a;
-    --grad: linear-gradient(135deg,#e9d8a6 0%,#c8a96a 40%,#8c6f3f 100%);
+  :root {
+    --bg: #06060a;
+    --bg-sidebar: #0b0b14;
+    --surface: rgba(255,255,255,0.03);
+    --surface-hover: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.12);
+    --text: #f5f5f7;
+    --muted: #8e8e9f;
+    --accent: #c8a96a;
+    --accent-glow: rgba(200,169,106,0.15);
+    --grad: linear-gradient(135deg, #e9d8a6 0%, #c8a96a 40%, #8c6f3f 100%);
+    --font-size-base: 12.5px;
+    --font-size-sm: 11px;
+    --font-size-xs: 10px;
+    --radius: 8px;
+    --transition-fast: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    background: radial-gradient(circle at top right, rgba(200,169,106,0.08), transparent 25%),
-                radial-gradient(circle at 15% 10%, rgba(120,90,200,0.06), transparent 20%),
-                var(--bg);
-    color:var(--text);font-family:'Inter',sans-serif;
-    -webkit-font-smoothing:antialiased;height:100vh;overflow:hidden;display:flex;flex-direction:column;
+
+  [data-theme="light"] {
+    --bg: #f3f4f6;
+    --bg-sidebar: #ffffff;
+    --surface: rgba(0,0,0,0.03);
+    --surface-hover: rgba(0,0,0,0.06);
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.15);
+    --text: #1f2937;
+    --muted: #6b7280;
+    --accent: #0284c7;
+    --accent-glow: rgba(2,132,199,0.12);
+    --grad: linear-gradient(135deg, #38bdf8 0%, #0284c7 40%, #0369a1 100%);
   }
-  button, select, input, textarea{font-family:inherit;color:inherit;outline:none;}
-  button{cursor:pointer;border:none;background:none;transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);}
-  
-  button:active { transform: scale(0.98); opacity: 0.85; }
+
+  [data-theme="hacker"] {
+    --bg: #000000;
+    --bg-sidebar: #050505;
+    --surface: rgba(0,255,0,0.04);
+    --surface-hover: rgba(0,255,0,0.1);
+    --border: rgba(0,255,0,0.2);
+    --border-strong: rgba(0,255,0,0.4);
+    --text: #00ff00;
+    --muted: #008800;
+    --accent: #00ff00;
+    --accent-glow: rgba(0,255,0,0.15);
+    --grad: linear-gradient(135deg, #00ff00 0%, #00cc00 40%, #006600 100%);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(circle at top right, var(--accent-glow), transparent 25%), var(--bg);
+    color: var(--text); font-family: 'Inter', sans-serif; font-size: var(--font-size-base);
+    -webkit-font-smoothing: antialiased; height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+    transition: background var(--transition-slow), color var(--transition-slow);
+  }
+  button, select, input, textarea { font-family: inherit; color: inherit; outline: none; transition: all var(--transition-fast); }
+  button { cursor: pointer; border: none; background: none; }
+  button:active { transform: scale(0.96); opacity: 0.85; }
 
   /* TOP BAR */
-  header{
-    height:44px;background:#09090f;border-bottom:1px solid var(--border);
-    display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:10;
+  header {
+    height: 44px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 10;
   }
-  .app-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
-  .status-badge{
-    font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(200,169,106,0.1);
-    color:var(--accent);border:1px solid rgba(200,169,106,0.2);display:flex;align-items:center;gap:6px;
+  .app-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .logo-mark { width: 24px; height: 24px; background: var(--grad); border-radius: 6px; display: grid; place-items: center; color: #0a0a0f; font-weight: 800; font-size: 12px; }
+  .header-actions { display: flex; align-items: center; gap: 12px; }
+  .status-badge {
+    font-size: var(--font-size-sm); padding: 4px 10px; border-radius: 999px; background: var(--accent-glow);
+    color: var(--accent); border: 1px solid var(--border); display: flex; align-items: center; gap: 6px;
   }
-  .pulse-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
-  @keyframes pulse {0% {opacity:0.3} 50% {opacity:1} 100% {opacity:0.3}}
+  .pulse-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
 
-  /* MAIN LAYOUT WITH STRUCTURAL TRANSITIONS */
-  .workspace-container{
-    display:flex;flex:1;height:calc(100vh - 44px);width:100%;
-    position: relative; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  .icon-btn {
+    display: flex; align-items: center; justify-content: center; width: 30px; height: 30px;
+    border-radius: 50%; color: var(--muted); background: var(--surface); border: 1px solid transparent;
   }
+  .icon-btn:hover { color: var(--text); background: var(--surface-hover); border-color: var(--border); }
 
-  /* SIDEBAR / CHAT BLOCK */
-  .chat-sidebar{
-    width: 100%; background:var(--bg-sidebar); border-right:1px solid var(--border);
-    display:flex; flex-direction:column; position:relative;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5;
-    overflow-y: auto;
-  }
+  /* CONTAINER LAYOUT */
+  .workspace-container { display: flex; flex: 1; height: calc(100vh - 44px); width: 100%; position: relative; }
   
-  .workspace-container.split-mode .chat-sidebar {
-    width: clamp(340px, 24vw, 400px);
-  }
-
-  /* Compact Controls Wrapper */
-  .panel-scroller {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px;
+  .chat-sidebar {
+    width: 380px; min-width: 280px; max-width: 700px; background: var(--bg-sidebar);
+    border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 5;
+    transition: background var(--transition-slow);
   }
 
-  /* Credentials & Usage Panels */
-  .credentials-panel{
-    padding:12px; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-    display:flex;flex-direction:column;gap:10px;
-    border:1px solid var(--border); border-radius:12px;
-  }
-  .cred-field{display:flex;flex-direction:column;gap:4px;}
-  .cred-field label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;}
-  
-  .cred-field select,
-  .cred-field input{
-    background:rgba(0,0,0,0.35);border:1px solid var(--border-strong);
-    border-radius:8px;padding:8px 10px;font-size:12px;color:#fff;
-    transition: border 0.2s, transform 0.2s;
-    width: 100%;
-  }
-  .cred-field select:focus,
-  .cred-field input:focus { border-color: var(--accent); }
-  
-  .key-info-row{display:flex;flex-direction:column;gap:4px;}
-  
-  .custom-dropdown{
-    position:relative;display:flex;align-items:center;justify-content:space-between;
-    background:rgba(0,0,0,0.35);border:1px solid var(--border-strong);
-    border-radius:8px;padding:8px 10px;color:#fff;cursor:pointer;
-    min-height:34px;user-select:none;
-  }
-  .custom-dropdown.open{border-color:var(--accent);}
-  .custom-dropdown .dropdown-value{font-size:12px;flex:1;}
-  .custom-dropdown .dropdown-icon{margin-left:8px;color:var(--muted);font-size:10px;}
-  
-  .dropdown-menu{
-    position:absolute;top:calc(100% + 4px);left:0;right:0;
-    background:rgba(10,10,15,0.98);border:1px solid var(--border-strong);
-    border-radius:8px;box-shadow:0 12px 24px rgba(0,0,0,0.4);z-index:20;
-    max-height:220px;overflow:auto;display:none;
-  }
-  .custom-dropdown.open .dropdown-menu{display:block;}
-  
-  .dropdown-item{
-    width:100%;text-align:left;padding:8px 10px;font-size:12px;color:#fff;
-    background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
-    gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.02);
-  }
-  .dropdown-item:hover{background:rgba(255,255,255,0.04);}
-  .dropdown-item.disabled{color:var(--muted);cursor:default;}
-  .dropdown-item span{font-size:11px;color:var(--muted);white-space: nowrap;}
-  .dropdown-item .try-anyway-btn {
-    background: rgba(200, 169, 106, 0.15);
-    color: var(--accent);
-    border: 1px solid rgba(200, 169, 106, 0.3);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .dropdown-item .try-anyway-btn:hover {
-    background: var(--grad);
-    color: #0a0a0f;
-  }
-  
-  .key-status{font-size:11px;color:var(--muted);line-height:1.4;}
-  .key-status span{display:inline-block;color:#fff;margin-right:4px;}
-  
-  .key-input-row{display:flex;gap:6px;}
-  .key-input-row input{flex:1;}
-  .key-input-row button{padding:0 12px; font-size:11px; height:32px; border-radius:8px;}
-  
-  .projects-panel{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;}
-  .projects-title{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:0.12em;font-weight:700;}
-  .project-card{background:rgba(0,0,0,0.15);border:1px solid rgba(255,255,255,0.03);border-radius:8px;padding:8px;display:flex;justify-content:space-between;gap:8px;align-items:center;}
-  .project-card span{font-size:12px;color:#fff;flex:1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-  .project-actions{display:flex;gap:4px;}
-  .project-actions button{font-size:10px;padding:4px 8px;border-radius:6px;}
-  .project-empty{font-size:11px;color:var(--muted); text-align: center; padding: 4px 0;}
-  
-  .share-banner{display:block;padding:8px 10px;border-radius:8px;border:1px solid rgba(200,169,106,0.2);background:rgba(200,169,106,0.04);color:#fff;font-size:11px;word-break:break-all;margin-top:4px;}
-  .share-banner a{color:var(--accent); text-decoration: none;}
-  .share-banner a:hover{text-decoration: underline;}
+  /* DRAGGABLE RESIZER */
+  .resizer { width: 6px; background: var(--border); cursor: col-resize; z-index: 15; transition: background var(--transition-fast); position: relative; }
+  .resizer:hover, .resizer.dragging { background: var(--accent); }
+  .resizer::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); height: 30px; width: 2px; background: rgba(255,255,255,0.2); border-radius: 2px; }
 
-  .history-container{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px; min-height: 120px;}
-  .message{padding:10px;border-radius:8px;max-width:95%;font-size:12.5px;line-height:1.4; transform: scale(0.98); opacity: 0; animation: msgShow 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+  /* SCROLLER PANEL FOR CONTROLS */
+  .panel-scroller { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-bottom: 1px solid var(--border); }
+  .panel-row { display: flex; align-items: center; justify-content: space-between; font-size: var(--font-size-sm); color: var(--muted); }
+  .panel-row span strong { color: var(--text); }
 
-  .usage-dashboard {
-    background: rgba(200, 169, 106, 0.02);
-    border: 1px solid rgba(200, 169, 106, 0.08);
-    border-radius: 8px;
-    padding: 8px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .usage-title {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 2px;
-  }
-  .metric-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-  }
-  .metric-label { color: var(--muted); }
-  .metric-value { font-family: 'Fira Code', monospace; color: #fff; font-weight: 500; }
+  /* HISTORY & STREAMING ANIMATION */
+  .history-container { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
   
-  @keyframes msgShow { to { transform: scale(1); opacity: 1; } }
-  
-  .message.user{background:var(--surface);border:1px solid var(--border);align-self:flex-end;color:#fff}
-  .message.assistant{background:rgba(200,169,106,0.02);border:1px solid rgba(200,169,106,0.04);align-self:flex-start}
-  
-  .agent-status-box{
-    margin-top:4px;border-top:1px dashed var(--border);padding-top:6px;display:flex;
-    flex-direction:column;gap:4px;font-size:11px;color:var(--muted);
+  .message {
+    padding: 10px 12px; border-radius: var(--radius); max-width: 95%; line-height: 1.45;
+    transform-origin: bottom left; opacity: 0; transform: translateY(8px);
+    animation: msgShow 0.35s forwards cubic-bezier(0.23, 1, 0.32, 1);
   }
-  .log-line{display:flex;align-items:center;gap:6px}
+  @keyframes msgShow { to { transform: translateY(0); opacity: 1; } }
 
-  .input-container{padding:12px;border-top:1px solid var(--border);background:#0d0d17; margin-top: auto;}
-  .input-wrap{
-    background:rgba(0,0,0,0.2);border:1px solid var(--border-strong);border-radius:8px;
-    padding:8px;display:flex;flex-direction:column;gap:6px; transition: border 0.2s;
-  }
+  .message.user { background: var(--surface); border: 1px solid var(--border); align-self: flex-end; color: var(--text); transform-origin: bottom right; }
+  .message.assistant { background: rgba(255,255,255,0.01); border: 1px solid var(--border); align-self: flex-start; }
+
+  /* INPUT WRAPPER */
+  .input-container { padding: 12px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.15); }
+  
+  .input-wrap { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 8px; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
   .input-wrap:focus-within { border-color: var(--accent); }
-  .input-wrap textarea{
-    width:100%;background:none;border:none;color:#fff;font-size:12.5px;resize:none;min-height:38px;height: 38px;
-  }
-  .input-action-row{display:flex;justify-content:flex-end;align-items:center}
-  .action-btn{
-    background:var(--grad);color:#0a0a0f;font-weight:600;padding:6px 12px;
-    border-radius:6px;font-size:12px;display:flex;align-items:center;gap:6px;
-  }
-
-  /* PREVIEW CANVAS (RIGHT 2/3) */
-  .preview-canvas{
-    flex:1;display:none;flex-direction:column;background:#020204;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: translateX(20px);
-  }
-  .workspace-container.split-mode .preview-canvas {
-    display: flex; opacity: 1; transform: translateX(0);
-  }
+  .input-wrap textarea { width: 100%; background: none; border: none; resize: none; min-height: 40px; height: 40px; font-size: var(--font-size-base); color: var(--text); }
   
-  .canvas-header{
-    height:40px;background:#09090f;border-bottom:1px solid var(--border);
-    display:flex;align-items:center;justify-content: space-between; padding:0 16px;gap:8px;
-  }
+  .input-action-row { display: flex; justify-content: space-between; align-items: center; }
+  .counter-display { font-size: var(--font-size-xs); color: var(--muted); }
+  .action-btn { background: var(--grad); color: #0a0a0f; font-weight: 600; padding: 6px 12px; border-radius: 6px; font-size: var(--font-size-sm); display: flex; align-items: center; gap: 6px; }
+  [data-theme="hacker"] .action-btn { color: #000; }
+
+  /* CANVAS STRUCTURES */
+  .preview-canvas { flex: 1; display: flex; flex-direction: column; background: #020204; overflow: hidden; position: relative; }
+  .canvas-header { height: 44px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 4; }
   .header-left, .header-right { display: flex; align-items: center; gap: 6px; }
   
-  .tab-btn{font-size:12px;color:var(--muted);padding:4px 10px;border-radius:4px;font-weight:500;}
-  .tab-btn:hover{color:var(--text);background:var(--surface)}
-  .tab-btn.active{color:#fff;background:rgba(255,255,255,0.06);border:1px solid var(--border)}
+  .tab-btn { font-size: var(--font-size-base); color: var(--muted); padding: 4px 10px; border-radius: 5px; font-weight: 500; }
+  .tab-btn:hover { color: var(--text); background: var(--surface); }
+  .tab-btn.active { color: var(--text); background: var(--surface-hover); border: 1px solid var(--border); }
 
-  /* UTILITY UTILS: EXPORT ACTION ROW */
-  .util-btn {
-    font-size: 11px; color: var(--muted); padding: 4px 8px; border-radius: 4px;
-    border: 1px solid var(--border); background: rgba(255,255,255,0.01); display: flex; align-items: center; gap: 4px;
-  }
-  .util-btn:hover { color: #fff; border-color: var(--border-strong); background: var(--surface); }
-  .util-btn.active { color:#fff; background: rgba(255,255,255,0.08); border-color: var(--accent); }
-  .deploy-btn{background:var(--grad);color:#0a0a0f;font-weight:600;border:none;}
-  .deploy-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(200,169,106,0.15);}
+  .util-btn { font-size: var(--font-size-sm); color: var(--muted); padding: 4px 8px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; gap: 4px; }
+  .util-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .util-btn.active { color: var(--text); background: var(--surface-hover); border-color: var(--accent); }
 
-  /* RESPONSIVE VIEWPORT STYLING WRAPPER */
-  .view-viewport{
-    flex:1;width:100%;position:relative; overflow: auto;
-    display: flex; align-items: center; justify-content: center; padding: 12px; background: #040407;
-  }
-
-  @media (max-width: 1040px) {
-    .workspace-container { flex-direction: column; }
-    .chat-sidebar, .preview-canvas { width:100%; }
-    .workspace-container.split-mode .chat-sidebar { width:100%; height: 40%; }
-    .preview-canvas { display:flex; flex: 1; }
-    .canvas-header { flex-wrap:wrap; height: auto; padding:8px; }
-  }
+  .view-viewport { flex: 1; width: 100%; position: relative; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px 16px 44px 16px; background: #040407; }
   
   .viewport-wrapper {
-    width: 100%; height: 100%; max-width: 100%; max-height: 100%;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden;
-    border: 1px solid var(--border-strong); background: #fff;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: block; position: relative;
+    width: 100%; height: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-radius: var(--radius);
+    overflow: hidden; border: 1px solid var(--border-strong); background: #fff;
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), height 0.4s ease; position: relative;
   }
-
-  /* Responsive Presets classes */
-  .viewport-wrapper.preset-phone { width: 375px; height: 100%; max-height: 720px; }
-  .viewport-wrapper.preset-tablet { width: 768px; height: 100%; max-height: 900px; }
+  .viewport-wrapper.preset-phone { width: 375px; height: 100%; max-height: 740px; }
+  .viewport-wrapper.preset-tablet { width: 768px; height: 100%; max-height: 920px; }
   .viewport-wrapper.preset-desktop { width: 100%; height: 100%; }
 
-  .canvas-frame{width:100%;height:100%;border:none;background:#fff;display:block}
+  .canvas-frame { width: 100%; height: 100%; border: none; background: #fff; display: block; }
   
-  .code-view-container{
-    position: absolute; inset: 12px; display:none; background:#050508; border-radius: 8px;
-    border: 1px solid var(--border-strong); padding:12px; overflow:auto; font-family:'Fira Code',monospace; font-size:12px; color:#d4d4d8; line-height:1.5;
-  }
-  .code-area{width:100%;height:100%;background:none;border:none;resize:none;color:inherit;font-family:inherit}
+  .view-layer { position: absolute; inset: 16px 16px 44px 16px; border-radius: var(--radius); overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all var(--transition-slow); }
+  .view-layer.active { opacity: 1; pointer-events: auto; transform: translateY(0); z-index: 2; }
+  .code-view-container { background: #050508; border: 1px solid var(--border-strong); padding: 12px; }
+  .code-area { width: 100%; height: 100%; background: none; border: none; resize: none; color: #d4d4d8; font-family: 'Fira Code', monospace; font-size: var(--font-size-sm); line-height: 1.5; }
 
-  .initial-load-overlay{
-    position:absolute;inset:0;background:#0a0a0f;z-index:100;
-    display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;
+  /* FLOATING WATERMARK ACCENT */
+  .nexus-watermark {
+    position: absolute; bottom: 12px; right: 16px; z-index: 10;
+    font-size: var(--font-size-sm); font-weight: 500; text-decoration: none;
+    background: rgba(11, 11, 20, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-strong); color: var(--muted); padding: 4px 10px; border-radius: 6px;
+    display: flex; align-items: center; gap: 5px; transition: all var(--transition-fast);
   }
-  .initial-load-overlay.active{display:flex}
-  .spinner{
-    width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--accent);
-    border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px;
+  .nexus-watermark:hover {
+    color: var(--text); border-color: var(--accent); background: rgba(11, 11, 20, 0.9);
+    box-shadow: 0 4px 12px var(--accent-glow); transform: translateY(-1px);
   }
-  @keyframes spin {to{transform:rotate(360deg)}}
+  .nexus-watermark-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
 
-  /* Legal Link Footer Container Styling */
-  .sidebar-footer {
-    margin-top: 10px;
-    padding-top: 12px;
-    border-top: 1px dashed var(--border);
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
+  .initial-load-overlay { position: absolute; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; transition: opacity var(--transition-fast); }
+  .initial-load-overlay.active { display: flex; opacity: 1; }
+  .spinner { width: 36px; height: 36px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SETTINGS MODAL overlay */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity var(--transition-fast); display: flex; align-items: center; justify-content: center; }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+  .modal-content { background: var(--bg-sidebar); border: 1px solid var(--border-strong); border-radius: 12px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; padding: 20px; transform: scale(0.95); transition: all var(--transition-fast); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+  .modal-overlay.active .modal-content { transform: scale(1); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .modal-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .close-btn { background: var(--surface); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--muted); }
+  .close-btn:hover { background: var(--surface-hover); color: var(--text); }
+
+  .settings-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .settings-title { font-size: var(--font-size-xs); font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
+  .cred-field { display: flex; flex-direction: column; gap: 4px; }
+  .cred-field label { font-size: var(--font-size-xs); color: var(--muted); font-weight: 600; text-transform: uppercase; display: flex; justify-content: space-between; }
+  .cred-field select, .cred-field input { background: rgba(0,0,0,0.25); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px 10px; font-size: var(--font-size-sm); color: inherit; width: 100%; }
+  .cred-field select:focus, .cred-field input:focus { border-color: var(--accent); }
+  .key-input-row { display: flex; gap: 6px; }
+  .key-input-row input { flex: 1; }
   
-  .legal-link-btn {
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 500;
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid transparent;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  
-  .legal-link-btn:hover {
-    color: var(--accent);
-    background: rgba(200, 169, 106, 0.04);
-    border-color: rgba(200, 169, 106, 0.15);
-  }
-
-  .logo-mark{
-    width:48px;height:31px;border-radius:11px;
-    display:grid;place-items:center;color:#0a0a0f;font-weight:800;font-size:14px;
-  }
+  /* SLIDER STYLE OPTIONS */
+  .slider-element { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); outline: none; margin: 6px 0; }
+  .slider-element::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; transition: transform var(--transition-fast); }
+  .slider-element::-webkit-slider-thumb:hover { transform: scale(1.15); }
 </style>
 </head>
 <body>
 
 <header>
-  <a href="index.html" class="logo">
-    <div class="logo-mark">
-      <img src="assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+  <div class="app-title">
+    <div class="logo-mark">N</div>
+    Nexus Engineering Canvas
+  </div>
+  <div class="header-actions">
+    <div class="status-badge">
+      <span class="pulse-dot"></span> <span id="runtimeStatus">Workspace Edge Node</span>
     </div>
-  </a>
-  <div class="status-badge">
-    <span class="pulse-dot"></span> <span id="runtimeStatus">Ready Workspace</span>
+    <button class="icon-btn" onclick="toggleSettingsModal(true)" title="Workspace Settings">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
   </div>
 </header>
 
-<div class="workspace-container" id="workspaceContainer">
-  <aside class="chat-sidebar">
+<div class="workspace-container">
+  <aside class="chat-sidebar" id="sidebarContainer">
     <div class="panel-scroller">
-      <div class="credentials-panel">
-        <div class="cred-field">
-          <label>Active Provider</label>
-          <select id="providerSelect" onchange="handleProviderChange()">
-            <option value="github">GitHub Models (Free Tier)</option>
-            <option value="groq">Groq Cloud (Free Tier)</option>
-          </select>
-        </div>
-        
-        <div class="cred-field">
-          <label>Active Engine Model</label>
-          <select id="modelSelect">
-            </select>
-        </div>
-
-        <div class="cred-field">
-          <label>Active API Host</label>
-          <div class="custom-dropdown" id="keyDropdown" onclick="handleKeyDropdownClick(event)" tabindex="0">
-            <span class="dropdown-value" id="keyLabel">Select server</span>
-            <span class="dropdown-icon">▼</span>
-            <div class="dropdown-menu" id="keyMenu"></div>
-          </div>
-          <div class="key-info-row">
-            <div class="key-status" id="keyStatus">Choose or add a key to begin.</div>
-          </div>
-        </div>
-        <div class="cred-field">
-          <label>Add API Key</label>
-          <div class="key-input-row">
-            <input id="keyInput" placeholder="Paste a provider key" />
-            <button class="action-btn" onclick="addApiKey()">Add</button>
-          </div>
-        </div>
-        <div class="usage-dashboard">
-          <div class="usage-title">
-            <span>Usage Dashboard</span>
-            <span style="opacity:0.6; font-size:8px;">Session Total</span>
-          </div>
-          <div class="metric-row">
-            <span class="metric-label">Last Call Tokens:</span>
-            <span class="metric-value" id="lblLastTokens">0</span>
-          </div>
-          <div class="metric-row">
-            <span class="metric-label">Estimated Remaining:</span>
-            <span class="metric-value" id="lblRemainingTokens" style="color: #69c88b;">Unlimited</span>
-          </div>
-        </div>
-        <div class="projects-panel">
-          <div class="projects-title">Saved Projects</div>
-          <div id="projectList"></div>
-          <div class="project-empty" id="projectEmpty">No saved projects yet.</div>
-        </div>
-        <div class="share-banner" id="shareBanner">Share link will appear after deployment.</div>
-      </div>
-      
-      <div class="sidebar-footer">
-        <a href="legal.html" class="legal-link-btn" target="_blank">
-          Legal & Privacy Policy
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-top:-1px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-        </a>
+      <div class="panel-row">
+        <span>Active Infrastructure: <strong id="lblActiveNode">Cloudflare Worker</strong></span>
+        <span>Tokens: <strong id="lblLastTokens">0</strong></span>
       </div>
     </div>
 
     <div class="history-container" id="chatHistory">
       <div class="message assistant">
-        Your API credentials have been initialized. Choose your free generation model and prompt below.
+        System initialized. Submit operational structural descriptions below to compile live components onto the presentation workspace layout. AI calls are routed through the custom Cloudflare Edge Worker.
       </div>
     </div>
 
     <div class="input-container">
       <div class="input-wrap">
-        <textarea id="workspaceInput" placeholder="Ask the active AI engine to code your canvas app..."></textarea>
+        <textarea id="workspaceInput" placeholder="Describe layout changes or ask to design structural variants..."></textarea>
         <div class="input-action-row">
-          <button class="action-btn" onclick="submitRevisionPrompt()">
-            Build Changes
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <span class="counter-display" id="messageCounterLabel">Sent: 0 / 50</span>
+          <button class="action-btn" id="btnSubmitPrompt" onclick="handlePromptSubmission()">
+            <span id="submitBtnLabel">Build Changes</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
         </div>
       </div>
     </div>
   </aside>
 
+  <div class="resizer" id="dragSplitResizer"></div>
+
   <main class="preview-canvas">
     <div class="canvas-header">
       <div class="header-left">
-        <button class="tab-btn active" id="btnPreview" onclick="switchCanvasTab('preview')">Live Canvas</button>
-        <button class="tab-btn" id="btnCode" onclick="switchCanvasTab('code')">Code Architecture</button>
+        <button class="tab-btn active" id="btnTabPreview" onclick="toggleCanvasTab('preview')">Live Canvas</button>
+        <button class="tab-btn" id="btnTabCode" onclick="toggleCanvasTab('code')">Code Architecture</button>
       </div>
-      
       <div class="header-right">
-        <button class="util-btn active" id="presetDesktop" onclick="changeOrientation('desktop')" title="Desktop View">Desktop</button>
-        <button class="util-btn" id="presetTablet" onclick="changeOrientation('tablet')" title="Tablet View">Tablet</button>
-        <button class="util-btn" id="presetPhone" onclick="changeOrientation('phone')" title="Mobile View">Mobile</button>
+        <button class="util-btn active" id="presetDesktop" onclick="setCanvasViewport('desktop')">Desktop</button>
+        <button class="util-btn" id="presetTablet" onclick="setCanvasViewport('tablet')">Tablet</button>
+        <button class="util-btn" id="presetPhone" onclick="setCanvasViewport('phone')">Mobile</button>
         <div style="width: 1px; height: 12px; background: var(--border); margin: 0 2px;"></div>
-        <button class="util-btn deploy-btn" onclick="createShareLink()" title="Deploy and share project">Deploy</button>
-        <button class="util-btn" onclick="openLiveView()" style="border-color: rgba(200,169,106,0.3); color: var(--accent);">Open Live</button>
-        <button class="util-btn" onclick="downloadCode()" style="background: rgba(255,255,255,0.04);">Download</button>
+        <button class="util-btn text-accent" onclick="triggerCodeDownload()" style="color: var(--accent);">Download</button>
       </div>
     </div>
-    
+
     <div class="view-viewport">
       <div class="initial-load-overlay" id="globalWorkspaceLoader">
         <div class="spinner"></div>
-        <h3 style="font-size:14px;margin-bottom:4px">AI Engine Executing</h3>
-        <p id="agentLoaderMessage" style="color:var(--muted);font-size:12px;max-width:300px">Processing layout structures...</p>
+        <h3 style="font-size: 14px; margin-bottom: 4px;">AI Engine Executing</h3>
+        <p id="agentLoaderMessage" style="color: var(--muted); font-size: 11px;">Synthesizing interface parameters...</p>
       </div>
 
-      <div class="viewport-wrapper preset-desktop" id="viewportWrapper">
-        <iframe id="previewFrame" class="canvas-frame" title="Live Rendering Layout"></iframe>
+      <div class="view-layer active" id="layerPreview">
+        <div class="viewport-wrapper preset-desktop" id="viewportWrapper">
+          <iframe id="previewFrame" class="canvas-frame" title="Application Workspace Output"></iframe>
+        </div>
       </div>
-      
-      <div id="codeViewBlock" class="code-view-container">
+
+      <div class="view-layer code-view-container" id="layerCode">
         <textarea id="codeAreaView" class="code-area" readonly></textarea>
       </div>
     </div>
+
+    <a href="https://nexus.owenlee.xyz" target="_blank" rel="noopener noreferrer" class="nexus-watermark">
+      <span class="nexus-watermark-dot"></span>
+      made by Nexus
+    </a>
   </main>
 </div>
-</body>
-</html>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Workspace Adjustments</div>
+      <button class="close-btn" onclick="toggleSettingsModal(false)">&times;</button>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Theme & Layout Appearance</div>
+      <div class="cred-field">
+        <label>Visual Style Presets</label>
+        <select id="themeStyleSelect" onchange="applyVisualConfigurations()">
+          <option value="dark">Dark Space (Default)</option>
+          <option value="light">Light Minimal</option>
+          <option value="hacker">Neo Hacker Matrix</option>
+        </select>
+      </div>
+      <div class="cred-field">
+        <label>Typography Sizing</label>
+        <select id="textSizeSelect" onchange="applyVisualConfigurations()">
+          <option value="small">Compact Workspace</option>
+          <option value="medium" selected>Standard Display</option>
+          <option value="large">Spacious Mode</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Usage Restraints Configuration</div>
+      <div class="cred-field">
+        <label><span>Max Allocation Cap</span> <span id="lblSliderLimitValue" style="color: var(--accent); font-weight: 700;">50 Messages</span></label>
+        <input type="range" id="maxMessagesLimitSlider" class="slider-element" min="5" max="100" value="50" oninput="updateMaxAllocationParameters()" />
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">AI Endpoint Infrastructure</div>
+      <div class="cred-field">
+        <label>Provider Hub</label>
+        <select id="providerSelect" onchange="handleEndpointRotation()">
+          <option value="github">GitHub Models API Hub</option>
+          <option value="groq">Groq Cloud System (Fast Execution)</option>
+        </select>
+      </div>
+      <div class="cred-field">
+        <label>Active Architecture Model</label>
+        <select id="modelSelect"></select>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="module">
-  let manualKeySelection = false;
-  const API_KEY_STORAGE = "mexusBuilderApiKeys";
-  const ACTIVE_KEY_STORAGE = "mexusBuilderActiveKeyIndex";
-  const PROJECT_STORAGE_KEY = "mexusBuilderProjects";
-  const SHARE_PARAM_NAME = "share";
+  // Core Operational States
+  let dynamicCalculatedHTML = "";
+  let paneResizingState = false;
+  let isRequestProcessing = false;
+  
+  // Tracking allocations metrics
+  let totalSentMessagesCounter = 0;
+  let maxConfiguredMessageLimit = 50;
+  let userAlertHasBeenTriggered = false;
 
-  const DEFAULT_API_KEYS = {
+  const ALLOCATION_LIMIT_STORE = "nexusAllocationLimit";
+
+  // Production Worker Endpoint Router Location
+  const CLOUDFLARE_WORKER_ENDPOINT = "https://nexus.imcrabfr.workers.dev";
+
+  // FIXED CATALOG KEYS: Changed "openai/gpt-4o" and "deepseek-ai/deepseek-r1" to point straight to target IDs
+  const ENGINE_VARIATIONS = {
     github: [
-      { label: "Server One", key: "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", blockedUntil: null },
-      { label: "Server Two", key: "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", blockedUntil: null },
-      { label: "Server Three", key: "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", blockedUntil: null },
-      { label: "Server Four", key: "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", blockedUntil: null },
-      { label: "Server Five", key: "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", blockedUntil: null },
-      { label: "Server Six", key: "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", blockedUntil: null },
-      { label: "Server Seven", key: "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", blockedUntil: null },
-      { label: "Server Eight", key: "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", blockedUntil: null },
-      { label: "Server Nine", key: "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", blockedUntil: null }
+      { name: "GPT-4o Production [Standard]", value: "gpt-4o" },
+      { name: "DeepSeek R1 [Reasoning Framework]", value: "DeepSeek-R1" }
     ],
     groq: [
-      { label: "Groq Server One", key: "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", blockedUntil: null },
-      { label: "Groq Server Two", key: "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", blockedUntil: null }
+      { name: "Llama 3.3 70B [Ultra Speed]", value: "llama-3.3-70b-versatile" },
+      { name: "DeepSeek R1 Distill 70B", value: "deepseek-r1-distill-llama-70b" }
     ]
   };
+  
+  maxConfiguredMessageLimit = loadPersistedStorage(ALLOCATION_LIMIT_STORE, 50);
 
-  let apiKeyStore = loadApiKeyStore();
-  let activeKeyIndex = loadActiveKeyIndex();
-  let savedProjects = loadSavedProjects();
-  let currentShareId = null;
-
-  // Global loop interval to keep cooldown elements ticking down live 
-  setInterval(() => {
-    updateKeyStatusDisplay();
-    const provider = document.getElementById('providerSelect').value;
-    const dropdown = document.getElementById('keyDropdown');
-    if (dropdown && dropdown.classList.contains('open')) {
-      populateKeySelect(provider);
-    }
-  }, 1000);
-
-  function loadApiKeyStore() {
-    try {
-      const stored = localStorage.getItem(API_KEY_STORAGE);
-      if (stored) return JSON.parse(stored);
-    } catch (err) { console.warn("Unable to load saved API keys.", err); }
-    return JSON.parse(JSON.stringify(DEFAULT_API_KEYS));
-  }
-
-  function loadActiveKeyIndex() {
-    try {
-      const stored = localStorage.getItem(ACTIVE_KEY_STORAGE);
-      if (stored) return JSON.parse(stored);
-    } catch (err) { console.warn("Unable to load key index state.", err); }
-    return { github: 0, groq: 0 };
-  }
-
-  function saveApiKeyStore() {
-    localStorage.setItem(API_KEY_STORAGE, JSON.stringify(apiKeyStore));
-  }
-
-  function saveActiveKeyIndex() {
-    localStorage.setItem(ACTIVE_KEY_STORAGE, JSON.stringify(activeKeyIndex));
-  }
-
-  function loadSavedProjects() {
-    try {
-      const stored = localStorage.getItem(PROJECT_STORAGE_KEY);
-      if (stored) return JSON.parse(stored);
-    } catch (err) { console.warn("Unable to load saved projects.", err); }
-    return [];
-  }
-
-  function saveSavedProjects() {
-    localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(savedProjects));
-  }
-
-  function isKeyBlocked(keyEntry) {
-    return keyEntry?.blockedUntil && new Date(keyEntry.blockedUntil) > new Date();
-  }
-
-  function getBlockedSeconds(keyEntry) {
-    if (!isKeyBlocked(keyEntry)) return 0;
-    return Math.max(0, new Date(keyEntry.blockedUntil) - Date.now()) / 1000;
-  }
-
-  function formatDuration(ms) {
-    const totalSeconds = Math.ceil(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    if (minutes > 0) return `${minutes}m ${seconds}s`;
-    return `${seconds}s`;
-  }
-
-  function getSelectedKey(provider) {
-    const keys = apiKeyStore[provider] || [];
-    const index = Math.min(activeKeyIndex[provider] || 0, keys.length - 1);
-    return keys[index] || null;
-  }
-
-  function findNextAvailableKey(provider, skipIndex = null) {
-    const keys = apiKeyStore[provider] || [];
-    for (let i = 0; i < keys.length; i++) {
-      if (i === skipIndex) continue;
-      if (!isKeyBlocked(keys[i])) return i;
-    }
-    return null;
-  }
-
-  const PROVIDER_MODELS = {
-    github: [
-      { name: "GPT-4o [Recommended]", value: "openai/gpt-4o" },
-      { name: "GPT-4o mini [Fast]", value: "openai/gpt-4o-mini" },
-      { name: "DeepSeek R1 [Reasoning]", value: "deepseek-ai/deepseek-r1" },
-      { name: "Meta Llama 3.3 70B", value: "meta-llama-3.3-70b-instruct" }
-    ],
-    groq: [
-      { name: "Llama 3.3 70B Versatile", value: "llama-3.3-70b-versatile" },
-      { name: "DeepSeek R1 Distill 70B", value: "deepseek-r1-distill-llama-70b" },
-      { name: "Llama 3.1 8B Instant", value: "llama-3.1-8b-instant" },
-      { name: "Gemma 2 9B IT", value: "gemma2-9b-it" }
-    ]
-  };
-
-  let conversationalContext = [
-    {
-      role: "system",
-      content: `You are an elite frontend software engineering agent specializing in single-page applications.
-Your core objective is to output valid single-file web applications combining semantic modern HTML, layout utilities, beautiful color choices, and dynamic frontend interactions.
-
-CRITICAL REQUIREMENTS FOR OUTPUT:
-- Do not include any <img> tags, background-image URLs, or external image assets in the generated HTML.
-- Use CSS, gradients, icons, text, and pure HTML illustrations instead of images.
-- Do not use emoji characters in the final generated HTML, labels, or site copy.
-
-CRITICAL ARCHITECTURE REQUIREMENTS:
-- You MUST construct fully functional websites using standard HTML, CSS, and JavaScript.
-- You must write raw clean JS code directly into script modules inside the page to run dynamic systems.
-- OUTPUT SPECIFICATION: Return EXACTLY the updated production-ready HTML code document block starting with <!DOCTYPE html>. Do NOT provide prose outside the markdown block or separate code parts.`
-    }
+  // Conversation memory channels
+  let compilationMemory = [
+    { role: "system", content: "You are an elite frontend engineer. Return ONLY valid standalone HTML files. Do not use emoji characters or external image assets." }
   ];
 
-  let calculatedCodeInstance = "";
-
-  window.handleProviderChange = function() {
-    manualKeySelection = false;
-    const provider = document.getElementById('providerSelect').value;
-    const modelSelect = document.getElementById('modelSelect');
-    const lblRemaining = document.getElementById('lblRemainingTokens');
-    modelSelect.innerHTML = '';
-    if (provider === 'github') {
-      lblRemaining.textContent = "Rate Limited / Min";
-      lblRemaining.style.color = "#c8a96a";
-    } else {
-      lblRemaining.textContent = "Unlimited (Free Tier)";
-      lblRemaining.style.color = "#69c88b";
-    }
-    PROVIDER_MODELS[provider].forEach(m => {
-      const opt = document.createElement('option');
-      opt.value = m.value;
-      opt.textContent = m.name;
-      modelSelect.appendChild(opt);
-    });
-    populateKeySelect(provider);
-    updateKeyStatusDisplay();
-  };
-
-  function populateKeySelect(provider) {
-    const keyMenu = document.getElementById('keyMenu');
-    const keyLabel = document.getElementById('keyLabel');
-    const keys = apiKeyStore[provider] || [];
-    
-    // Save current scroll position inside the menu so it doesn't jump every second
-    const oldScrollTop = keyMenu.scrollTop;
-    
-    keyMenu.innerHTML = '';
-    if (!keys.length) {
-      const emptyItem = document.createElement('div');
-      emptyItem.className = 'dropdown-item disabled';
-      emptyItem.textContent = 'No keys configured';
-      keyMenu.appendChild(emptyItem);
-      keyLabel.textContent = 'No server';
-      return;
-    }
-    const selectedIndex = Math.min(activeKeyIndex[provider] || 0, keys.length - 1);
-    keyLabel.textContent = keys[selectedIndex]?.label || `Server ${selectedIndex + 1}`;
-    
-    keys.forEach((entry, index) => {
-      const item = document.createElement('div');
-      const blocked = isKeyBlocked(entry);
-      item.className = `dropdown-item${blocked ? ' disabled' : ''}`;
-      
-      let statusString = 'active';
-      if (blocked) {
-        statusString = `${formatDuration(getBlockedSeconds(entry) * 1000)}`;
-      }
-      
-      let labelContainer = document.createElement('span');
-      labelContainer.innerHTML = `<strong>${entry.label}</strong>`;
-      labelContainer.style.flex = "1";
-      item.appendChild(labelContainer);
-
-      let timerContainer = document.createElement('span');
-      timerContainer.textContent = statusString;
-      timerContainer.style.marginRight = "6px";
-      if (blocked) {
-        timerContainer.style.color = "#ff6b6b";
-      } else {
-        timerContainer.style.color = "#69c88b";
-      }
-      item.appendChild(timerContainer);
-
-      if (blocked) {
-        let tryAnywayBtn = document.createElement('button');
-        tryAnywayBtn.type = 'button';
-        tryAnywayBtn.className = 'try-anyway-btn';
-        tryAnywayBtn.textContent = 'Try Anyway';
-        tryAnywayBtn.onclick = (e) => {
-          e.stopPropagation();
-          activeKeyIndex[provider] = index;
-          manualKeySelection = true;
-          saveActiveKeyIndex();
-          keyLabel.textContent = entry.label;
-          updateKeyStatusDisplay();
-          closeKeyMenu();
-        };
-        item.appendChild(tryAnywayBtn);
-      } else {
-        item.style.cursor = 'pointer';
-        item.onclick = () => {
-          activeKeyIndex[provider] = index;
-          manualKeySelection = true;
-          saveActiveKeyIndex();
-          keyLabel.textContent = entry.label;
-          updateKeyStatusDisplay();
-          closeKeyMenu();
-        };
-      }
-      
-      keyMenu.appendChild(item);
-    });
-    
-    keyMenu.scrollTop = oldScrollTop;
+  function loadPersistedStorage(key, alternative) {
+    try { const value = localStorage.getItem(key); if (value) return JSON.parse(value); } catch(e){}
+    return JSON.parse(JSON.stringify(alternative));
   }
+  function persistStorage(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
 
-  window.addApiKey = function() {
-    const provider = document.getElementById('providerSelect').value;
-    const rawKey = document.getElementById('keyInput').value.trim();
-    if (!rawKey) {
-      alert("Enter a valid API key before adding.");
-      return;
-    }
-    apiKeyStore[provider] = apiKeyStore[provider] || [];
-    apiKeyStore[provider].push({
-      label: `Server ${apiKeyStore[provider].length + 1}`,
-      key: rawKey,
-      blockedUntil: null
-    });
-    saveApiKeyStore();
-    document.getElementById('keyInput').value = '';
-    activeKeyIndex[provider] = apiKeyStore[provider].length - 1;
-    manualKeySelection = true;
-    saveActiveKeyIndex();
-    populateKeySelect(provider);
-    updateKeyStatusDisplay();
-  };
+  // Resizable Split-Pane Functionality
+  const sidebarContainer = document.getElementById('sidebarContainer');
+  const splitResizer = document.getElementById('dragSplitResizer');
 
-  function updateKeyStatusDisplay() {
-    const provider = document.getElementById('providerSelect').value;
-    const keyEntry = getSelectedKey(provider);
-    const statusEl = document.getElementById('keyStatus');
-    if (!keyEntry) {
-      statusEl.textContent = 'No API key configured for the selected provider.';
-      return;
-    }
-    
-    if (isKeyBlocked(keyEntry)) {
-      statusEl.innerHTML = `<span style="color:#ff6b6b; font-weight:bold;">${keyEntry.label} (RATE LIMITED)</span><br><span style="font-size:11px;">Cooldown remaining: ${formatDuration(getBlockedSeconds(keyEntry) * 1000)}</span>`;
-    } else {
-      statusEl.innerHTML = `<span>Current: <strong>${keyEntry.label}</strong></span><br><span style="color:#69c88b;">● Active and ready</span>`;
-    }
-  }
+  splitResizer.addEventListener('mousedown', (e) => {
+    paneResizingState = true;
+    splitResizer.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    e.preventDefault();
+  });
 
-  function parseRetryAfter(header, body) {
-    if (header) {
-      const retrySeconds = parseInt(header, 10);
-      if (!isNaN(retrySeconds)) return retrySeconds;
-    }
-    const match = String(body).match(/retry-after\s*[:=]?\s*(\d+)/i);
-    return match ? Number(match[1]) : null;
-  }
+  document.addEventListener('mousemove', (e) => {
+    if (!paneResizingState) return;
+    const boundaryWidth = Math.max(280, Math.min(e.clientX, window.innerWidth - 320));
+    sidebarContainer.style.width = `${boundaryWidth}px`;
+    sidebarContainer.style.flex = 'none';
+  });
 
-  function getNextKeyIndex(provider, currentIndex) {
-    const keys = apiKeyStore[provider] || [];
-    if (!keys.length) return null;
-    const len = keys.length;
-    let start = (Number.isInteger(currentIndex) ? (currentIndex + 1) % len : 0);
-    for (let i = 0; i < len; i++) {
-      const index = (start + i) % len;
-      if (!isKeyBlocked(keys[index])) return index;
-    }
-    return null;
-  }
-
-  function blockKey(provider, index, message, retrySeconds = 900) {
-    const keyEntry = apiKeyStore[provider]?.[index];
-    if (!keyEntry) return;
-    keyEntry.blockedUntil = new Date(Date.now() + retrySeconds * 1000).toISOString();
-    saveApiKeyStore();
-    if (activeKeyIndex[provider] === index) {
-      const nextIndex = getNextKeyIndex(provider, index);
-      if (nextIndex !== null) {
-        activeKeyIndex[provider] = nextIndex;
-        saveActiveKeyIndex();
-      }
-    }
-    populateKeySelect(provider);
-    updateKeyStatusDisplay();
-    appendChatMessage('assistant', `Key "${keyEntry.label}" hit a limit: ${message}. Blocked for ${formatDuration(retrySeconds * 1000)}.`);
-  }
-
-  function createProjectId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-  }
-
-  function saveProjectInstance(prompt, html, title) {
-    let sanitizedTitle = title;
-    if (!sanitizedTitle) {
-      const words = prompt.replace(/[^a-zA-Z0-9\s]/g, '').split(/\s+/).filter(w => w.length > 2);
-      if (words.length > 0) {
-        sanitizedTitle = words.slice(0, 3).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
-      } else {
-        sanitizedTitle = prompt.replace(/\s+/g, ' ').trim().slice(0, 20) || "Untitled app";
-      }
-    }
-    
-    const id = currentShareId || createProjectId();
-    const existing = savedProjects.find(item => item.id === id);
-    const record = { id, title: sanitizedTitle, prompt, html, updatedAt: Date.now() };
-    if (existing) {
-      Object.assign(existing, record);
-    } else {
-      savedProjects.unshift(record);
-      if (savedProjects.length > 20) savedProjects.pop();
-    }
-    saveSavedProjects();
-    renderProjectList();
-    return id;
-  }
-
-  function renderProjectList() {
-    const container = document.getElementById('projectList');
-    const empty = document.getElementById('projectEmpty');
-    container.innerHTML = '';
-    if (!savedProjects.length) {
-      empty.style.display = 'block';
-      return;
-    }
-    empty.style.display = 'none';
-    savedProjects.slice(0, 4).forEach(project => {
-      const card = document.createElement('div');
-      card.className = 'project-card';
-      const title = document.createElement('span');
-      title.textContent = project.title;
-      const actions = document.createElement('div');
-      actions.className = 'project-actions';
-      const open = document.createElement('button');
-      open.className = 'util-btn';
-      open.textContent = 'Open';
-      open.onclick = () => loadProjectById(project.id);
-      const remove = document.createElement('button');
-      remove.className = 'util-btn';
-      remove.textContent = 'Del';
-      remove.onclick = () => {
-        savedProjects = savedProjects.filter(item => item.id !== project.id);
-        saveSavedProjects();
-        renderProjectList();
-      };
-      actions.append(open, remove);
-      card.append(title, actions);
-      container.appendChild(card);
-    });
-  }
-
-  function loadProjectById(id) {
-    const project = savedProjects.find(item => item.id === id);
-    if (!project) {
-      alert("Saved project not found.");
-      return;
-    }
-    loadProject(project);
-  }
-
-  function loadProject(project) {
-    currentShareId = project.id;
-    document.getElementById('workspaceInput').value = project.prompt || '';
-    calculatedCodeInstance = project.html || '';
-    document.getElementById('previewFrame').srcdoc = calculatedCodeInstance;
-    document.getElementById('codeAreaView').value = calculatedCodeInstance;
-    document.getElementById('runtimeStatus').textContent = `Loaded: ${project.title}`;
-    setShareBanner(`${location.origin + location.pathname}?share=${project.id}`);
-  }
-
-  window.handleKeyDropdownClick = function(event) {
-    if (event.target.closest('.dropdown-item') || event.target.closest('.try-anyway-btn')) return;
-    const dropdown = document.getElementById('keyDropdown');
-    dropdown.classList.toggle('open');
-  };
-
-  window.closeKeyMenu = function() {
-    const dropdown = document.getElementById('keyDropdown');
-    if (dropdown) dropdown.classList.remove('open');
-  };
-
-  document.addEventListener('click', event => {
-    if (!event.target.closest('#keyDropdown')) {
-      closeKeyMenu();
+  document.addEventListener('mouseup', () => {
+    if (paneResizingState) {
+      paneResizingState = false;
+      splitResizer.classList.remove('dragging');
+      document.body.style.cursor = '';
     }
   });
 
-  window.createShareLink = function() {
-    if (!calculatedCodeInstance) {
-      alert("Build a project first, then deploy it.");
-      return;
-    }
-    const prompt = document.getElementById('workspaceInput').value.trim();
-    const id = saveProjectInstance(prompt, calculatedCodeInstance);
-    currentShareId = id;
-    const url = `${location.origin + location.pathname}?share=${id}`;
-    setShareBanner(url);
-    appendChatMessage('assistant', "Deploy ready. Link generated inside control panel banner.");
+  // Theme & Appearance Layout Switches
+  window.toggleSettingsModal = (displayState) => {
+    document.getElementById('settingsModal').classList.toggle('active', displayState);
   };
 
-  function setShareBanner(url) {
-    const banner = document.getElementById('shareBanner');
-    banner.innerHTML = `<a href="${url}" target="_blank" rel="noreferrer">${url}</a>`;
-  }
+  window.applyVisualConfigurations = () => {
+    const selectedTheme = document.getElementById('themeStyleSelect').value;
+    const selectedSizing = document.getElementById('textSizeSelect').value;
+    document.documentElement.setAttribute('data-theme', selectedTheme);
 
-  function loadSharedProjectFromQuery() {
-    const params = new URLSearchParams(window.location.search);
-    if (!params.has(SHARE_PARAM_NAME)) return;
-    const shareId = params.get(SHARE_PARAM_NAME);
-    const project = savedProjects.find(item => item.id === shareId);
-    if (project) {
-      loadProject(project);
-      appendChatMessage('assistant', "Shared project loaded from browser session storage configuration.");
-    } else {
-      document.getElementById('shareBanner').textContent = "Shared context key mapping not initialized locally.";
-    }
-  }
+    let variableSize = "12.5px";
+    if (selectedSizing === "small") variableSize = "11.5px";
+    if (selectedSizing === "large") variableSize = "14px";
+    document.documentElement.style.setProperty('--font-size-base', variableSize);
+  };
 
-  window.switchCanvasTab = function(targetTab) {
-    const pBtn = document.getElementById('btnPreview');
-    const cBtn = document.getElementById('btnCode');
-    const wrapper = document.getElementById('viewportWrapper');
-    const codeContainer = document.getElementById('codeViewBlock');
-    if (targetTab === 'preview') {
-      pBtn.classList.add('active');
-      cBtn.classList.remove('active');
-      wrapper.style.display = 'block';
-      codeContainer.style.display = 'none';
-    } else {
-      cBtn.classList.add('active');
-      pBtn.classList.remove('active');
-      wrapper.style.display = 'none';
-      codeContainer.style.display = 'block';
+  // Adjust Allocations Limits
+  window.updateMaxAllocationParameters = () => {
+    const sliderElement = document.getElementById('maxMessagesLimitSlider');
+    maxConfiguredMessageLimit = parseInt(sliderElement.value, 10);
+    document.getElementById('lblSliderLimitValue').textContent = `${maxConfiguredMessageLimit} Messages`;
+    persistStorage(ALLOCATION_LIMIT_STORE, maxConfiguredMessageLimit);
+    refreshCounterDisplayLabel();
+    
+    if (totalSentMessagesCounter < (maxConfiguredMessageLimit * 0.85)) {
+      userAlertHasBeenTriggered = false;
     }
   };
 
-  window.changeOrientation = function(targetOrientation) {
-    const wrapper = document.getElementById('viewportWrapper');
-    const presets = ['desktop', 'tablet', 'phone'];
-    presets.forEach(p => {
-      wrapper.classList.remove(`preset-${p}`);
+  function refreshCounterDisplayLabel() {
+    document.getElementById('messageCounterLabel').textContent = `Sent: ${totalSentMessagesCounter} / ${maxConfiguredMessageLimit}`;
+  }
+
+  // Endpoint Engine Management
+  window.handleEndpointRotation = () => {
+    const activeProvider = document.getElementById('providerSelect').value;
+    const modelSelectionElement = document.getElementById('modelSelect');
+    modelSelectionElement.innerHTML = '';
+
+    ENGINE_VARIATIONS[activeProvider].forEach(engine => {
+      const optionNode = document.createElement('option');
+      optionNode.value = engine.value;
+      optionNode.textContent = engine.name;
+      modelSelectionElement.appendChild(optionNode);
+    });
+  };
+
+  // Navigation Tabs Control Inside Canvas
+  window.toggleCanvasTab = (activeTabTarget) => {
+    document.getElementById('btnTabPreview').classList.toggle('active', activeTabTarget === 'preview');
+    document.getElementById('btnTabCode').classList.toggle('active', activeTabTarget === 'code');
+    document.getElementById('layerPreview').classList.toggle('active', activeTabTarget === 'preview');
+    document.getElementById('layerCode').classList.toggle('active', activeTabTarget === 'code');
+  };
+
+  window.setCanvasViewport = (dimensionsPreset) => {
+    ['desktop', 'tablet', 'phone'].forEach(p => {
       document.getElementById(`preset${p.charAt(0).toUpperCase() + p.slice(1)}`).classList.remove('active');
+      document.getElementById('viewportWrapper').classList.remove(`preset-${p}`);
     });
-    wrapper.classList.add(`preset-${targetOrientation}`);
-    document.getElementById(`preset${targetOrientation.charAt(0).toUpperCase() + targetOrientation.slice(1)}`).classList.add('active');
+    document.getElementById(`preset${dimensionsPreset.charAt(0).toUpperCase() + dimensionsPreset.slice(1)}`).classList.add('active');
+    document.getElementById('viewportWrapper').classList.add(`preset-${dimensionsPreset}`);
   };
 
-  window.openLiveView = function() {
-    if (!calculatedCodeInstance) {
-      alert("No active canvas code compiled yet.");
+  // Execution Processing Handles
+  window.handlePromptSubmission = async () => {
+    if (isRequestProcessing) return;
+
+    const inputElement = document.getElementById('workspaceInput');
+    const promptValueText = inputElement.value.trim();
+    if (!promptValueText) return;
+
+    if (totalSentMessagesCounter >= maxConfiguredMessageLimit) {
+      alert(`Pipeline Transmission Blocked: You have exhaustively reached your total allocated cap space configuration limit of ${maxConfiguredMessageLimit} messages.`);
       return;
     }
-    const newWindow = window.open();
-    newWindow.document.write(calculatedCodeInstance);
-    newWindow.document.close();
+
+    inputElement.value = "";
+    totalSentMessagesCounter++;
+    refreshCounterDisplayLabel();
+
+    if (!userAlertHasBeenTriggered && totalSentMessagesCounter >= (maxConfiguredMessageLimit * 0.85)) {
+      userAlertHasBeenTriggered = true;
+      alert(`Operational Warning: You are approaching your maximum limits profile cap. You have consumed ${totalSentMessagesCounter} out of your total allocated ${maxConfiguredMessageLimit} messages allocation parameters space.`);
+    }
+
+    await launchSystemBuildPipeline(promptValueText);
   };
 
-  window.downloadCode = function() {
-    if (!calculatedCodeInstance) {
-      alert("No active canvas code compiled yet.");
-      return;
-    }
-    const blob = new Blob([calculatedCodeInstance], { type: "text/html" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "nexus-canvas-app.html";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // System Core Code Construction Compilation Path
+  async function launchSystemBuildPipeline(userInstructionPrompt) {
+    const globalLoaderOverlay = document.getElementById('globalWorkspaceLoader');
+    const submitButton = document.getElementById('btnSubmitPrompt');
+    const selectedProviderHub = document.getElementById('providerSelect').value;
+    const selectedEngineTarget = document.getElementById('modelSelect').value;
 
-  async function executePrimaryBuild(userPromptText) {
-    const container = document.getElementById('workspaceContainer');
-    const loader = document.getElementById('globalWorkspaceLoader');
-    const statusText = document.getElementById('runtimeStatus');
-    const loaderMsg = document.getElementById('agentLoaderMessage');
-    const provider = document.getElementById('providerSelect').value;
-    const selectedKey = getSelectedKey(provider);
-    if (!selectedKey?.key) {
-      alert(`Please add or select an API key for ${provider}.`);
-      return;
-    }
-    if (!container.classList.contains('split-mode')) {
-      container.classList.add('split-mode');
-      await delay(300);
-    }
-    loader.classList.add('active');
-    statusText.textContent = "Pipeline Active...";
-    appendChatMessage('user', userPromptText);
-    const logsElement = createAgentLogContainer();
+    isRequestProcessing = true;
+    if (submitButton) submitButton.disabled = true;
+
+    globalLoaderOverlay.classList.add('active');
+    document.getElementById('agentLoaderMessage').textContent = "Assembling framework layout matrix elements...";
+    postMessageToContainer('user', userInstructionPrompt);
+
     try {
-      updateAgentLogStep(logsElement, "Initiating inference layout...");
-      loaderMsg.textContent = "Contacting chosen inference pipeline...";
-      conversationalContext.push({ role: "user", content: userPromptText });
-      const rawAIResponse = await runMultiProviderRouter(conversationalContext, provider);
-      calculatedCodeInstance = await sanitizeAndResolveHTML(rawAIResponse, userPromptText);
-      updateAgentLogStep(logsElement, "Compiling environment configuration structural variants...");
-      loaderMsg.textContent = "Injecting workspace context...";
-      await delay(400);
-      document.getElementById('previewFrame').srcdoc = calculatedCodeInstance;
-      document.getElementById('codeAreaView').value = calculatedCodeInstance;
-      currentShareId = saveProjectInstance(userPromptText, calculatedCodeInstance);
-      setShareBanner(`${location.origin + location.pathname}?share=${currentShareId}`);
-      conversationalContext.push({ role: "assistant", content: rawAIResponse });
-      appendChatMessage('assistant', "Workspace view updated successfully.");
-    } catch(err) {
-      console.error(err);
-      appendChatMessage('assistant', `Interface Error: ${err.message}`);
-    } finally {
-      loader.classList.remove('active');
-      statusText.textContent = "Workspace Active";
-    }
-  }
+      compilationMemory.push({ role: "user", content: userInstructionPrompt });
 
-  async function runMultiProviderRouter(payload, provider) {
-    const model = document.getElementById('modelSelect').value;
-    const keys = apiKeyStore[provider] || [];
-    if (!keys.length) throw new Error(`No ${provider} API keys configured.`);
-    
-    let selectedIndex = activeKeyIndex[provider] || 0;
-    
-    // If the user manually selected a key via 'Try Anyway', use exactly that key
-    const orderedIndices = [];
-    if (manualKeySelection) {
-      orderedIndices.push(selectedIndex);
-    } else {
-      const nextRotated = getNextKeyIndex(provider, selectedIndex);
-      if (nextRotated !== null) {
-        selectedIndex = nextRotated;
+      // Clean, modern direct request straight to your edge environment
+      const networkCompilationStream = await fetch(CLOUDFLARE_WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ 
+          provider: selectedProviderHub, 
+          model: selectedEngineTarget, 
+          messages: compilationMemory, 
+          temperature: 0.25 
+        })
+      });
+
+      if (!networkCompilationStream.ok) {
+        let textErrorDetails = "";
+        try {
+          textErrorDetails = ` status ${networkCompilationStream.status} ${networkCompilationStream.statusText}`;
+        } catch (_) {}
+        throw new Error(`Inference execution framework returned processing errors.${textErrorDetails}`);
       }
-      const len = keys.length;
-      for (let offset = 0; offset < len; offset++) {
-        orderedIndices.push((selectedIndex + offset) % len);
-      }
-    }
-    
-    for (const index of orderedIndices) {
-      const keyEntry = keys[index];
-      if (!keyEntry) continue;
-      
-      // If we are not in forced manual mode, skip blocked keys
-      if (!manualKeySelection && isKeyBlocked(keyEntry)) continue;
-      
-      const key = keyEntry.key;
-      let endpoint = "";
-      let headers = { "Content-Type": "application/json" };
-      let bodyObj = { model: model, messages: payload, temperature: 0.3 };
-      
-      // Replace the old corsproxy.io lines with your worker URL:
-if (provider === "github") {
-  const target = "https://models.github.ai/inference/chat/completions";
-  endpoint = `https://nexus.imcrabfr.workers.dev/?url=${encodeURIComponent(target)}`;
-  headers["Authorization"] = `Bearer ${key}`;
-} else if (provider === "groq") {
-  const target = "https://api.groq.com/openai/v1/chat/completions";
-  endpoint = `https://nexus.imcrabfr.workers.dev/?url=${encodeURIComponent(target)}`;
-  headers["Authorization"] = `Bearer ${key}`;
-}
-      
+
+      let dataPayloadJson;
       try {
-        const res = await fetch(endpoint, {
-          method: "POST",
-          headers: headers,
-          body: JSON.stringify(bodyObj)
-        });
-        
-        if (!res.ok) {
-          const info = await res.text();
-          
-          if (res.status === 429 || /rate limit|quota|limit/i.test(info)) {
-            const retry = parseRetryAfter(res.headers.get('retry-after'), info) || 900;
-            blockKey(provider, index, "Rate Limited", retry);
-            if (manualKeySelection) break; // Break out immediately if forced key fails
-            continue;
-          }
-          
-          if (res.status === 401 || /unauthorized|invalid/i.test(info)) {
-            blockKey(provider, index, "Unauthorized / Invalid Key", 864000);
-            if (manualKeySelection) break;
-            continue;
-          }
-          
-          console.warn(`Server ${index + 1} failed with status ${res.status}: ${info}`);
-          if (manualKeySelection) break;
-          continue;
-        }
-        
-        const json = await res.json();
-        if (json.usage) {
-          document.getElementById('lblLastTokens').textContent = json.usage.total_tokens || "N/A";
-        } else {
-          document.getElementById('lblLastTokens').textContent = "~" + (json.choices?.[0]?.message?.content?.length / 4).toFixed(0);
-        }
-        
-        // Key worked successfully: unblock it completely if it was blocked
-        keyEntry.blockedUntil = null;
-        saveApiKeyStore();
-        
-        activeKeyIndex[provider] = index;
-        manualKeySelection = false; 
-        saveActiveKeyIndex();
-        populateKeySelect(provider);
-        updateKeyStatusDisplay();
-        return json.choices?.[0]?.message?.content || "";
-        
-      } catch (fetchErr) {
-        console.error(`Network error on server ${index + 1}:`, fetchErr);
-        if (manualKeySelection) break;
-        continue;
+        dataPayloadJson = await networkCompilationStream.json();
+      } catch (jsonParseError) {
+        throw new Error("Failed to parse response matrix payload configuration files.");
       }
+      
+      if (!dataPayloadJson || !dataPayloadJson.choices || !dataPayloadJson.choices[0] || !dataPayloadJson.choices[0].message) {
+        throw new Error("Unexpected API schema structure format encountered.");
+      }
+
+      const coreResponseProseText = dataPayloadJson.choices[0].message.content;
+      
+      const codeMarkdownRegexMatch = /```html([\s\S]*?)```/i.exec(coreResponseProseText);
+      dynamicCalculatedHTML = codeMarkdownRegexMatch ? codeMarkdownRegexMatch[1].trim() : coreResponseProseText.trim();
+
+      document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
+      document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
+
+      compilationMemory.push({ role: "assistant", content: coreResponseProseText });
+      postMessageToContainer('assistant', "Canvas render refreshed. Codebase synchronizations finalized structural execution paths.");
+      
+      if (dataPayloadJson.usage && dataPayloadJson.usage.total_tokens) {
+        document.getElementById('lblLastTokens').textContent = dataPayloadJson.usage.total_tokens;
+      }
+
+    } catch (compilationError) {
+      let messageSuffix = "Please confirm that your Cloudflare Worker is deployed correctly, allows cross-origin requests (CORS), and handles preflight OPTIONS requests.";
+      if (compilationError.message && compilationError.message !== "Failed to fetch") {
+        messageSuffix = compilationError.message;
+      }
+      postMessageToContainer('assistant', `Compilation Processing Aborted: ${messageSuffix}`);
+    } finally {
+      globalLoaderOverlay.classList.remove('active');
+      isRequestProcessing = false;
+      if (submitButton) submitButton.disabled = false;
     }
-    
-    manualKeySelection = false; // Reset manual override flag if it fails
-    throw new Error(`All configured ${provider} API keys are either blocked or returning errors.`);
   }
 
-  window.submitRevisionPrompt = function() {
-    const inputArea = document.getElementById('workspaceInput');
-    const taskContent = inputArea.value.trim();
-    if(!taskContent) return;
-    inputArea.value = "";
-    executePrimaryBuild(taskContent);
+  function postMessageToContainer(roleDesignation, blockMessageCopy) {
+    const historicalContainerBox = document.getElementById('chatHistory');
+    const dynamicMessageCard = document.createElement('div');
+    dynamicMessageCard.className = `message ${roleDesignation}`;
+    dynamicMessageCard.innerHTML = blockMessageCopy.replace(/\n/g, '<br>');
+    historicalContainerBox.appendChild(dynamicMessageCard);
+    historicalContainerBox.scrollTop = historicalContainerBox.scrollHeight;
+  }
+
+  window.triggerCodeDownload = () => {
+    if (!dynamicCalculatedHTML) return alert("Compile application layouts first.");
+    const formattingBlob = new Blob([dynamicCalculatedHTML], { type: "text/html" });
+    const virtualLinkElement = document.createElement("a");
+    virtualLinkElement.href = URL.createObjectURL(formattingBlob);
+    virtualLinkElement.download = "nexus-compiled-workspace.html";
+    document.body.appendChild(virtualLinkElement);
+    virtualLinkElement.click();
+    document.body.removeChild(virtualLinkElement);
   };
 
-  function extractSanitizedHTML(rawMarkdownText) {
-    const standardBlockRegex = /```html([\s\S]*?)```/i;
-    const generalBlockRegex = /```([\s\S]*?)```/;
-    let match = standardBlockRegex.exec(rawMarkdownText) || generalBlockRegex.exec(rawMarkdownText);
-    if (match && match[1]) return match[1].trim();
-    if (rawMarkdownText.includes("<!DOCTYPE html>")) return rawMarkdownText.trim();
-    return rawMarkdownText;
-  }
-
-  async function sanitizeAndResolveHTML(rawMarkdownText) {
-    const rawHTML = extractSanitizedHTML(rawMarkdownText);
-    return removeImageAssets(rawHTML);
-  }
-
-  function removeImageAssets(html) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    Array.from(doc.querySelectorAll('img')).forEach(img => img.remove());
-    Array.from(doc.querySelectorAll('[style]')).forEach(el => {
-      const style = el.getAttribute('style') || '';
-      const cleaned = style.replace(/background(?:-image)?\s*:\s*url\((['"]?)(.*?)\1\)/gi, 'background: none');
-      if (cleaned !== style) el.setAttribute('style', cleaned.trim());
-    });
-    Array.from(doc.querySelectorAll('style')).forEach(styleTag => {
-      styleTag.textContent = styleTag.textContent.replace(/url\((['"]?)(.*?)\1\)/gi, 'none');
-    });
-    if (doc.body) {
-      const watermark = doc.createElement('div');
-      watermark.id = "nexus-global-watermark";
-      watermark.innerHTML = "Made on Nexus Web";
-      watermark.style.cssText = "text-align: center !important; padding: 12px !important; font-family: sans-serif !important; font-size: 11px !important; color: rgba(125, 125, 135, 0.4) !important; width: 100% !important; box-sizing: border-box !important;";
-      doc.body.appendChild(watermark);
-    }
-    return doc.documentElement ? '<!DOCTYPE html>\n' + doc.documentElement.outerHTML : html;
-  }
-
-  function appendChatMessage(senderRole, narrative) {
-    const container = document.getElementById('chatHistory');
-    const block = document.createElement('div');
-    block.className = `message ${senderRole}`;
-    block.textContent = narrative;
-    container.appendChild(block);
-    container.scrollTop = container.scrollHeight;
-  }
-
-  function createAgentLogContainer() {
-    const container = document.getElementById('chatHistory');
-    const logBox = document.createElement('div');
-    logBox.className = "agent-status-box";
-    container.appendChild(logBox);
-    return logBox;
-  }
-
-  function updateAgentLogStep(targetLogBox, traceNarrative) {
-    const line = document.createElement('div');
-    line.className = "log-line active";
-    line.textContent = traceNarrative;
-    targetLogBox.appendChild(line);
-    document.getElementById('chatHistory').scrollTop = document.getElementById('chatHistory').scrollHeight;
-  }
-
-  function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+  // Run Initialization Sequences
+  document.getElementById('maxMessagesLimitSlider').value = maxConfiguredMessageLimit;
+  document.getElementById('lblSliderLimitValue').textContent = `${maxConfiguredMessageLimit} Messages`;
+  refreshCounterDisplayLabel();
   
-  handleProviderChange();
-  renderProjectList();
-  loadSharedProjectFromQuery();
+  window.handleEndpointRotation();
+  window.applyVisualConfigurations();
 </script>
 </body>
 </html>
