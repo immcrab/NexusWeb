@@ -504,14 +504,11 @@
   };
 
   // System Core Code Construction Compilation Path
+  // System Core Code Construction Compilation Path
   async function launchSystemBuildPipeline(userInstructionPrompt) {
     const globalLoaderOverlay = document.getElementById('globalWorkspaceLoader');
-    const submitButton = document.getElementById('btnSubmitPrompt');
     const selectedProviderHub = document.getElementById('providerSelect').value;
     const selectedEngineTarget = document.getElementById('modelSelect').value;
-
-    isRequestProcessing = true;
-    if (submitButton) submitButton.disabled = true;
 
     globalLoaderOverlay.classList.add('active');
     document.getElementById('agentLoaderMessage').textContent = "Assembling framework layout matrix elements...";
@@ -520,14 +517,16 @@
     try {
       compilationMemory.push({ role: "user", content: userInstructionPrompt });
 
-      // Clean, modern direct request straight to your edge environment
-      const networkCompilationStream = await fetch(CLOUDFLARE_WORKER_ENDPOINT, {
+      // REPLACE THIS URL WITH YOUR ACTUAL CLOUDFLARE WORKER ROUTE:
+      const cloudflareWorkerEndpoint = "https://nexus.imcrabfr.workers.dev";
+
+      const networkCompilationStream = await fetch(cloudflareWorkerEndpoint, {
         method: "POST",
         headers: { 
-          "Content-Type": "application/json"
+          "Content-Type": "application/json" 
         },
         body: JSON.stringify({ 
-          provider: selectedProviderHub, 
+          provider: selectedProviderHub, // "github" or "groq"
           model: selectedEngineTarget, 
           messages: compilationMemory, 
           temperature: 0.25 
@@ -535,49 +534,30 @@
       });
 
       if (!networkCompilationStream.ok) {
-        let textErrorDetails = "";
-        try {
-          textErrorDetails = ` status ${networkCompilationStream.status} ${networkCompilationStream.statusText}`;
-        } catch (_) {}
-        throw new Error(`Inference execution framework returned processing errors.${textErrorDetails}`);
-      }
-
-      let dataPayloadJson;
-      try {
-        dataPayloadJson = await networkCompilationStream.json();
-      } catch (jsonParseError) {
-        throw new Error("Failed to parse response matrix payload configuration files.");
+        const errorText = await networkCompilationStream.text();
+        throw new Error(`Edge node framework returned processing errors: ${networkCompilationStream.status} - ${errorText}`);
       }
       
-      if (!dataPayloadJson || !dataPayloadJson.choices || !dataPayloadJson.choices[0] || !dataPayloadJson.choices[0].message) {
-        throw new Error("Unexpected API schema structure format encountered.");
-      }
-
+      const dataPayloadJson = await networkCompilationStream.json();
       const coreResponseProseText = dataPayloadJson.choices[0].message.content;
       
+      // Clean structure block boundaries safely
       const codeMarkdownRegexMatch = /```html([\s\S]*?)```/i.exec(coreResponseProseText);
       dynamicCalculatedHTML = codeMarkdownRegexMatch ? codeMarkdownRegexMatch[1].trim() : coreResponseProseText.trim();
 
+      // Refresh layout sandbox elements smoothly
       document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
       document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
 
       compilationMemory.push({ role: "assistant", content: coreResponseProseText });
       postMessageToContainer('assistant', "Canvas render refreshed. Codebase synchronizations finalized structural execution paths.");
       
-      if (dataPayloadJson.usage && dataPayloadJson.usage.total_tokens) {
-        document.getElementById('lblLastTokens').textContent = dataPayloadJson.usage.total_tokens;
-      }
+      if (dataPayloadJson.usage) document.getElementById('lblLastTokens').textContent = dataPayloadJson.usage.total_tokens;
 
     } catch (compilationError) {
-      let messageSuffix = "Please confirm that your Cloudflare Worker is deployed correctly, allows cross-origin requests (CORS), and handles preflight OPTIONS requests.";
-      if (compilationError.message && compilationError.message !== "Failed to fetch") {
-        messageSuffix = compilationError.message;
-      }
-      postMessageToContainer('assistant', `Compilation Processing Aborted: ${messageSuffix}`);
+      postMessageToContainer('assistant', `Compilation Processing Aborted: ${compilationError.message}`);
     } finally {
       globalLoaderOverlay.classList.remove('active');
-      isRequestProcessing = false;
-      if (submitButton) submitButton.disabled = false;
     }
   }
 
