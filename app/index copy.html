@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nexus Web AI builder | Build modern websites with AI</title>
+<meta name="description" content="A compelling, high-converting sentence explaining exactly what value your site provides to visitors. Click to explore our solutions.">
+<meta name="robots" content="index, follow">
+<meta property="og:site_name" content="BrandName Studio">
+<meta property="og:type" content="website">
+
+<meta property="og:url" content="https://nexus.owenlee.xyz/">
+
+<meta property="og:title" content="Transform Your Workflow with Nexus Web AI Studio">
+
+<meta property="og:description" content="Discover the tools and framework configurations built to optimize efficiency and upgrade interface scalability.">
+
+<meta property="og:image" content="https://nexus.owenlee.xyz/assets/logo.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A sleek visual preview showcase of the Nexus Web AI software dashboard interface.">
+<link rel="icon" href="assets/logo.png" />
+<meta name="description" content="Nexus Web AI builder lets you build modern websites and apps by chatting with AI. Login, deploy, and ship faster." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TFZPC07B0B"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TFZPC07B0B');
+</script>
+<style>
+  :root {
+    --bg: #06060a;
+    --bg-sidebar: #0b0b14;
+    --surface: rgba(255,255,255,0.03);
+    --surface-hover: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.12);
+    --text: #f5f5f7;
+    --muted: #8e8e9f;
+    --accent: #c8a96a;
+    --accent-glow: rgba(200,169,106,0.15);
+    --grad: linear-gradient(135deg, #e9d8a6 0%, #c8a96a 40%, #8c6f3f 100%);
+    --font-size-base: 12.5px;
+    --font-size-sm: 11px;
+    --font-size-xs: 10px;
+    --radius: 8px;
+    --transition-fast: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [data-theme="light"] {
+    --bg: #f3f4f6;
+    --bg-sidebar: #ffffff;
+    --surface: rgba(0,0,0,0.03);
+    --surface-hover: rgba(0,0,0,0.06);
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.15);
+    --text: #1f2937;
+    --muted: #6b7280;
+    --accent: #0284c7;
+    --accent-glow: rgba(2,132,199,0.12);
+    --grad: linear-gradient(135deg, #38bdf8 0%, #0284c7 40%, #0369a1 100%);
+  }
+
+  [data-theme="hacker"] {
+    --bg: #000000;
+    --bg-sidebar: #050505;
+    --surface: rgba(0,255,0,0.04);
+    --surface-hover: rgba(0,255,0,0.1);
+    --border: rgba(0,255,0,0.2);
+    --border-strong: rgba(0,255,0,0.4);
+    --text: #00ff00;
+    --muted: #008800;
+    --accent: #00ff00;
+    --accent-glow: rgba(0,255,0,0.15);
+    --grad: linear-gradient(135deg, #00ff00 0%, #00cc00 40%, #006600 100%);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(circle at top right, var(--accent-glow), transparent 25%), var(--bg);
+    color: var(--text); font-family: 'Inter', sans-serif; font-size: var(--font-size-base);
+    -webkit-font-smoothing: antialiased; height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+    transition: background var(--transition-slow), color var(--transition-slow);
+  }
+  button, select, input, textarea { font-family: inherit; color: inherit; outline: none; transition: all var(--transition-fast); }
+  button { cursor: pointer; border: none; background: none; }
+  button:active { transform: scale(0.96); opacity: 0.85; }
+  .styled-select {
+    display: inline-flex;
+    width: 100%;
+    min-width: 140px;
+    padding: 11px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    color: var(--text);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%23F5F5F7' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 14px 14px;
+  }
+  .styled-select:hover, .styled-select:focus {
+    border-color: rgba(200,169,106,0.8);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.08), 0 0 0 6px rgba(200,169,106,0.08);
+    outline: none;
+  }
+  .styled-select option { color: var(--text); background: var(--bg-sidebar); }
+
+  /* TOP BAR */
+  header {
+    height: 44px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 10;
+  }
+  .app-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .logo-mark {
+    width: 48px;
+    height: 31px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    color: #0a0a0f;
+    font-weight: 800;
+    font-size: 14px;
+    background: none;
+  }
+  .header-actions { display: flex; align-items: center; gap: 12px; }
+  .status-badge {
+    font-size: var(--font-size-sm); padding: 4px 10px; border-radius: 999px; background: var(--accent-glow);
+    color: var(--accent); border: 1px solid var(--border); display: flex; align-items: center; gap: 6px;
+  }
+  .pulse-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+
+  .icon-btn {
+    display: flex; align-items: center; justify-content: center; width: 30px; height: 30px;
+    border-radius: 50%; color: var(--muted); background: var(--surface); border: 1px solid transparent;
+  }
+  .icon-btn:hover { color: var(--text); background: var(--surface-hover); border-color: var(--border); }
+
+  /* PROJECTS NAVIGATION INTERFACE ELEMENTS */
+  .projects-nav-btn {
+    font-size: var(--font-size-sm); color: var(--text); padding: 5px 11px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface); display: flex; align-items: center; gap: 6px;
+    text-decoration: none; font-weight: 500; transition: all var(--transition-fast);
+  }
+  .projects-nav-btn:hover { background: var(--surface-hover); border-color: var(--accent); }
+
+  /* CONTAINER LAYOUT */
+  .workspace-container { display: flex; flex: 1; height: calc(100vh - 44px); width: 100%; position: relative; }
+  
+  .chat-sidebar {
+    width: 380px; min-width: 280px; max-width: 700px; background: var(--bg-sidebar);
+    border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 5;
+    transition: background var(--transition-slow);
+  }
+
+  /* DRAGGABLE RESIZER */
+  .resizer { width: 6px; background: var(--border); cursor: col-resize; z-index: 15; transition: background var(--transition-fast); position: relative; }
+  .resizer:hover, .resizer.dragging { background: var(--accent); }
+  .resizer::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); height: 30px; width: 2px; background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+  /* SCROLLER PANEL FOR CONTROLS */
+  .panel-scroller { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-bottom: 1px solid var(--border); }
+  .panel-row { display: flex; align-items: center; justify-content: space-between; font-size: var(--font-size-sm); color: var(--muted); }
+  .panel-row span strong { color: var(--text); }
+
+  .attachments-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+  }
+  .attachments-header { color: var(--text); font-size: 12px; font-weight: 700; }
+  .attachments-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .attachments-note { color: var(--muted); font-size: 11px; }
+  .attachment-list { display: grid; gap: 8px; max-height: 180px; overflow-y: auto; padding-right: 2px; }
+  .attachment-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; }
+  .attachment-item strong { font-size: 12px; }
+  .attachment-item span { color: var(--muted); font-size: 11px; }
+  .attachment-item button { background: rgba(255,255,255,0.08); color: var(--text); padding: 4px 8px; border-radius: 8px; font-size: 11px; }
+  .attachment-item button:hover { background: rgba(255,255,255,0.12); }
+
+  /* HISTORY & STREAMING ANIMATION */
+  .history-container { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+  
+  .message {
+    padding: 10px 12px; border-radius: var(--radius); max-width: 95%; line-height: 1.45;
+    transform-origin: bottom left; opacity: 0; transform: translateY(8px);
+    animation: msgShow 0.35s forwards cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  @keyframes msgShow { to { transform: translateY(0); opacity: 1; } }
+
+  .message.user { background: var(--surface); border: 1px solid var(--border); align-self: flex-end; color: var(--text); transform-origin: bottom right; }
+  .message.assistant { background: rgba(255,255,255,0.01); border: 1px solid var(--border); align-self: flex-start; }
+
+  /* INPUT WRAPPER */
+  .input-container { padding: 12px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.15); }
+  
+  .input-wrap { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 8px; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .input-wrap:focus-within { border-color: var(--accent); }
+  .input-wrap textarea { width: 100%; background: none; border: none; resize: none; min-height: 40px; height: 40px; font-size: var(--font-size-base); color: var(--text); }
+  
+  .input-action-row { display: flex; justify-content: space-between; align-items: center; }
+  .counter-display { font-size: var(--font-size-xs); color: var(--muted); }
+  .action-btn { background: var(--grad); color: #0a0a0f; font-weight: 600; padding: 6px 12px; border-radius: 6px; font-size: var(--font-size-sm); display: flex; align-items: center; gap: 6px; }
+  [data-theme="hacker"] .action-btn { color: #000; }
+
+  /* CANVAS STRUCTURES */
+  .preview-canvas { flex: 1; display: flex; flex-direction: column; background: #020204; overflow: hidden; position: relative; }
+  .canvas-header { height: 44px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 4; }
+  .header-left, .header-right { display: flex; align-items: center; gap: 6px; }
+  
+  .tab-btn { font-size: var(--font-size-base); color: var(--muted); padding: 4px 10px; border-radius: 5px; font-weight: 500; }
+  .tab-btn:hover { color: var(--text); background: var(--surface); }
+  .tab-btn.active { color: var(--text); background: var(--surface-hover); border: 1px solid var(--border); }
+
+  .util-btn { font-size: var(--font-size-sm); color: var(--muted); padding: 4px 8px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; gap: 4px; }
+  .util-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .util-btn.active { color: var(--text); background: var(--surface-hover); border-color: var(--accent); }
+
+  .view-viewport { flex: 1; width: 100%; position: relative; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px 16px 44px 16px; background: #040407; gap: 16px; }
+  
+  .viewport-wrapper {
+    width: 100%; height: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-radius: var(--radius);
+    overflow: hidden; border: 1px solid var(--border-strong); background: #fff;
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), height 0.4s ease; position: relative;
+  }
+  .viewport-wrapper.preset-phone { width: 375px; height: 100%; max-height: 740px; }
+  .viewport-wrapper.preset-tablet { width: 768px; height: 100%; max-height: 920px; }
+  .viewport-wrapper.preset-desktop { width: 100%; height: 100%; }
+
+  .canvas-frame { width: 100%; height: 100%; border: none; background: #fff; display: block; }
+  
+  .view-layer { position: absolute; inset: 16px 16px 44px 16px; border-radius: var(--radius); overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all var(--transition-slow); }
+  .view-layer.active { opacity: 1; pointer-events: auto; transform: translateY(0); z-index: 2; }
+  .code-view-container { background: #050508; border: 1px solid var(--border-strong); padding: 12px; }
+  .code-area { width: 100%; height: 100%; background: none; border: none; resize: none; color: #d4d4d8; font-family: 'Fira Code', monospace; font-size: var(--font-size-sm); line-height: 1.5; }
+
+  .initial-load-overlay { position: absolute; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; transition: opacity var(--transition-fast); }
+  .initial-load-overlay.active { display: flex; opacity: 1; }
+  .spinner { width: 36px; height: 36px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SETTINGS MODAL overlay */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity var(--transition-fast); display: flex; align-items: center; justify-content: center; }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+  .modal-content { background: var(--bg-sidebar); border: 1px solid var(--border-strong); border-radius: 12px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; padding: 20px; transform: scale(0.95); transition: all var(--transition-fast); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+  .modal-overlay.active .modal-content { transform: scale(1); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .modal-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .close-btn { background: var(--surface); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--muted); }
+  .close-btn:hover { background: var(--surface-hover); color: var(--text); }
+
+  .settings-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .settings-title { font-size: var(--font-size-xs); font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
+  .cred-field { display: flex; flex-direction: column; gap: 4px; }
+  .cred-field label { font-size: var(--font-size-xs); color: var(--muted); font-weight: 600; text-transform: uppercase; display: flex; justify-content: justify-content; justify-content: space-between; }
+  .cred-field select, .cred-field input { background: rgba(0,0,0,0.25); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px 10px; font-size: var(--font-size-sm); color: inherit; width: 100%; }
+  .cred-field select:focus, .cred-field input:focus { border-color: var(--accent); }
+  .key-input-row { display: flex; gap: 6px; }
+  .key-input-row input { flex: 1; }
+  
+  /* SLIDER STYLE OPTIONS */
+  .slider-element { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); outline: none; margin: 6px 0; }
+  .slider-element::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; transition: transform var(--transition-fast); }
+  .slider-element::-webkit-slider-thumb:hover { transform: scale(1.15); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../index.html" class="logo">
+    <div class="logo-mark">
+      <img src="../assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+    </div>
+  </a>
+  <div class="header-actions">
+    <a href="../projects/" class="projects-nav-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+      Projects
+    </a>
+    <div class="status-badge">
+      <span class="pulse-dot"></span> <span id="runtimeStatus">Workspace Active</span>
+    </div>
+    <button class="icon-btn" onclick="toggleSettingsModal(true)" title="Workspace Settings">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 2 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
+  </div>
+</header>
+
+<div class="workspace-container">
+  <aside class="chat-sidebar" id="sidebarContainer">
+    <div class="panel-scroller">
+      <div class="panel-row">
+        <span>Active: <strong id="lblActiveNode">Nexus</strong></span>
+        <span>Tokens: <strong id="lblLastTokens">0</strong></span>
+      </div>
+      <div class="attachments-panel">
+        <div class="attachments-header">Attachments</div>
+        <div class="attachments-actions">
+          <button class="action-btn" type="button" onclick="document.getElementById('attachmentUpload').click()">Add Files</button>
+          <span class="attachments-note">HTML, CSS, JS, images</span>
+        </div>
+        <input id="attachmentUpload" type="file" multiple accept=".html,.css,.js,image/*" style="display:none;" onchange="handleAttachmentFiles(this.files)" />
+        <div id="attachmentList" class="attachment-list">No attachments yet.</div>
+      </div>
+    </div>
+
+    <div class="history-container" id="chatHistory">
+      <div class="message assistant">
+        Welcome to Nexus! Describe your site, and I'll generate the code for you. You can also ask me to design variations or optimize your existing structure. Let's build something amazing together!
+      </div>
+    </div>
+
+    <div class="input-container">
+      <div class="input-wrap">
+        <textarea id="workspaceInput" placeholder="Describe layout changes or ask to design structural variants..."></textarea>
+        <div class="input-action-row">
+          <div>
+            <span class="counter-display" id="messageCounterLabel">Credits: 20.0 / 20 · Messages: 0 / 20</span>
+            <span class="counter-display" id="dailyResetLabel">Resets in: 24:00:00</span>
+          </div>
+          <button class="action-btn" id="btnSubmitPrompt" onclick="handlePromptSubmission()">
+            <span id="submitBtnLabel">Build Changes</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="resizer" id="dragSplitResizer"></div>
+
+  <main class="preview-canvas">
+    <div class="canvas-header">
+      <div class="header-left">
+        <button class="tab-btn active" id="btnTabPreview" onclick="toggleCanvasTab('preview')">Live Canvas</button>
+        <button class="tab-btn" id="btnTabVisual" onclick="toggleCanvasTab('visual')">Visual Designer</button>
+        <button class="tab-btn" id="btnTabCode" onclick="toggleCanvasTab('code')">Code Architecture</button>
+      </div>
+      <div class="header-right">
+        <button class="util-btn active" id="presetDesktop" onclick="setCanvasViewport('desktop')">Desktop</button>
+        <button class="util-btn" id="presetTablet" onclick="setCanvasViewport('tablet')">Tablet</button>
+        <button class="util-btn" id="presetPhone" onclick="setCanvasViewport('phone')">Mobile</button>
+        <div style="width: 1px; height: 12px; background: var(--border); margin: 0 2px;"></div>
+        <button class="util-btn text-accent" onclick="triggerCodeDownload()" style="color: var(--accent);">Download</button>
+      </div>
+    </div>
+
+    <div class="view-viewport">
+      <div class="initial-load-overlay" id="globalWorkspaceLoader">
+        <div class="spinner"></div>
+        <h3 style="font-size: 14px; margin-bottom: 4px;">AI Engine Executing</h3>
+        <p id="agentLoaderMessage" style="color: var(--muted); font-size: 11px;">Synthesizing interface parameters...</p>
+      </div>
+
+      <div class="view-layer active" id="layerPreview">
+        <div class="viewport-wrapper preset-desktop" id="viewportWrapper">
+          <iframe id="previewFrame" class="canvas-frame" title="Application Workspace Output"></iframe>
+        </div>
+      </div>
+
+      <div class="view-layer code-view-container" id="layerCode">
+        <textarea id="codeAreaView" class="code-area" readonly></textarea>
+      </div>
+
+      <div id="visualInspectorPanel" style="display: none; width: 280px; min-width: 280px; background: var(--bg-sidebar); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 14px; flex-direction: column; gap: 12px; height: 100%; overflow-y: auto; z-index: 10; box-shadow: -5px 0 20px rgba(0,0,0,0.3);">
+        <div class="settings-title" style="font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px;">Visual Transform Inspector</div>
+        <p style="color: var(--muted); font-size: 11px; line-height: 1.4;">Click directly on any item inside the live canvas viewport to select it, modify text content on screen, or tweak its style vectors below.</p>
+        
+        <div id="inspectorControls" style="display: none; flex-direction: column; gap: 14px; margin-top: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+            <span style="font-size: 11px; color: var(--muted);">Selected Element:</span>
+            <strong id="selectedElementTag" style="color: var(--accent); text-transform: uppercase; font-family: monospace; font-size: 12px; background: var(--surface); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);">none</strong>
+          </div>
+          
+          <div class="cred-field">
+            <label style="font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Edit Text Content</label>
+            <input type="text" id="vTextContent" style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px 10px; font-size: 12px; color: inherit; width: 100%;" oninput="applyVisualChange('innerText', this.value)" />
+          </div>
+          
+          <div class="cred-field">
+            <label style="display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase;"><span>Font Size</span> <span id="vFontSizeVal" style="color: var(--accent); font-weight: 700;">16px</span></label>
+            <input type="range" class="slider-element" id="vFontSize" min="8" max="90" oninput="applyVisualChange('fontSize', this.value + 'px')" />
+          </div>
+          
+          <div class="cred-field">
+            <label style="display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase;"><span>Text Height (Line)</span> <span id="vLineHeightVal" style="color: var(--accent); font-weight: 700;">1.2</span></label>
+            <input type="range" class="slider-element" id="vLineHeight" min="0.8" max="4" step="0.1" oninput="applyVisualChange('lineHeight', this.value)" />
+          </div>
+          
+          <div class="cred-field" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px;">
+            <label style="display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase;"><span>Transform Scale</span> <span id="vScaleVal" style="color: var(--accent); font-weight: 700;">1.0</span></label>
+            <input type="range" class="slider-element" id="vScale" min="0.2" max="3.5" step="0.05" oninput="applyVisualTransform()" />
+          </div>
+
+          <div class="cred-field">
+            <label style="display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase;"><span>Move Position X</span> <span id="vMoveXVal" style="color: var(--accent); font-weight: 700;">0px</span></label>
+            <input type="range" class="slider-element" id="vMoveX" min="-300" max="300" oninput="applyVisualTransform()" />
+          </div>
+
+          <div class="cred-field">
+            <label style="display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase;"><span>Move Position Y</span> <span id="vMoveYVal" style="color: var(--accent); font-weight: 700;">0px</span></label>
+            <input type="range" class="slider-element" id="vMoveY" min="-300" max="300" oninput="applyVisualTransform()" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Workspace Adjustments</div>
+      <button class="close-btn" onclick="toggleSettingsModal(false)">&times;</button>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Theme & Layout Appearance</div>
+      <div class="cred-field">
+        <label>Visual Style Presets</label>
+        <select id="themeStyleSelect" class="styled-select" onchange="applyVisualConfigurations()">
+          <option value="dark">Dark Space (Default)</option>
+          <option value="light">Light Minimal</option>
+          <option value="hacker">Hacker Terminal</option>
+        </select>
+      </div>
+      <div class="cred-field">
+        <label>Typography Sizing</label>
+        <select id="textSizeSelect" class="styled-select" onchange="applyVisualConfigurations()">
+          <option value="small">Compact Workspace</option>
+          <option value="medium" selected>Standard Display</option>
+          <option value="large">Spacious Mode</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Usage Restraints Configuration</div>
+      <div class="cred-field">
+        <label><span>Daily message cap</span> <span id="lblSliderLimitValue" style="color: var(--accent); font-weight: 700;">20 Messages</span></label>
+        <input type="range" id="maxMessagesLimitSlider" class="slider-element" min="5" max="20" value="20" oninput="updateMaxAllocationParameters()" />
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">AI Endpoint Infrastructure</div>
+      <div class="cred-field">
+        <label>Provider Hub</label>
+        <select id="providerSelect" class="styled-select" onchange="handleEndpointRotation()">
+          <option value="github">GitHub Models API Hub</option>
+          <option value="groq">Groq Cloud System (Fast Execution)</option>
+        </select>
+      </div>
+      <div class="cred-field">
+        <label>Active Architecture Model</label>
+        <select id="modelSelect" class="styled-select"></select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  // Core Operational States
+  let dynamicCalculatedHTML = "";
+  let paneResizingState = false;
+  let isRequestProcessing = false;
+  
+  // Tracking allocations metrics
+  let totalSentMessagesCounter = 0;
+  let maxConfiguredMessageLimit = 20;
+  let userAlertHasBeenTriggered = false;
+
+  const DAILY_CREDIT_STORE = "nexusDailyCreditState";
+  const DAY_MESSAGE_CAP = 20;
+  const DAILY_CREDIT_MAX = 20;
+  const DAILY_CREDIT_COST_BASE = 0.5;
+  const ALLOCATION_LIMIT_STORE = "nexusAllocationLimit";
+  const PROJECTS_MANIFEST_KEY = "nexus_projects_manifest";
+  const ACTIVE_PROJECT_ID_KEY = "nexus_current_active_project_id";
+  const ACTIVE_PROJECT_VERSION_KEY = "nexus_current_active_version_id";
+  const ACTIVE_PROJECT_TITLE_KEY = "nexus_current_active_title";
+  const ACTIVE_PROJECT_CODE_KEY = "nexus_current_active_code";
+  const ACTIVE_PROJECT_PROMPT_KEY = "nexus_current_active_prompt";
+  const ACTIVE_PROJECT_ATTACHMENTS_KEY = "nexus_current_active_attachments";
+  let activeProjectAttachments = [];
+
+  // Production Worker Endpoint Router Location
+  const CLOUDFLARE_WORKER_ENDPOINT = "https://nexus.imcrabfr.workers.dev";
+
+  // FIXED CATALOG KEYS: Changed "openai/gpt-4o" and "deepseek-ai/deepseek-r1" to point straight to target IDs
+  const ENGINE_VARIATIONS = {
+    github: [
+      { name: "GPT-4o Production [Standard]", value: "gpt-4o" },
+      { name: "DeepSeek R1 [Reasoning Framework]", value: "DeepSeek-R1" }
+    ],
+    groq: [
+      { name: "Llama 3.3 70B [Ultra Speed]", value: "llama-3.3-70b-versatile" },
+      { name: "DeepSeek R1 Distill 70B", value: "deepseek-r1-distill-llama-70b" }
+    ]
+  };
+  
+  maxConfiguredMessageLimit = loadPersistedStorage(ALLOCATION_LIMIT_STORE, 20);
+
+  // Conversation memory channels
+  let compilationMemory = [
+    { role: "system", content: "You are an elite frontend engineer. Return ONLY valid standalone HTML files. Do not use emoji characters or external image assets. USE Tailwind CSS for styling. Make the style feel modern and responsive. The HTML should be a single, complete file ALWAYS. DO NOT use any external resources or image assets." }
+  ];
+
+  function loadPersistedStorage(key, alternative) {
+    try { const value = localStorage.getItem(key); if (value) return JSON.parse(value); } catch(e){}
+    return JSON.parse(JSON.stringify(alternative));
+  }
+  function persistStorage(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+  function getTodayKey() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  }
+
+  function getMidnightTimestamp() {
+    const next = new Date();
+    next.setHours(24, 0, 0, 0);
+    return next.getTime();
+  }
+
+  function loadDailyCreditState() {
+    const today = getTodayKey();
+    let state = loadPersistedStorage(DAILY_CREDIT_STORE, null);
+    if (!state || state.date !== today) {
+      state = {
+        date: today,
+        creditsRemaining: DAILY_CREDIT_MAX,
+        totalUsedCredits: 0,
+        messagesUsed: 0,
+        resetAt: getMidnightTimestamp()
+      };
+      persistStorage(DAILY_CREDIT_STORE, state);
+    }
+    if (!state.resetAt) state.resetAt = getMidnightTimestamp();
+    return state;
+  }
+
+  function persistDailyCreditState(state) {
+    persistStorage(DAILY_CREDIT_STORE, state);
+  }
+
+  function calculateCreditCost(tokenCount) {
+    if (!tokenCount || tokenCount <= 0) return DAILY_CREDIT_COST_BASE;
+    const extraSteps = Math.floor(tokenCount / 1500);
+    return Math.min(DAILY_CREDIT_MAX, DAILY_CREDIT_COST_BASE + extraSteps * 0.5);
+  }
+
+  function updateResetTimer() {
+    if (!dailyCreditState) return;
+    const now = Date.now();
+    if (now >= dailyCreditState.resetAt) {
+      dailyCreditState = {
+        date: getTodayKey(),
+        creditsRemaining: DAILY_CREDIT_MAX,
+        totalUsedCredits: 0,
+        messagesUsed: 0,
+        resetAt: getMidnightTimestamp()
+      };
+      persistDailyCreditState(dailyCreditState);
+    }
+    refreshCounterDisplayLabel();
+  }
+
+  function startDailyResetTimer() {
+    setInterval(updateResetTimer, 1000);
+  }
+
+  let dailyCreditState = loadDailyCreditState();
+
+  function getResetCountdownText() {
+    const remainingMs = Math.max(0, dailyCreditState.resetAt - Date.now());
+    const hours = String(Math.floor(remainingMs / 3600000)).padStart(2, '0');
+    const minutes = String(Math.floor((remainingMs % 3600000) / 60000)).padStart(2, '0');
+    const seconds = String(Math.floor((remainingMs % 60000) / 1000)).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  function getActiveAttachmentsFromStorage() {
+    return loadPersistedStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, []);
+  }
+
+  function persistCurrentAttachments() {
+    persistStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, activeProjectAttachments);
+  }
+
+  function readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleAttachmentFiles(fileList) {
+    if (!fileList || !fileList.length) return;
+    const selectedFiles = Array.from(fileList);
+    const attachments = await Promise.all(selectedFiles.map(async (file) => ({
+      id: `att_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+      name: file.name,
+      type: file.type || 'application/octet-stream',
+      size: file.size,
+      data: await readFileAsDataURL(file)
+    })));
+
+    activeProjectAttachments = [...activeProjectAttachments, ...attachments];
+    persistCurrentAttachments();
+    updateAttachmentListDisplay();
+    const uploadInput = document.getElementById('attachmentUpload');
+    if (uploadInput) uploadInput.value = '';
+  }
+
+  window.handleAttachmentFiles = handleAttachmentFiles;
+
+  window.removeAttachment = (attachmentId) => {
+    activeProjectAttachments = activeProjectAttachments.filter(a => a.id !== attachmentId);
+    persistCurrentAttachments();
+    updateAttachmentListDisplay();
+  };
+
+  function updateAttachmentListDisplay() {
+    const list = document.getElementById('attachmentList');
+    if (!list) return;
+    if (!activeProjectAttachments.length) {
+      list.innerHTML = '<div class="attachment-item" style="justify-content:center;">No attachments yet.</div>';
+      return;
+    }
+    list.innerHTML = activeProjectAttachments.map(att => `
+      <div class="attachment-item">
+        <div>
+          <strong>${att.name}</strong>
+          <div><span>${att.type || 'file'} · ${Math.round(att.size / 1024)} KB</span></div>
+        </div>
+        <button type="button" onclick="removeAttachment('${att.id}')">Remove</button>
+      </div>
+    `).join('');
+  }
+
+  function getProjectsManifest() {
+    const raw = loadPersistedStorage(PROJECTS_MANIFEST_KEY, []);
+    return raw.map(project => {
+      if (project && project.sourceCode && !Array.isArray(project.versions)) {
+        return {
+          id: project.id || `proj_${Date.now()}`,
+          name: project.name || "Generated Project Layout",
+          versions: [{
+            versionId: `ver_${Date.now()}`,
+            label: "Version 1",
+            timestamp: project.timestamp || new Date().toLocaleString(),
+            prompt: project.prompt || "Legacy imported project",
+            sourceCode: project.sourceCode
+          }]
+        };
+      }
+      return project;
+    });
+  }
+
+  function saveProjectsManifest(manifest) {
+    persistStorage(PROJECTS_MANIFEST_KEY, manifest);
+  }
+
+  // Resizable Split-Pane Functionality
+  const sidebarContainer = document.getElementById('sidebarContainer');
+  const splitResizer = document.getElementById('dragSplitResizer');
+
+  splitResizer.addEventListener('mousedown', (e) => {
+    paneResizingState = true;
+    splitResizer.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!paneResizingState) return;
+    const boundaryWidth = Math.max(280, Math.min(e.clientX, window.innerWidth - 320));
+    sidebarContainer.style.width = `${boundaryWidth}px`;
+    sidebarContainer.style.flex = 'none';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (paneResizingState) {
+      paneResizingState = false;
+      splitResizer.classList.remove('dragging');
+      document.body.style.cursor = '';
+    }
+  });
+
+  // Theme & Appearance Layout Switches
+  window.toggleSettingsModal = (displayState) => {
+    document.getElementById('settingsModal').classList.toggle('active', displayState);
+  };
+
+  window.applyVisualConfigurations = () => {
+    const selectedTheme = document.getElementById('themeStyleSelect').value;
+    const selectedSizing = document.getElementById('textSizeSelect').value;
+    document.documentElement.setAttribute('data-theme', selectedTheme);
+
+    let variableSize = "12.5px";
+    if (selectedSizing === "small") variableSize = "11.5px";
+    if (selectedSizing === "large") variableSize = "14px";
+    document.documentElement.style.setProperty('--font-size-base', variableSize);
+  };
+
+  // Adjust Allocations Limits
+  window.updateMaxAllocationParameters = () => {
+    const sliderElement = document.getElementById('maxMessagesLimitSlider');
+    maxConfiguredMessageLimit = parseInt(sliderElement.value, 10);
+    document.getElementById('lblSliderLimitValue').textContent = `${maxConfiguredMessageLimit} Messages`;
+    persistStorage(ALLOCATION_LIMIT_STORE, maxConfiguredMessageLimit);
+    refreshCounterDisplayLabel();
+    
+    if (totalSentMessagesCounter < (maxConfiguredMessageLimit * 0.85)) {
+      userAlertHasBeenTriggered = false;
+    }
+  };
+
+  function refreshCounterDisplayLabel() {
+    const creditsText = dailyCreditState ? dailyCreditState.creditsRemaining.toFixed(1) : DAILY_CREDIT_MAX.toFixed(1);
+    const messagesText = dailyCreditState ? dailyCreditState.messagesUsed : 0;
+    document.getElementById('messageCounterLabel').textContent = `Credits: ${creditsText} / ${DAILY_CREDIT_MAX} · Messages: ${messagesText} / ${maxConfiguredMessageLimit}`;
+    document.getElementById('dailyResetLabel').textContent = `Resets in: ${getResetCountdownText()}`;
+    const submitBtn = document.getElementById('btnSubmitPrompt');
+    if (dailyCreditState && (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0)) {
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.6';
+      submitBtn.style.pointerEvents = 'none';
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.style.pointerEvents = 'auto';
+    }
+  }
+
+  // Update the submit button label depending on whether a project exists
+  function updateSubmitButtonLabel() {
+    const labelEl = document.getElementById('submitBtnLabel');
+    if (!labelEl) return;
+    const activeCachedCode = localStorage.getItem('nexus_current_active_code');
+    labelEl.textContent = activeCachedCode ? 'Build Changes' : 'Build';
+  }
+
+  // Endpoint Engine Management
+  window.handleEndpointRotation = () => {
+    const activeProvider = document.getElementById('providerSelect').value;
+    const modelSelectionElement = document.getElementById('modelSelect');
+    modelSelectionElement.innerHTML = '';
+
+    ENGINE_VARIATIONS[activeProvider].forEach(engine => {
+      const optionNode = document.createElement('option');
+      optionNode.value = engine.value;
+      optionNode.textContent = engine.name;
+      modelSelectionElement.appendChild(optionNode);
+    });
+  };
+
+  // Navigation Tabs Control Inside Canvas
+  window.toggleCanvasTab = (activeTabTarget) => {
+    document.getElementById('btnTabPreview').classList.toggle('active', activeTabTarget === 'preview');
+    document.getElementById('btnTabVisual').classList.toggle('active', activeTabTarget === 'visual');
+    document.getElementById('btnTabCode').classList.toggle('active', activeTabTarget === 'code');
+    
+    document.getElementById('layerPreview').classList.toggle('active', activeTabTarget === 'preview' || activeTabTarget === 'visual');
+    document.getElementById('layerCode').classList.toggle('active', activeTabTarget === 'code');
+    
+    const visualInspector = document.getElementById('visualInspectorPanel');
+    if (activeTabTarget === 'visual') {
+      visualInspector.style.display = 'flex';
+      enableVisualDesignMode(true);
+    } else {
+      visualInspector.style.display = 'none';
+      enableVisualDesignMode(false);
+    }
+  };
+
+  window.setCanvasViewport = (dimensionsPreset) => {
+    ['desktop', 'tablet', 'phone'].forEach(p => {
+      document.getElementById(`preset${p.charAt(0).toUpperCase() + p.slice(1)}`).classList.remove('active');
+      document.getElementById('viewportWrapper').classList.remove(`preset-${p}`);
+    });
+    document.getElementById(`preset${dimensionsPreset.charAt(0).toUpperCase() + dimensionsPreset.slice(1)}`).classList.add('active');
+    document.getElementById('viewportWrapper').classList.add(`preset-${dimensionsPreset}`);
+  };
+
+  // Execution Processing Handles
+  window.handlePromptSubmission = async () => {
+    if (isRequestProcessing) return;
+
+    const inputElement = document.getElementById('workspaceInput');
+    const promptValueText = inputElement.value.trim();
+    if (!promptValueText) return;
+
+    if (!dailyCreditState) dailyCreditState = loadDailyCreditState();
+    if (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0) {
+      alert('Daily AI access blocked: You have used all available daily messages or credits. Please wait until your credits reset.');
+      refreshCounterDisplayLabel();
+      return;
+    }
+
+    inputElement.value = "";
+    totalSentMessagesCounter++;
+    dailyCreditState.messagesUsed += 1;
+    dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - DAILY_CREDIT_COST_BASE);
+    dailyCreditState.totalUsedCredits += DAILY_CREDIT_COST_BASE;
+    persistDailyCreditState(dailyCreditState);
+    refreshCounterDisplayLabel();
+
+    if (!userAlertHasBeenTriggered && dailyCreditState.messagesUsed >= (maxConfiguredMessageLimit * 0.85)) {
+      userAlertHasBeenTriggered = true;
+      alert(`Operational Warning: You are approaching your maximum daily message limit. You have used ${dailyCreditState.messagesUsed} out of ${maxConfiguredMessageLimit} messages, and ${dailyCreditState.creditsRemaining.toFixed(1)} credits remain.`);
+    }
+
+    await launchSystemBuildPipeline(promptValueText);
+  };
+
+  // System Core Code Construction Compilation Path
+  async function launchSystemBuildPipeline(userInstructionPrompt) {
+    const globalLoaderOverlay = document.getElementById('globalWorkspaceLoader');
+    const selectedProviderHub = document.getElementById('providerSelect').value;
+    const selectedEngineTarget = document.getElementById('modelSelect').value;
+
+    globalLoaderOverlay.classList.add('active');
+    document.getElementById('agentLoaderMessage').textContent = "Assembling framework layout matrix elements...";
+    postMessageToContainer('user', userInstructionPrompt);
+
+    try {
+      compilationMemory.push({ role: "user", content: userInstructionPrompt });
+
+      // REPLACE THIS URL WITH YOUR ACTUAL CLOUDFLARE WORKER ROUTE:
+      const cloudflareWorkerEndpoint = CLOUDFLARE_WORKER_ENDPOINT;
+
+      const networkCompilationStream = await fetch(cloudflareWorkerEndpoint, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json" 
+        },
+        body: JSON.stringify({ 
+          provider: selectedProviderHub, // "github" or "groq"
+          model: selectedEngineTarget, 
+          messages: compilationMemory, 
+          temperature: 0.25 
+        })
+      });
+
+      if (!networkCompilationStream.ok) {
+        const errorText = await networkCompilationStream.text();
+        throw new Error(`Edge node framework returned processing errors: ${networkCompilationStream.status} - ${errorText}`);
+      }
+      
+      const dataPayloadJson = await networkCompilationStream.json();
+      const coreResponseProseText = dataPayloadJson.choices[0].message.content;
+      
+      // Clean structure block boundaries safely
+      const codeMarkdownRegexMatch = /```html([\s\S]*?)```/i.exec(coreResponseProseText);
+      dynamicCalculatedHTML = codeMarkdownRegexMatch ? codeMarkdownRegexMatch[1].trim() : coreResponseProseText.trim();
+
+      // Refresh layout sandbox elements smoothly
+      document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
+      document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
+
+      compilationMemory.push({ role: "assistant", content: coreResponseProseText });
+
+      // 1. DYNAMIC CUSTOM SENTENCE LOGIC:
+      // Strip markdown code backticks blocks to cleanly extract the short status text summary sentence provided by the AI model.
+      let customSentenceSummary = coreResponseProseText.replace(/```html[\s\S]*?```/gi, '').replace(/```[\s\S]*?```/gi, '').trim();
+      if (!customSentenceSummary || customSentenceSummary.length < 5) {
+        customSentenceSummary = "Canvas layouts refreshed; generated modern components successfully via structural synthesis paths.";
+      } else if (customSentenceSummary.length > 180) {
+        customSentenceSummary = customSentenceSummary.substring(0, 177) + "...";
+      }
+
+      postMessageToContainer('assistant', customSentenceSummary);
+      
+      // 2. AUTOMATIC LOCALSTORAGE PROJECT PERSISTENCE PIPELINE:
+      saveActiveProjectToLocalStorage(userInstructionPrompt, dynamicCalculatedHTML);
+
+      const buildSummaryMessage = createBuildCompletionSummary(
+        userInstructionPrompt,
+        selectedProviderHub,
+        selectedEngineTarget,
+        dynamicCalculatedHTML
+      );
+      postMessageToContainer('assistant', buildSummaryMessage);
+
+      if (dataPayloadJson.usage) {
+        const tokenCount = dataPayloadJson.usage.total_tokens || 0;
+        document.getElementById('lblLastTokens').textContent = tokenCount;
+        const exactCost = calculateCreditCost(tokenCount);
+        const extraCost = Math.max(0, exactCost - DAILY_CREDIT_COST_BASE);
+        if (extraCost > 0 && dailyCreditState) {
+          dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - extraCost);
+          dailyCreditState.totalUsedCredits += extraCost;
+          persistDailyCreditState(dailyCreditState);
+          refreshCounterDisplayLabel();
+          postMessageToContainer('assistant', `Credit adjustment applied: ${exactCost.toFixed(1)} credits used for this request based on ${tokenCount} token usage.`);
+        }
+      }
+
+    } catch (compilationError) {
+      postMessageToContainer('assistant', `Compilation Processing Aborted: ${compilationError.message}`);
+    } finally {
+      globalLoaderOverlay.classList.remove('active');
+    }
+  }
+
+  function createBuildCompletionSummary(userPrompt, providerName, engineName, htmlPayload) {
+    const promptTitle = userPrompt.trim().replace(/\s+/g, ' ');
+    const trimmedPrompt = promptTitle.length > 90 ? `${promptTitle.substring(0, 87)}...` : promptTitle;
+
+    return `Build complete from prompt: "${trimmedPrompt}".\n\nWhat it made: a fully assembled HTML layout matching your request, including the page structure, sections, and content blocks required for the chosen site type.\n\nHow it works: the generated HTML is rendered in the live preview and exposed in the code tab; it is also saved as a versioned project in LocalStorage so you can continue editing later.\n\nWhat it used: the ${providerName} provider with the ${engineName} engine, plus the AI build pipeline to synthesize HTML directly from your prompt.`;
+  }
+
+  function postMessageToContainer(roleDesignation, blockMessageCopy) {
+    const historicalContainerBox = document.getElementById('chatHistory');
+    const dynamicMessageCard = document.createElement('div');
+    dynamicMessageCard.className = `message ${roleDesignation}`;
+    dynamicMessageCard.innerHTML = blockMessageCopy.replace(/\n/g, '<br>');
+    historicalContainerBox.appendChild(dynamicMessageCard);
+    historicalContainerBox.scrollTop = historicalContainerBox.scrollHeight;
+  }
+
+  // Local Storage Pipeline for individual project compilation states
+  function saveActiveProjectToLocalStorage(userPromptIntent, htmlPayload) {
+    try {
+      const registeredProjects = getProjectsManifest();
+      const activeProjectId = localStorage.getItem(ACTIVE_PROJECT_ID_KEY);
+      const versionId = `ver_${Date.now()}`;
+      const existingProjectIndex = registeredProjects.findIndex(p => p.id === activeProjectId);
+
+      const derivedName = userPromptIntent.split(/[.?!,]/)[0].substring(0, 35).trim() || "Generated Project Layout";
+      let projectName = derivedName;
+      if (existingProjectIndex !== -1 && registeredProjects[existingProjectIndex].name) {
+        projectName = registeredProjects[existingProjectIndex].name;
+      }
+
+      const versionObject = {
+        versionId,
+        label: `Version ${existingProjectIndex === -1 ? 1 : registeredProjects[existingProjectIndex].versions.length + 1}`,
+        timestamp: new Date().toLocaleString(),
+        prompt: userPromptIntent,
+        sourceCode: htmlPayload,
+        attachments: activeProjectAttachments
+      };
+
+      let activeProjectIdToSave = activeProjectId;
+      if (existingProjectIndex !== -1) {
+        registeredProjects[existingProjectIndex].versions.unshift(versionObject);
+      } else {
+        activeProjectIdToSave = `proj_${Date.now()}`;
+        registeredProjects.unshift({
+          id: activeProjectIdToSave,
+          name: projectName,
+          versions: [versionObject]
+        });
+      }
+
+      saveProjectsManifest(registeredProjects);
+
+      localStorage.setItem(ACTIVE_PROJECT_ID_KEY, activeProjectIdToSave);
+      localStorage.setItem(ACTIVE_PROJECT_VERSION_KEY, versionId);
+      localStorage.setItem(ACTIVE_PROJECT_CODE_KEY, htmlPayload);
+      localStorage.setItem(ACTIVE_PROJECT_TITLE_KEY, projectName);
+      localStorage.setItem(ACTIVE_PROJECT_PROMPT_KEY, userPromptIntent);
+      updateSubmitButtonLabel();
+    } catch (err) {
+      console.error("Local project persistence error encountered:", err);
+    }
+  }
+
+  // Check if a specific project was loaded from projects.html to run inside the frame layout
+  function verifyActiveSessionLoadingState() {
+    const activeCachedCode = localStorage.getItem(ACTIVE_PROJECT_CODE_KEY);
+    const activeProjectTitle = localStorage.getItem(ACTIVE_PROJECT_TITLE_KEY);
+    const activeProjectVersionId = localStorage.getItem(ACTIVE_PROJECT_VERSION_KEY);
+    const activeProjectPrompt = localStorage.getItem(ACTIVE_PROJECT_PROMPT_KEY);
+
+    if (activeCachedCode) {
+      dynamicCalculatedHTML = activeCachedCode;
+      document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
+      document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
+      document.getElementById('lblActiveNode').textContent = activeProjectTitle || "Nexus";
+      activeProjectAttachments = getActiveAttachmentsFromStorage();
+      updateAttachmentListDisplay();
+      
+      const currentTitle = activeProjectTitle || "Loaded Workspace";
+      postMessageToContainer('assistant', `Loaded external project: "<strong>${currentTitle}</strong>" successfully into the preview viewport memory workspace layout matrix.`);
+
+      compilationMemory.push({
+        role: "assistant",
+        content: `The active project version ${activeProjectVersionId || ''} has been loaded. Use the current HTML below as the starting point for all further requested edits.`
+      });
+
+      if (activeProjectPrompt) {
+        compilationMemory.push({
+          role: "assistant",
+          content: `Previous prompt for this version: ${activeProjectPrompt}`
+        });
+      }
+
+      compilationMemory.push({
+        role: "assistant",
+        content: `Current HTML start state:\n\n${activeCachedCode}`
+      });
+
+      updateSubmitButtonLabel();
+    }
+  }
+
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+
+  function maybeAutoStartFromQuery() {
+    const prompt = getQueryParam('prompt');
+    const isNew = getQueryParam('new');
+    if (isNew) {
+      localStorage.removeItem(ACTIVE_PROJECT_ID_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_VERSION_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_PROMPT_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_TITLE_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_CODE_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_ATTACHMENTS_KEY);
+      activeProjectAttachments = [];
+      updateAttachmentListDisplay();
+      dynamicCalculatedHTML = "";
+      document.getElementById('previewFrame').srcdoc = "";
+      document.getElementById('codeAreaView').value = "";
+    }
+    if (prompt) {
+      const inputElement = document.getElementById('workspaceInput');
+      if (inputElement) {
+        inputElement.value = prompt;
+      }
+      setTimeout(() => {
+        if (prompt && inputElement && inputElement.value.trim()) {
+          handlePromptSubmission();
+        }
+      }, 140);
+    }
+  }
+
+  window.triggerCodeDownload = () => {
+    if (!dynamicCalculatedHTML) return alert("Compile application layouts first.");
+    const formattingBlob = new Blob([dynamicCalculatedHTML], { type: "text/html" });
+    const virtualLinkElement = document.createElement("a");
+    virtualLinkElement.href = URL.createObjectURL(formattingBlob);
+    virtualLinkElement.download = "nexus-compiled-workspace.html";
+    document.body.appendChild(virtualLinkElement);
+    virtualLinkElement.click();
+    document.body.removeChild(virtualLinkElement);
+  };
+
+  // --- VISUAL TRANSFORM DESIGNER SYSTEM INFRASTRUCTURE ---
+  let selectedVisualElement = null;
+  let visualModeActive = false;
+
+  function enableVisualDesignMode(active) {
+    visualModeActive = active;
+    const iframe = document.getElementById('previewFrame');
+    if (!iframe || !iframe.contentWindow) return;
+    const doc = iframe.contentWindow.document;
+    
+    if (active) {
+      // Append runtime helper highlight rules safely inside workspace document
+      let styleEl = doc.getElementById('nexus-designer-styles');
+      if (!styleEl) {
+        styleEl = doc.createElement('style');
+        styleEl.id = 'nexus-designer-styles';
+        styleEl.innerHTML = `
+          .nexus-hovered { outline: 2px dashed #c8a96a !important; cursor: pointer !important; outline-offset: 1px; }
+          .nexus-selected { outline: 2px solid #c8a96a !important; outline-offset: 1px; }
+        `;
+        doc.head.appendChild(styleEl);
+      }
+      doc.body.addEventListener('mouseover', handleIframeMouseOver);
+      doc.body.addEventListener('mouseout', handleIframeMouseOut);
+      doc.body.addEventListener('click', handleIframeClick);
+      doc.body.contentEditable = "true";
+    } else {
+      doc.body.contentEditable = "false";
+      doc.body.removeEventListener('mouseover', handleIframeMouseOver);
+      doc.body.removeEventListener('mouseout', handleIframeMouseOut);
+      doc.body.removeEventListener('click', handleIframeClick);
+      
+      const hovered = doc.querySelectorAll('.nexus-hovered');
+      hovered.forEach(el => el.classList.remove('nexus-hovered'));
+      const selected = doc.querySelectorAll('.nexus-selected');
+      selected.forEach(el => el.classList.remove('nexus-selected'));
+      
+      document.getElementById('inspectorControls').style.display = 'none';
+      selectedVisualElement = null;
+    }
+  }
+
+  function handleIframeMouseOver(e) {
+    if (!visualModeActive || e.target === e.currentTarget) return;
+    e.target.classList.add('nexus-hovered');
+  }
+
+  function handleIframeMouseOut(e) {
+    e.target.classList.remove('nexus-hovered');
+  }
+
+  function handleIframeClick(e) {
+    if (!visualModeActive) return;
+    if (e.target === e.currentTarget) return;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const doc = document.getElementById('previewFrame').contentWindow.document;
+    const selected = doc.querySelectorAll('.nexus-selected');
+    selected.forEach(el => el.classList.remove('nexus-selected'));
+    
+    selectedVisualElement = e.target;
+    selectedVisualElement.classList.add('nexus-selected');
+    
+    document.getElementById('inspectorControls').style.display = 'flex';
+    document.getElementById('selectedElementTag').textContent = selectedVisualElement.tagName.toLowerCase();
+    document.getElementById('vTextContent').value = selectedVisualElement.innerText || "";
+    
+    const computedStyle = document.getElementById('previewFrame').contentWindow.getComputedStyle(selectedVisualElement);
+    
+    const fSize = parseInt(computedStyle.fontSize) || 16;
+    document.getElementById('vFontSize').value = fSize;
+    document.getElementById('vFontSizeVal').textContent = fSize + 'px';
+    
+    let lHeight = parseFloat(computedStyle.lineHeight);
+    if (isNaN(lHeight)) lHeight = 1.2;
+    document.getElementById('vLineHeight').value = lHeight;
+    document.getElementById('vLineHeightVal').textContent = lHeight;
+    
+    if (!selectedVisualElement.dataset.scale) selectedVisualElement.dataset.scale = "1";
+    if (!selectedVisualElement.dataset.moveX) selectedVisualElement.dataset.moveX = "0";
+    if (!selectedVisualElement.dataset.moveY) selectedVisualElement.dataset.moveY = "0";
+    
+    document.getElementById('vScale').value = selectedVisualElement.dataset.scale;
+    document.getElementById('vScaleVal').textContent = selectedVisualElement.dataset.scale;
+    document.getElementById('vMoveX').value = selectedVisualElement.dataset.moveX;
+    document.getElementById('vMoveXVal').textContent = selectedVisualElement.dataset.moveX + 'px';
+    document.getElementById('vMoveY').value = selectedVisualElement.dataset.moveY;
+    document.getElementById('vMoveYVal').textContent = selectedVisualElement.dataset.moveY + 'px';
+  }
+
+  window.applyVisualChange = (property, value) => {
+    if (!selectedVisualElement) return;
+    if (property === 'innerText') {
+      selectedVisualElement.innerText = value;
+    } else {
+      selectedVisualElement.style[property] = value;
+      if (property === 'fontSize') document.getElementById('vFontSizeVal').textContent = value;
+      if (property === 'lineHeight') document.getElementById('vLineHeightVal').textContent = value;
+    }
+    syncVisualCodeBack();
+  };
+
+  window.applyVisualTransform = () => {
+    if (!selectedVisualElement) return;
+    const scale = document.getElementById('vScale').value;
+    const moveX = document.getElementById('vMoveX').value;
+    const moveY = document.getElementById('vMoveY').value;
+    
+    selectedVisualElement.dataset.scale = scale;
+    selectedVisualElement.dataset.moveX = moveX;
+    selectedVisualElement.dataset.moveY = moveY;
+    
+    document.getElementById('vScaleVal').textContent = scale;
+    document.getElementById('vMoveXVal').textContent = moveX + 'px';
+    document.getElementById('vMoveYVal').textContent = moveY + 'px';
+    
+    selectedVisualElement.style.transform = `translate(${moveX}px, ${moveY}px) scale(${scale})`;
+    if (!selectedVisualElement.style.display || selectedVisualElement.style.display === 'inline') {
+      selectedVisualElement.style.display = 'inline-block';
+    }
+    syncVisualCodeBack();
+  };
+
+  function syncVisualCodeBack() {
+    const iframe = document.getElementById('previewFrame');
+    if (!iframe) return;
+    const docClone = iframe.contentWindow.document.documentElement.cloneNode(true);
+    
+    const styleEl = docClone.querySelector('#nexus-designer-styles');
+    if (styleEl) styleEl.remove();
+    
+    const hovered = docClone.querySelectorAll('.nexus-hovered');
+    hovered.forEach(el => el.classList.remove('nexus-hovered'));
+    const selected = docClone.querySelectorAll('.nexus-selected');
+    selected.forEach(el => el.classList.remove('nexus-selected'));
+    
+    const bodyNode = docClone.querySelector('body');
+    if (bodyNode) bodyNode.removeAttribute('contenteditable');
+    
+    dynamicCalculatedHTML = "<!DOCTYPE html>\n" + docClone.outerHTML;
+    document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
+    localStorage.setItem('nexus_current_active_code', dynamicCalculatedHTML);
+  }
+
+  document.getElementById('previewFrame').addEventListener('load', () => {
+    if (document.getElementById('btnTabVisual') && document.getElementById('btnTabVisual').classList.contains('active')) {
+      enableVisualDesignMode(true);
+    }
+  });
+
+  // Run Initialization Sequences
+  document.getElementById('maxMessagesLimitSlider').value = maxConfiguredMessageLimit;
+  document.getElementById('lblSliderLimitValue').textContent = `${maxConfiguredMessageLimit} Messages`;
+  refreshCounterDisplayLabel();
+  startDailyResetTimer();
+  
+  window.handleEndpointRotation();
+  window.applyVisualConfigurations();
+  verifyActiveSessionLoadingState();
+  maybeAutoStartFromQuery();
+  updateSubmitButtonLabel();
+</script>
+</body>
+</html>
