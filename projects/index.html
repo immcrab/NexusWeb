@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Projects | Manage Saved AI Workspaces</title>
+<link rel="icon" href="../assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #06060a;
+    --sidebar: #0b0b14;
+    --surface: rgba(255,255,255,0.03);
+    --surface-hover: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.12);
+    --text: #f5f5f7;
+    --muted: #8e8e9f;
+    --accent: #c8a96a;
+    --grad: linear-gradient(135deg, #e9d8a6 0%, #c8a96a 40%, #8c6f3f 100%);
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif;
+    min-height: 100vh; padding: 40px 24px; -webkit-font-smoothing: antialiased;
+  }
+  .dashboard-wrapper { max-width: 1100px; margin: 0 auto; }
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border-strong); padding-bottom: 20px; margin-bottom: 32px;
+  }
+  .title-section h1 { font-size: 24px; font-weight: 700; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .title-section p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--surface);
+    border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 6px;
+    text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s ease;
+  }
+  .back-btn:hover { background: var(--surface-hover); border-color: var(--accent); }
+
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  .projects-tools { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+  .projects-tools .action-trigger.open-type {
+    min-width: 250px;
+    padding: 14px 24px;
+    font-size: 15px;
+    border-radius: 12px;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.1);
+  }
+  .folder-dropdown { display: flex; flex-direction: column; gap: 8px; color: var(--muted); }
+  .folder-dropdown label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: #b6b6c2; }
+  .styled-select {
+    min-width: 220px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text);
+    border-radius: 16px;
+    padding: 12px 44px 12px 14px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+    transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%23F5F5F7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px 16px;
+    cursor: pointer;
+  }
+  .styled-select:hover, .styled-select:focus {
+    border-color: rgba(200,169,106,0.8);
+    box-shadow: 0 0 0 6px rgba(200,169,106,0.08);
+    outline: none;
+  }
+  .styled-select option { background: #0b0b14; color: var(--text); }
+  .styled-select::-ms-expand { display: none; }
+  .project-card {
+    background: var(--sidebar); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .project-card:hover { transform: translateY(-2px); border-color: var(--border-strong); box-shadow: 0 12px 24px rgba(0,0,0,0.4); }
+  
+  .project-details h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .project-details .meta-time { font-size: 11px; color: var(--muted); display: block; margin-bottom: 16px; }
+  
+  /* Inline Edit Input Field Style */
+  .rename-input {
+    width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--accent); border-radius: 6px;
+    color: var(--text); font-family: inherit; font-size: 15px; padding: 4px 8px; margin-bottom: 6px; outline: none;
+  }
+
+  .card-actions { display: flex; gap: 8px; border-top: 1px solid var(--border); padding-top: 14px; margin-top: 12px; }
+  .action-trigger {
+    flex: 1; text-align: center; padding: 7px 0; font-size: 12px; font-weight: 500; border-radius: 6px;
+    cursor: pointer; transition: all 0.2s ease; border: none; background: none; display: inline-flex; justify-content: center; align-items: center; gap: 4px;
+  }
+  .action-trigger.open-type { background: var(--grad); color: #06060a; font-weight: 600; }
+  .action-trigger.open-type:hover { opacity: 0.9; }
+  .action-trigger.edit-type { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+  .action-trigger.edit-type:hover { background: var(--surface-hover); }
+  .action-trigger.delete-type { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; }
+  .action-trigger.delete-type:hover { background: rgba(239, 68, 68, 0.18); border-color: #f87171; }
+
+  .template-panel {
+    display: grid;
+    gap: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 14px;
+  }
+
+  .template-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .template-header strong {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .template-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+  }
+
+  .template-buttons .action-trigger {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+
+  .empty-state {
+    grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: var(--sidebar);
+    border: 1px dashed var(--border-strong); border-radius: var(--radius); color: var(--muted);
+  }
+  .empty-state p { margin-bottom: 16px; font-size: 14px; }
+  .fade-in { animation: fadeInCard 0.32s ease forwards; }
+  @keyframes fadeInCard { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+  <header>
+    <div class="title-section">
+      <h1>Nexus Project Manifest</h1>
+      <p>Manage, rename, view, or reload local builds saved within your LocalStorage workspace engine sandbox</p>
+    </div>
+    <a href="../app/" class="back-btn">
+      &larr; Return to Live Studio
+    </a>
+  </header>
+
+  <div class="projects-tools">
+    <button class="action-trigger open-type" onclick="createNewProject()" style="flex:none;">＋ Create New Project</button>
+    <div class="template-panel">
+      <div class="template-header">
+        <strong>Ready-made templates</strong>
+        <span>Pick a prompt and jump into the builder with a prewritten starting point.</span>
+      </div>
+      <div id="templateButtons" class="template-buttons"></div>
+    </div>
+  </div>
+
+  <div class="projects-grid" id="manifestGridContainer">
+  </div>
+</div>
+
+<script>
+  const TEMPLATE_PROMPTS = [
+    { label: 'SaaS landing page', prompt: 'Generate a modern SaaS landing page for an AI productivity platform with hero section, features, testimonials, and pricing.' },
+    { label: 'Designer portfolio', prompt: 'Create a stylish portfolio site for a graphic designer with project showcase, about section, and contact CTA.' },
+    { label: 'Restaurant menu', prompt: 'Build a responsive restaurant website with menu highlights, reservation section, and location details.' },
+    { label: 'E-commerce shop', prompt: 'Design an e-commerce storefront for handmade goods with featured products, categories, and checkout CTA.' },
+    { label: 'Event landing page', prompt: 'Craft an event landing page for a conference with schedule, speakers, registration form, and sponsors.' },
+    { label: 'Mobile app promo', prompt: 'Generate a landing page for a mobile app with app features, screenshots, and download buttons.' },
+    { label: 'Community forum', prompt: 'Create a community hub page with discussion previews, user onboarding, and community rules.' },
+    { label: 'Personal resume', prompt: 'Build a clean personal resume website with bio, experience timeline, and contact links.' },
+    { label: 'Agency showcase', prompt: 'Design an agency showcase page with services, case studies, team, and contact CTA.' },
+    { label: 'Blog homepage', prompt: 'Create a blog homepage layout with featured posts, categories, and newsletter signup.' }
+  ];
+
+  function getProjectsManifest() {
+    const raw = JSON.parse(localStorage.getItem('nexus_projects_manifest') || '[]');
+    return raw.map(project => {
+      if (project && project.sourceCode && !Array.isArray(project.versions)) {
+        return {
+          id: project.id || `proj_${Date.now()}`,
+          name: project.name || "Generated Project Layout",
+          versions: [{
+            versionId: `ver_${Date.now()}`,
+            label: "Version 1",
+            timestamp: project.timestamp || new Date().toLocaleString(),
+            prompt: project.prompt || "Legacy imported project",
+            sourceCode: project.sourceCode
+          }]
+        };
+      }
+      return project;
+    });
+  }
+
+  function renderTemplateButtons() {
+    const container = document.getElementById('templateButtons');
+    if (!container) return;
+    container.innerHTML = '';
+    TEMPLATE_PROMPTS.forEach((template) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'action-trigger edit-type';
+      button.textContent = template.label;
+      button.addEventListener('click', () => openBuilderWithTemplate(template.prompt));
+      container.appendChild(button);
+    });
+  }
+
+  function openBuilderWithTemplate(promptText) {
+    const encoded = encodeURIComponent(promptText);
+    window.location.href = `../app/?prompt=${encoded}`;
+  }
+
+  function createNewProject() {
+    localStorage.removeItem('nexus_current_active_project_id');
+    localStorage.removeItem('nexus_current_active_version_id');
+    localStorage.removeItem('nexus_current_active_prompt');
+    localStorage.removeItem('nexus_current_active_title');
+    localStorage.removeItem('nexus_current_active_code');
+    window.location.href = '../app/?new=1';
+  }
+
+  function renderStoredProjectsManifest() {
+    const container = document.getElementById('manifestGridContainer');
+    const projectsList = getProjectsManifest();
+
+    if (projectsList.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <p>No compiled components found in active client cache storage.</p>
+          <a href="../app/" class="back-btn" style="display:inline-flex;">Create New Project Layout</a>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = '';
+    projectsList.forEach((project) => {
+      const cardElement = document.createElement('div');
+      cardElement.className = 'project-card fade-in';
+      cardElement.id = `card_${project.id}`;
+      const versions = Array.isArray(project.versions) ? project.versions : [];
+      const selectedVersion = versions[0] || {};
+      const versionOptions = versions.map(version => `
+            <option value="${version.versionId}">${escapeHtmlSymbols(version.label)} — ${escapeHtmlSymbols(version.timestamp)}</option>
+          `).join('');
+
+      cardElement.innerHTML = `
+        <div class="project-details" id="details_box_${project.id}">
+          <h3 id="title_Display_${project.id}">${escapeHtmlSymbols(project.name)}</h3>
+          <span class="meta-time">Last updated: ${selectedVersion.timestamp || 'Unknown'}</span>
+          <div style="margin-top: 14px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <label for="versionSelect_${project.id}" style="font-size:11px; color:#8e8e9f; letter-spacing:0.08em; text-transform:uppercase;">Version</label>
+            <select id="versionSelect_${project.id}" class="styled-select" style="flex:1; min-width: 160px;">
+              ${versionOptions}
+            </select>
+          </div>
+        </div>
+        <div class="card-actions" id="actions_box_${project.id}">
+          <button class="action-trigger open-type" onclick="loadProjectWorkspace('${project.id}')">View</button>
+          <button class="action-trigger edit-type" onclick="initiateInlineRename('${project.id}')">Rename</button>
+          <button class="action-trigger delete-type" onclick="initiateInlineDelete('${project.id}')">Delete</button>
+        </div>
+      `;
+      container.appendChild(cardElement);
+    });
+  }
+
+  window.loadProjectWorkspace = (projectId) => {
+    const list = getProjectsManifest();
+    const project = list.find(p => p.id === projectId);
+    if (!project || !Array.isArray(project.versions) || project.versions.length === 0) return;
+
+    const versionSelector = document.getElementById(`versionSelect_${projectId}`);
+    const selectedVersionId = versionSelector ? versionSelector.value : project.versions[0].versionId;
+    const selectedVersion = project.versions.find(v => v.versionId === selectedVersionId) || project.versions[0];
+
+    localStorage.setItem('nexus_current_active_code', selectedVersion.sourceCode);
+    localStorage.setItem('nexus_current_active_title', project.name);
+    localStorage.setItem('nexus_current_active_project_id', project.id);
+    localStorage.setItem('nexus_current_active_version_id', selectedVersion.versionId);
+    localStorage.setItem('nexus_current_active_prompt', selectedVersion.prompt || "");
+    localStorage.setItem('nexus_current_active_attachments', JSON.stringify(selectedVersion.attachments || []));
+    window.location.href = '../app/';
+  };
+
+  // Inline Replacement for Prompt popup
+  window.initiateInlineRename = (projectId) => {
+    const list = JSON.parse(localStorage.getItem('nexus_projects_manifest') || '[]');
+    const project = list.find(p => p.id === projectId);
+    if (!project) return;
+
+    const detailsBox = document.getElementById(`details_box_${projectId}`);
+    const actionsBox = document.getElementById(`actions_box_${projectId}`);
+
+    // Replace text view with input element
+    detailsBox.innerHTML = `
+      <input type="text" class="rename-input" id="input_${projectId}" value="${escapeHtmlSymbols(project.name)}" />
+      <span class="meta-time">Compiled: ${project.timestamp}</span>
+    `;
+
+    // Swap standard action triggers with inline confirm panel
+    actionsBox.innerHTML = `
+      <button class="action-trigger open-type" onclick="saveInlineRename('${projectId}')">Save</button>
+      <button class="action-trigger edit-type" onclick="renderStoredProjectsManifest()">Cancel</button>
+    `;
+
+    const inputField = document.getElementById(`input_${projectId}`);
+    inputField.focus();
+    inputField.select();
+    
+    // Allow pressing Enter key to save change directly
+    inputField.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') saveInlineRename(projectId);
+      if (e.key === 'Escape') renderStoredProjectsManifest();
+    });
+  };
+
+  window.saveInlineRename = (projectId) => {
+    const inputField = document.getElementById(`input_${projectId}`);
+    if (!inputField) return;
+    
+    const newTitleValue = inputField.value.trim();
+    if (newTitleValue) {
+      let list = JSON.parse(localStorage.getItem('nexus_projects_manifest') || '[]');
+      const index = list.findIndex(p => p.id === projectId);
+      if (index !== -1) {
+        list[index].name = newTitleValue;
+        localStorage.setItem('nexus_projects_manifest', JSON.stringify(list));
+      }
+    }
+    renderStoredProjectsManifest();
+  };
+
+  // Inline Replacement for Confirm alert popup
+  window.initiateInlineDelete = (projectId) => {
+    const actionsBox = document.getElementById(`actions_box_${projectId}`);
+    if (!actionsBox) return;
+
+    // Changes the button row directly to a double-checking state
+    actionsBox.innerHTML = `
+      <span style="font-size:11px; color:#f87171; display:flex; align-items:center; font-weight:600;">Confirm Purge?</span>
+      <button class="action-trigger delete-type" style="padding: 4px 8px; flex:none;" onclick="executeProjectPurge('${projectId}')">Yes, Delete</button>
+      <button class="action-trigger edit-type" style="padding: 4px 8px; flex:none;" onclick="renderStoredProjectsManifest()">No</button>
+    `;
+  };
+
+  window.executeProjectPurge = (projectId) => {
+    let list = getProjectsManifest();
+    const filtered = list.filter(p => p.id !== projectId);
+    localStorage.setItem('nexus_projects_manifest', JSON.stringify(filtered));
+    
+    const activeProjectId = localStorage.getItem('nexus_current_active_project_id');
+    if (activeProjectId === projectId) {
+      localStorage.removeItem('nexus_current_active_code');
+      localStorage.removeItem('nexus_current_active_title');
+      localStorage.removeItem('nexus_current_active_project_id');
+      localStorage.removeItem('nexus_current_active_version_id');
+      localStorage.removeItem('nexus_current_active_prompt');
+    }
+
+    renderStoredProjectsManifest();
+  };
+
+  function escapeHtmlSymbols(rawText) {
+    return rawText
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTemplateButtons();
+    renderStoredProjectsManifest();
+  });
+</script>
+</body>
+</html>
