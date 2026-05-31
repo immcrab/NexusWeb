@@ -694,8 +694,9 @@
       document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
     } else {
   nav.innerHTML = `
-    <button class=\"btn btn-ghost\" onclick=\"openModal('login')\">Sign in</button>
-    <a href="pay" class=\"btn btn-primary\">Donate</a>`;
+    <button class=\"btn btn-ghost\" onclick=\"openModal('login')\">Sign in/Sign up</button>
+    <a href="pay" class=\"btn btn-primary\">Donate</a>
+    <a href="check" class=\"btn btn-primary\">Api Key Checker</a>`;
 }
   });
 
