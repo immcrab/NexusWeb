@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#06060a" />
 <title>Nexus Web AI builder | Build modern websites with AI</title>
 <meta name="description" content="A compelling, high-converting sentence explaining exactly what value your site provides to visitors. Click to explore our solutions.">
 <meta name="robots" content="index, follow">
@@ -25,7 +28,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TFZPC07B0B"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -218,6 +220,8 @@
   .input-action-row { display: flex; justify-content: space-between; align-items: center; }
   .counter-display { font-size: var(--font-size-xs); color: var(--muted); }
   .action-btn { background: var(--grad); color: #0a0a0f; font-weight: 600; padding: 6px 12px; border-radius: 6px; font-size: var(--font-size-sm); display: flex; align-items: center; gap: 6px; }
+  .action-btn-outline { background: transparent; border: 1px solid var(--border-strong); color: var(--text); font-weight: 500; padding: 6px 12px; border-radius: 6px; font-size: var(--font-size-sm); display: flex; align-items: center; gap: 6px; transition: all var(--transition-fast); }
+  .action-btn-outline:hover { background: var(--surface-hover); border-color: var(--accent); }
   [data-theme="hacker"] .action-btn { color: #000; }
 
   /* CANVAS STRUCTURES */
@@ -268,17 +272,30 @@
 
   .settings-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
   .settings-title { font-size: var(--font-size-xs); font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
-  .cred-field { display: flex; flex-direction: column; gap: 4px; }
-  .cred-field label { font-size: var(--font-size-xs); color: var(--muted); font-weight: 600; text-transform: uppercase; display: flex; justify-content: justify-content; justify-content: space-between; }
+  .cred-field { display: flex; flex-direction: column; gap: 8px; }
+  .cred-field label { font-size: var(--font-size-xs); color: var(--muted); font-weight: 600; text-transform: uppercase; display: flex; justify-content: space-between; }
   .cred-field select, .cred-field input { background: rgba(0,0,0,0.25); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px 10px; font-size: var(--font-size-sm); color: inherit; width: 100%; }
   .cred-field select:focus, .cred-field input:focus { border-color: var(--accent); }
-  .key-input-row { display: flex; gap: 6px; }
-  .key-input-row input { flex: 1; }
   
   /* SLIDER STYLE OPTIONS */
   .slider-element { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); outline: none; margin: 6px 0; }
   .slider-element::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; transition: transform var(--transition-fast); }
   .slider-element::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+  /* Mobile-friendly overrides */
+  @media (max-width: 900px) {
+    html,body { -webkit-text-size-adjust: 100%; height: auto !important; overflow: auto !important; }
+    header { padding: 12px 14px; height: auto; }
+    .nav-links { display: none; }
+    .workspace-container { flex-direction: column; height: auto !important; }
+    .chat-sidebar { width: 100% !important; min-width: 0 !important; max-width: 100% !important; order: 2; border-right: none; border-top: 1px solid var(--border); }
+    .preview-canvas { order: 1; width: 100%; }
+    .viewport-wrapper { width: 100% !important; max-height: none; height: auto !important; }
+    img, iframe, video { max-width: 100%; height: auto; }
+    .btn, .action-btn, .icon-btn { min-height: 44px; padding: 10px 14px; touch-action: manipulation; }
+    .input-wrap textarea { min-height: 80px; height: auto; }
+    .panel-scroller { padding: 10px; }
+  }
 </style>
 </head>
 <body>
@@ -417,12 +434,20 @@
     </div>
 
     <div class="settings-section">
-      <div class="settings-title">AI Endpoint Infrastructure</div>
+      <div class="settings-title" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>AI Endpoint Infrastructure</span>
+        <button class="action-btn-outline" onclick="openProviderModal()" style="padding: 4px 8px; font-size: 10px;">+ Add New Provider</button>
+      </div>
       <div class="cred-field">
         <label>Provider Hub</label>
-        <select id="providerSelect" class="styled-select" onchange="handleEndpointRotation()">
-          <option value="github">GitHub Models API Hub</option>
-          <option value="groq">Groq Cloud System (Fast Execution)</option>
+        <select id="providerSelect" class="styled-select" onchange="window.handleEndpointRotation()">
+          <optgroup label="Main Free Providers">
+            <option value="github" selected>GitHub Models API Hub</option>
+            <option value="groq">Groq Cloud System (Fast Execution)</option>
+            <option value="mistral">Mistral AI (Free Tier)</option>
+          </optgroup>
+          <optgroup id="customProviderGroup" label="Custom API Keys (Self-Configured)">
+            </optgroup>
         </select>
       </div>
       <div class="cred-field">
@@ -433,7 +458,58 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="providerModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Configure Custom Provider</div>
+      <button class="close-btn" onclick="closeProviderModal()">&times;</button>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">Connect your own API key safely</div>
+      <div class="cred-field">
+        <label>Select Service Provider</label>
+        <select id="customProviderType" class="styled-select">
+          <option value="openai">OpenAI (ChatGPT)</option>
+          <option value="gemini">Google Gemini</option>
+          <option value="anthropic">Anthropic Claude</option>
+        </select>
+      </div>
+      <div class="cred-field">
+        <label>API Key</label>
+        <input type="password" id="customApiKeyInput" placeholder="sk-..." />
+      </div>
+      <button class="action-btn" id="btnSaveProvider" onclick="saveCustomProviderKey()" style="margin-top: 10px; justify-content:center;">Save & Verify Key</button>
+      <p id="providerStatusText" style="font-size: 11px; color: var(--muted); margin-top: 5px; text-align: center;"></p>
+    </div>
+  </div>
+</div>
+
 <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
+  import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
+    authDomain: "sitedropio.firebaseapp.com",
+    databaseURL: "https://sitedropio-default-rtdb.firebaseio.com",
+    projectId: "sitedropio",
+    storageBucket: "sitedropio.firebasestorage.app",
+    messagingSenderId: "950561906473",
+    appId: "1:950561906473:web:45822a85f188c28b20e138",
+    measurementId: "G-BY119K5RS2"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getDatabase(app);
+
+  let deviceId = localStorage.getItem('nexus_device_id');
+  if (!deviceId) {
+    deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('nexus_device_id', deviceId);
+  }
+
   // Core Operational States
   let dynamicCalculatedHTML = "";
   let paneResizingState = false;
@@ -457,11 +533,12 @@
   const ACTIVE_PROJECT_PROMPT_KEY = "nexus_current_active_prompt";
   const ACTIVE_PROJECT_ATTACHMENTS_KEY = "nexus_current_active_attachments";
   let activeProjectAttachments = [];
+  let customKeysStore = {};
 
   // Production Worker Endpoint Router Location
   const CLOUDFLARE_WORKER_ENDPOINT = "https://nexus.imcrabfr.workers.dev";
 
-  // FIXED CATALOG KEYS: Changed "openai/gpt-4o" and "deepseek-ai/deepseek-r1" to point straight to target IDs
+  // FIXED CATALOG KEYS
   const ENGINE_VARIATIONS = {
     github: [
       { name: "GPT-4o Production [Standard]", value: "gpt-4o" },
@@ -470,12 +547,19 @@
     groq: [
       { name: "Llama 3.3 70B [Ultra Speed]", value: "llama-3.3-70b-versatile" },
       { name: "DeepSeek R1 Distill 70B", value: "deepseek-r1-distill-llama-70b" }
+    ],
+    mistral: [
+      { name: "Mistral Large (Flagship Free)", value: "mistral-large-latest" },
+      { name: "Mistral Small (Fast & Light)", value: "mistral-small-latest" },
+      { name: "Codestral (Advanced Coding)", value: "codestral-latest" },
+      { name: "Pixtral 12B (Vision & Text)", value: "pixtral-12b-latest" },
+      { name: "Mixtral 8x22B (High Capacity MoE)", value: "open-mixtral-8x22b" },
+      { name: "Mixtral 8x7B (Standard MoE)", value: "open-mixtral-8x7b" }
     ]
   };
   
   maxConfiguredMessageLimit = loadPersistedStorage(ALLOCATION_LIMIT_STORE, 20);
 
-  // Conversation memory channels
   let compilationMemory = [
     { role: "system", content: "You are an elite frontend engineer. Return ONLY valid standalone HTML files. Do not use emoji characters or external image assets. USE Tailwind CSS for styling. Make the style feel modern and responsive. The HTML should be a single, complete file ALWAYS. DO NOT use any external resources or image assets." }
   ];
@@ -490,7 +574,6 @@
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   }
-
   function getMidnightTimestamp() {
     const next = new Date();
     next.setHours(24, 0, 0, 0);
@@ -501,22 +584,14 @@
     const today = getTodayKey();
     let state = loadPersistedStorage(DAILY_CREDIT_STORE, null);
     if (!state || state.date !== today) {
-      state = {
-        date: today,
-        creditsRemaining: DAILY_CREDIT_MAX,
-        totalUsedCredits: 0,
-        messagesUsed: 0,
-        resetAt: getMidnightTimestamp()
-      };
+      state = { date: today, creditsRemaining: DAILY_CREDIT_MAX, totalUsedCredits: 0, messagesUsed: 0, resetAt: getMidnightTimestamp() };
       persistStorage(DAILY_CREDIT_STORE, state);
     }
     if (!state.resetAt) state.resetAt = getMidnightTimestamp();
     return state;
   }
 
-  function persistDailyCreditState(state) {
-    persistStorage(DAILY_CREDIT_STORE, state);
-  }
+  function persistDailyCreditState(state) { persistStorage(DAILY_CREDIT_STORE, state); }
 
   function calculateCreditCost(tokenCount) {
     if (!tokenCount || tokenCount <= 0) return DAILY_CREDIT_COST_BASE;
@@ -528,21 +603,12 @@
     if (!dailyCreditState) return;
     const now = Date.now();
     if (now >= dailyCreditState.resetAt) {
-      dailyCreditState = {
-        date: getTodayKey(),
-        creditsRemaining: DAILY_CREDIT_MAX,
-        totalUsedCredits: 0,
-        messagesUsed: 0,
-        resetAt: getMidnightTimestamp()
-      };
+      dailyCreditState = { date: getTodayKey(), creditsRemaining: DAILY_CREDIT_MAX, totalUsedCredits: 0, messagesUsed: 0, resetAt: getMidnightTimestamp() };
       persistDailyCreditState(dailyCreditState);
     }
     refreshCounterDisplayLabel();
   }
-
-  function startDailyResetTimer() {
-    setInterval(updateResetTimer, 1000);
-  }
+  function startDailyResetTimer() { setInterval(updateResetTimer, 1000); }
 
   let dailyCreditState = loadDailyCreditState();
 
@@ -554,13 +620,8 @@
     return `${hours}:${minutes}:${seconds}`;
   }
 
-  function getActiveAttachmentsFromStorage() {
-    return loadPersistedStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, []);
-  }
-
-  function persistCurrentAttachments() {
-    persistStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, activeProjectAttachments);
-  }
+  function getActiveAttachmentsFromStorage() { return loadPersistedStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, []); }
+  function persistCurrentAttachments() { persistStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, activeProjectAttachments); }
 
   function readFileAsDataURL(file) {
     return new Promise((resolve, reject) => {
@@ -575,13 +636,8 @@
     if (!fileList || !fileList.length) return;
     const selectedFiles = Array.from(fileList);
     const attachments = await Promise.all(selectedFiles.map(async (file) => ({
-      id: `att_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
-      name: file.name,
-      type: file.type || 'application/octet-stream',
-      size: file.size,
-      data: await readFileAsDataURL(file)
+      id: `att_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, name: file.name, type: file.type || 'application/octet-stream', size: file.size, data: await readFileAsDataURL(file)
     })));
-
     activeProjectAttachments = [...activeProjectAttachments, ...attachments];
     persistCurrentAttachments();
     updateAttachmentListDisplay();
@@ -590,7 +646,6 @@
   }
 
   window.handleAttachmentFiles = handleAttachmentFiles;
-
   window.removeAttachment = (attachmentId) => {
     activeProjectAttachments = activeProjectAttachments.filter(a => a.id !== attachmentId);
     persistCurrentAttachments();
@@ -606,13 +661,9 @@
     }
     list.innerHTML = activeProjectAttachments.map(att => `
       <div class="attachment-item">
-        <div>
-          <strong>${att.name}</strong>
-          <div><span>${att.type || 'file'} · ${Math.round(att.size / 1024)} KB</span></div>
-        </div>
+        <div><strong>${att.name}</strong><div><span>${att.type || 'file'} · ${Math.round(att.size / 1024)} KB</span></div></div>
         <button type="button" onclick="removeAttachment('${att.id}')">Remove</button>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
   function getProjectsManifest() {
@@ -620,78 +671,48 @@
     return raw.map(project => {
       if (project && project.sourceCode && !Array.isArray(project.versions)) {
         return {
-          id: project.id || `proj_${Date.now()}`,
-          name: project.name || "Generated Project Layout",
-          versions: [{
-            versionId: `ver_${Date.now()}`,
-            label: "Version 1",
-            timestamp: project.timestamp || new Date().toLocaleString(),
-            prompt: project.prompt || "Legacy imported project",
-            sourceCode: project.sourceCode
-          }]
+          id: project.id || `proj_${Date.now()}`, name: project.name || "Generated Project Layout",
+          versions: [{ versionId: `ver_${Date.now()}`, label: "Version 1", timestamp: project.timestamp || new Date().toLocaleString(), prompt: project.prompt || "Legacy imported project", sourceCode: project.sourceCode }]
         };
       }
       return project;
     });
   }
 
-  function saveProjectsManifest(manifest) {
-    persistStorage(PROJECTS_MANIFEST_KEY, manifest);
-  }
+  function saveProjectsManifest(manifest) { persistStorage(PROJECTS_MANIFEST_KEY, manifest); }
 
-  // Resizable Split-Pane Functionality
   const sidebarContainer = document.getElementById('sidebarContainer');
   const splitResizer = document.getElementById('dragSplitResizer');
+  splitResizer.addEventListener('mousedown', (e) => { paneResizingState = true; splitResizer.classList.add('dragging'); document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+  document.addEventListener('mousemove', (e) => { if (!paneResizingState) return; const boundaryWidth = Math.max(280, Math.min(e.clientX, window.innerWidth - 320)); sidebarContainer.style.width = `${boundaryWidth}px`; sidebarContainer.style.flex = 'none'; });
+  document.addEventListener('mouseup', () => { if (paneResizingState) { paneResizingState = false; splitResizer.classList.remove('dragging'); document.body.style.cursor = ''; } });
 
-  splitResizer.addEventListener('mousedown', (e) => {
-    paneResizingState = true;
-    splitResizer.classList.add('dragging');
-    document.body.style.cursor = 'col-resize';
-    e.preventDefault();
-  });
+  window.toggleSettingsModal = (displayState) => { document.getElementById('settingsModal').classList.toggle('active', displayState); };
 
-  document.addEventListener('mousemove', (e) => {
-    if (!paneResizingState) return;
-    const boundaryWidth = Math.max(280, Math.min(e.clientX, window.innerWidth - 320));
-    sidebarContainer.style.width = `${boundaryWidth}px`;
-    sidebarContainer.style.flex = 'none';
-  });
-
-  document.addEventListener('mouseup', () => {
-    if (paneResizingState) {
-      paneResizingState = false;
-      splitResizer.classList.remove('dragging');
-      document.body.style.cursor = '';
-    }
-  });
-
-  // Theme & Appearance Layout Switches
-  window.toggleSettingsModal = (displayState) => {
-    document.getElementById('settingsModal').classList.toggle('active', displayState);
+  window.openProviderModal = () => { 
+    document.getElementById('providerModal').classList.add('active'); 
+    document.getElementById('providerStatusText').innerText = '';
+    document.getElementById('customApiKeyInput').value = '';
   };
+  window.closeProviderModal = () => { document.getElementById('providerModal').classList.remove('active'); };
 
   window.applyVisualConfigurations = () => {
     const selectedTheme = document.getElementById('themeStyleSelect').value;
     const selectedSizing = document.getElementById('textSizeSelect').value;
     document.documentElement.setAttribute('data-theme', selectedTheme);
-
     let variableSize = "12.5px";
     if (selectedSizing === "small") variableSize = "11.5px";
     if (selectedSizing === "large") variableSize = "14px";
     document.documentElement.style.setProperty('--font-size-base', variableSize);
   };
 
-  // Adjust Allocations Limits
   window.updateMaxAllocationParameters = () => {
     const sliderElement = document.getElementById('maxMessagesLimitSlider');
     maxConfiguredMessageLimit = parseInt(sliderElement.value, 10);
     document.getElementById('lblSliderLimitValue').textContent = `${maxConfiguredMessageLimit} Messages`;
     persistStorage(ALLOCATION_LIMIT_STORE, maxConfiguredMessageLimit);
     refreshCounterDisplayLabel();
-    
-    if (totalSentMessagesCounter < (maxConfiguredMessageLimit * 0.85)) {
-      userAlertHasBeenTriggered = false;
-    }
+    if (totalSentMessagesCounter < (maxConfiguredMessageLimit * 0.85)) userAlertHasBeenTriggered = false;
   };
 
   function refreshCounterDisplayLabel() {
@@ -701,17 +722,12 @@
     document.getElementById('dailyResetLabel').textContent = `Resets in: ${getResetCountdownText()}`;
     const submitBtn = document.getElementById('btnSubmitPrompt');
     if (dailyCreditState && (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0)) {
-      submitBtn.disabled = true;
-      submitBtn.style.opacity = '0.6';
-      submitBtn.style.pointerEvents = 'none';
+      submitBtn.disabled = true; submitBtn.style.opacity = '0.6'; submitBtn.style.pointerEvents = 'none';
     } else {
-      submitBtn.disabled = false;
-      submitBtn.style.opacity = '1';
-      submitBtn.style.pointerEvents = 'auto';
+      submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.pointerEvents = 'auto';
     }
   }
 
-  // Update the submit button label depending on whether a project exists
   function updateSubmitButtonLabel() {
     const labelEl = document.getElementById('submitBtnLabel');
     if (!labelEl) return;
@@ -719,21 +735,101 @@
     labelEl.textContent = activeCachedCode ? 'Build Changes' : 'Build';
   }
 
-  // Endpoint Engine Management
   window.handleEndpointRotation = () => {
     const activeProvider = document.getElementById('providerSelect').value;
     const modelSelectionElement = document.getElementById('modelSelect');
     modelSelectionElement.innerHTML = '';
-
-    ENGINE_VARIATIONS[activeProvider].forEach(engine => {
-      const optionNode = document.createElement('option');
-      optionNode.value = engine.value;
-      optionNode.textContent = engine.name;
-      modelSelectionElement.appendChild(optionNode);
-    });
+    
+    if (ENGINE_VARIATIONS[activeProvider]) {
+      ENGINE_VARIATIONS[activeProvider].forEach(engine => {
+        const optionNode = document.createElement('option');
+        optionNode.value = engine.value;
+        optionNode.textContent = engine.name;
+        modelSelectionElement.appendChild(optionNode);
+      });
+    }
   };
 
-  // Navigation Tabs Control Inside Canvas
+  async function loadFirebaseProviders() {
+    try {
+      const snapshot = await get(child(ref(db), `apiKeys/${deviceId}`));
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const providerSelect = document.getElementById('providerSelect');
+        const customGroup = document.getElementById('customProviderGroup');
+        
+        for (const [providerId, providerData] of Object.entries(data)) {
+          customKeysStore[providerId] = providerData.apiKey;
+          if (providerData.models) {
+             ENGINE_VARIATIONS[providerId] = providerData.models;
+             
+             const optionsScope = customGroup ? Array.from(customGroup.children) : Array.from(providerSelect.options);
+             if (!optionsScope.some(opt => opt.value === providerId)) {
+               const option = document.createElement('option');
+               option.value = providerId;
+               option.textContent = `Custom: ${providerId.charAt(0).toUpperCase() + providerId.slice(1)}`;
+               if (customGroup) {
+                 customGroup.appendChild(option);
+               } else {
+                 providerSelect.appendChild(option);
+               }
+             }
+          }
+        }
+      }
+    } catch(err) {
+      console.error("Firebase Key Load Error:", err);
+    }
+  }
+
+  window.saveCustomProviderKey = async () => {
+    const provider = document.getElementById('customProviderType').value;
+    const apiKey = document.getElementById('customApiKeyInput').value.trim();
+    const statusText = document.getElementById('providerStatusText');
+    
+    if (!apiKey) { statusText.innerText = 'Please enter an API key.'; statusText.style.color = '#ff4444'; return; }
+    
+    statusText.innerText = 'Verifying key...';
+    statusText.style.color = 'var(--muted)';
+    
+    try {
+      let models = [];
+      if (provider === 'openai') {
+        const res = await fetch('https://api.openai.com/v1/models', { headers: { 'Authorization': `Bearer ${apiKey}` }});
+        if(!res.ok) throw new Error('Invalid OpenAI Key');
+        const data = await res.json();
+        models = data.data.filter(m => m.id.includes('gpt')).map(m => ({name: m.id, value: m.id}));
+      } else if (provider === 'gemini') {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        if(!res.ok) throw new Error('Invalid Gemini Key');
+        const data = await res.json();
+        models = data.models.filter(m => m.name.includes('gemini') || m.name.includes('learn')).map(m => ({name: m.displayName || m.name.split('/')[1], value: m.name.replace('models/', '')}));
+      } else if (provider === 'anthropic') {
+        models = [
+          {name: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet-20241022'},
+          {name: 'Claude 3 Opus', value: 'claude-3-opus-20240229'},
+          {name: 'Claude 3 Haiku', value: 'claude-3-haiku-20240307'}
+        ];
+      }
+      
+      // Save securely to firebase
+      await set(ref(db, `apiKeys/${deviceId}/${provider}`), { apiKey: apiKey, models: models });
+      
+      statusText.innerText = 'Key saved and models retrieved successfully!';
+      statusText.style.color = '#00ff00';
+      
+      // Reload UI dynamically
+      await loadFirebaseProviders();
+      document.getElementById('providerSelect').value = provider;
+      window.handleEndpointRotation();
+      
+      setTimeout(() => closeProviderModal(), 1500);
+    } catch(err) {
+      statusText.innerText = `Error: ${err.message}`;
+      statusText.style.color = '#ff4444';
+    }
+  };
+
   window.toggleCanvasTab = (activeTabTarget) => {
     document.getElementById('btnTabPreview').classList.toggle('active', activeTabTarget === 'preview');
     document.getElementById('btnTabCode').classList.toggle('active', activeTabTarget === 'code');
@@ -750,19 +846,16 @@
     document.getElementById('viewportWrapper').classList.add(`preset-${dimensionsPreset}`);
   };
 
-  // Execution Processing Handles
   window.handlePromptSubmission = async () => {
     if (isRequestProcessing) return;
-
     const inputElement = document.getElementById('workspaceInput');
     const promptValueText = inputElement.value.trim();
     if (!promptValueText) return;
 
     if (!dailyCreditState) dailyCreditState = loadDailyCreditState();
     if (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0) {
-      alert('Daily AI access blocked: You have used all available daily messages or credits. Please wait until your credits reset.');
-      refreshCounterDisplayLabel();
-      return;
+      alert('Daily AI access blocked: You have used all available daily messages or credits.');
+      refreshCounterDisplayLabel(); return;
     }
 
     inputElement.value = "";
@@ -775,13 +868,51 @@
 
     if (!userAlertHasBeenTriggered && dailyCreditState.messagesUsed >= (maxConfiguredMessageLimit * 0.85)) {
       userAlertHasBeenTriggered = true;
-      alert(`Operational Warning: You are approaching your maximum daily message limit. You have used ${dailyCreditState.messagesUsed} out of ${maxConfiguredMessageLimit} messages, and ${dailyCreditState.creditsRemaining.toFixed(1)} credits remain.`);
+      alert(`Operational Warning: You are approaching your maximum daily message limit.`);
     }
 
     await launchSystemBuildPipeline(promptValueText);
   };
 
-  // System Core Code Construction Compilation Path
+  async function callCustomProvider(provider, model, messages, apiKey) {
+    let coreResponseProseText = "";
+    let usageTokens = 0;
+    
+    if (provider === 'openai') {
+      const req = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+        body: JSON.stringify({ model: model, messages: messages, temperature: 0.25 })
+      });
+      const data = await req.json();
+      if(data.error) throw new Error(data.error.message);
+      coreResponseProseText = data.choices[0].message.content;
+      usageTokens = data.usage?.total_tokens || 0;
+    } else if (provider === 'gemini') {
+      const contents = messages.filter(m=>m.role!=='system').map(m => ({ role: m.role==='assistant'?'model':'user', parts: [{text: m.content}] }));
+      const systemInstruction = { parts: [{text: messages.find(m=>m.role==='system')?.content || ""}] };
+      const req = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: contents, systemInstruction: systemInstruction, generationConfig: {temperature: 0.25} })
+      });
+      const data = await req.json();
+      if(data.error) throw new Error(data.error.message);
+      coreResponseProseText = data.candidates[0].content.parts[0].text;
+      usageTokens = data.usageMetadata?.totalTokenCount || 0;
+    } else if (provider === 'anthropic') {
+      const anthropicMsgs = messages.filter(m=>m.role!=='system');
+      const systemStr = messages.find(m=>m.role==='system')?.content || "";
+      const req = await fetch('https://api.anthropic.com/v1/messages', {
+        method: "POST", headers: { "x-api-key": apiKey, "anthropic-version": "2023-06-01", "content-type": "application/json", "anthropic-dangerous-direct-browser-access": "true" },
+        body: JSON.stringify({ model: model, messages: anthropicMsgs, system: systemStr, max_tokens: 4096, temperature: 0.25 })
+      });
+      const data = await req.json();
+      if(data.error) throw new Error(data.error.message);
+      coreResponseProseText = data.content[0].text;
+      usageTokens = (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0);
+    }
+    return { coreResponseProseText, usageTokens };
+  }
+
   async function launchSystemBuildPipeline(userInstructionPrompt) {
     const globalLoaderOverlay = document.getElementById('globalWorkspaceLoader');
     const selectedProviderHub = document.getElementById('providerSelect').value;
@@ -793,43 +924,36 @@
 
     try {
       compilationMemory.push({ role: "user", content: userInstructionPrompt });
+      let coreResponseProseText = "";
+      let tokenCount = 0;
 
-      // REPLACE THIS URL WITH YOUR ACTUAL CLOUDFLARE WORKER ROUTE:
-      const cloudflareWorkerEndpoint = CLOUDFLARE_WORKER_ENDPOINT;
-
-      const networkCompilationStream = await fetch(cloudflareWorkerEndpoint, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json" 
-        },
-        body: JSON.stringify({ 
-          provider: selectedProviderHub, // "github" or "groq"
-          model: selectedEngineTarget, 
-          messages: compilationMemory, 
-          temperature: 0.25 
-        })
-      });
-
-      if (!networkCompilationStream.ok) {
-        const errorText = await networkCompilationStream.text();
-        throw new Error(`Edge node framework returned processing errors: ${networkCompilationStream.status} - ${errorText}`);
+      // Determine routing path based on whether the provider relies on native Keys or Cloudflare Worker
+      if (customKeysStore[selectedProviderHub]) {
+         const directCall = await callCustomProvider(selectedProviderHub, selectedEngineTarget, compilationMemory, customKeysStore[selectedProviderHub]);
+         coreResponseProseText = directCall.coreResponseProseText;
+         tokenCount = directCall.usageTokens;
+      } else {
+        const networkCompilationStream = await fetch(CLOUDFLARE_WORKER_ENDPOINT, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ provider: selectedProviderHub, model: selectedEngineTarget, messages: compilationMemory, temperature: 0.25 })
+        });
+        if (!networkCompilationStream.ok) {
+          const errorText = await networkCompilationStream.text();
+          throw new Error(`Edge node framework returned processing errors: ${networkCompilationStream.status} - ${errorText}`);
+        }
+        const dataPayloadJson = await networkCompilationStream.json();
+        coreResponseProseText = dataPayloadJson.choices[0].message.content;
+        tokenCount = dataPayloadJson.usage?.total_tokens || 0;
       }
       
-      const dataPayloadJson = await networkCompilationStream.json();
-      const coreResponseProseText = dataPayloadJson.choices[0].message.content;
-      
-      // Clean structure block boundaries safely
       const codeMarkdownRegexMatch = /```html([\s\S]*?)```/i.exec(coreResponseProseText);
       dynamicCalculatedHTML = codeMarkdownRegexMatch ? codeMarkdownRegexMatch[1].trim() : coreResponseProseText.trim();
 
-      // Refresh layout sandbox elements smoothly
       document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
       document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
 
       compilationMemory.push({ role: "assistant", content: coreResponseProseText });
 
-      // 1. DYNAMIC CUSTOM SENTENCE LOGIC:
-      // Strip markdown code backticks blocks to cleanly extract the short status text summary sentence provided by the AI model.
       let customSentenceSummary = coreResponseProseText.replace(/```html[\s\S]*?```/gi, '').replace(/```[\s\S]*?```/gi, '').trim();
       if (!customSentenceSummary || customSentenceSummary.length < 5) {
         customSentenceSummary = "Canvas layouts refreshed; generated modern components successfully via structural synthesis paths.";
@@ -838,20 +962,12 @@
       }
 
       postMessageToContainer('assistant', customSentenceSummary);
-      
-      // 2. AUTOMATIC LOCALSTORAGE PROJECT PERSISTENCE PIPELINE:
       saveActiveProjectToLocalStorage(userInstructionPrompt, dynamicCalculatedHTML);
 
-      const buildSummaryMessage = createBuildCompletionSummary(
-        userInstructionPrompt,
-        selectedProviderHub,
-        selectedEngineTarget,
-        dynamicCalculatedHTML
-      );
+      const buildSummaryMessage = createBuildCompletionSummary(userInstructionPrompt, selectedProviderHub, selectedEngineTarget, dynamicCalculatedHTML);
       postMessageToContainer('assistant', buildSummaryMessage);
 
-      if (dataPayloadJson.usage) {
-        const tokenCount = dataPayloadJson.usage.total_tokens || 0;
+      if (tokenCount > 0) {
         document.getElementById('lblLastTokens').textContent = tokenCount;
         const exactCost = calculateCreditCost(tokenCount);
         const extraCost = Math.max(0, exactCost - DAILY_CREDIT_COST_BASE);
@@ -874,7 +990,6 @@
   function createBuildCompletionSummary(userPrompt, providerName, engineName, htmlPayload) {
     const promptTitle = userPrompt.trim().replace(/\s+/g, ' ');
     const trimmedPrompt = promptTitle.length > 90 ? `${promptTitle.substring(0, 87)}...` : promptTitle;
-
     return `Build complete from prompt: "${trimmedPrompt}".\n\nWhat it made: a fully assembled HTML layout matching your request, including the page structure, sections, and content blocks required for the chosen site type.\n\nHow it works: the generated HTML is rendered in the live preview and exposed in the code tab; it is also saved as a versioned project in LocalStorage so you can continue editing later.\n\nWhat it used: the ${providerName} provider with the ${engineName} engine, plus the AI build pipeline to synthesize HTML directly from your prompt.`;
   }
 
@@ -887,7 +1002,6 @@
     historicalContainerBox.scrollTop = historicalContainerBox.scrollHeight;
   }
 
-  // Local Storage Pipeline for individual project compilation states
   function saveActiveProjectToLocalStorage(userPromptIntent, htmlPayload) {
     try {
       const registeredProjects = getProjectsManifest();
@@ -897,45 +1011,28 @@
 
       const derivedName = userPromptIntent.split(/[.?!,]/)[0].substring(0, 35).trim() || "Generated Project Layout";
       let projectName = derivedName;
-      if (existingProjectIndex !== -1 && registeredProjects[existingProjectIndex].name) {
-        projectName = registeredProjects[existingProjectIndex].name;
-      }
+      if (existingProjectIndex !== -1 && registeredProjects[existingProjectIndex].name) projectName = registeredProjects[existingProjectIndex].name;
 
-      const versionObject = {
-        versionId,
-        label: `Version ${existingProjectIndex === -1 ? 1 : registeredProjects[existingProjectIndex].versions.length + 1}`,
-        timestamp: new Date().toLocaleString(),
-        prompt: userPromptIntent,
-        sourceCode: htmlPayload,
-        attachments: activeProjectAttachments
-      };
+      const versionObject = { versionId, label: `Version ${existingProjectIndex === -1 ? 1 : registeredProjects[existingProjectIndex].versions.length + 1}`, timestamp: new Date().toLocaleString(), prompt: userPromptIntent, sourceCode: htmlPayload, attachments: activeProjectAttachments };
 
       let activeProjectIdToSave = activeProjectId;
       if (existingProjectIndex !== -1) {
         registeredProjects[existingProjectIndex].versions.unshift(versionObject);
       } else {
         activeProjectIdToSave = `proj_${Date.now()}`;
-        registeredProjects.unshift({
-          id: activeProjectIdToSave,
-          name: projectName,
-          versions: [versionObject]
-        });
+        registeredProjects.unshift({ id: activeProjectIdToSave, name: projectName, versions: [versionObject] });
       }
 
       saveProjectsManifest(registeredProjects);
-
       localStorage.setItem(ACTIVE_PROJECT_ID_KEY, activeProjectIdToSave);
       localStorage.setItem(ACTIVE_PROJECT_VERSION_KEY, versionId);
       localStorage.setItem(ACTIVE_PROJECT_CODE_KEY, htmlPayload);
       localStorage.setItem(ACTIVE_PROJECT_TITLE_KEY, projectName);
       localStorage.setItem(ACTIVE_PROJECT_PROMPT_KEY, userPromptIntent);
       updateSubmitButtonLabel();
-    } catch (err) {
-      console.error("Local project persistence error encountered:", err);
-    }
+    } catch (err) { console.error("Local project persistence error encountered:", err); }
   }
 
-  // Check if a specific project was loaded from projects.html to run inside the frame layout
   function verifyActiveSessionLoadingState() {
     const activeCachedCode = localStorage.getItem(ACTIVE_PROJECT_CODE_KEY);
     const activeProjectTitle = localStorage.getItem(ACTIVE_PROJECT_TITLE_KEY);
@@ -952,24 +1049,9 @@
       
       const currentTitle = activeProjectTitle || "Loaded Workspace";
       postMessageToContainer('assistant', `Loaded external project: "<strong>${currentTitle}</strong>" successfully into the preview viewport memory workspace layout matrix.`);
-
-      compilationMemory.push({
-        role: "assistant",
-        content: `The active project version ${activeProjectVersionId || ''} has been loaded. Use the current HTML below as the starting point for all further requested edits.`
-      });
-
-      if (activeProjectPrompt) {
-        compilationMemory.push({
-          role: "assistant",
-          content: `Previous prompt for this version: ${activeProjectPrompt}`
-        });
-      }
-
-      compilationMemory.push({
-        role: "assistant",
-        content: `Current HTML start state:\n\n${activeCachedCode}`
-      });
-
+      compilationMemory.push({ role: "assistant", content: `The active project version ${activeProjectVersionId || ''} has been loaded. Use the current HTML below as the starting point for all further requested edits.` });
+      if (activeProjectPrompt) compilationMemory.push({ role: "assistant", content: `Previous prompt for this version: ${activeProjectPrompt}` });
+      compilationMemory.push({ role: "assistant", content: `Current HTML start state:\n\n${activeCachedCode}` });
       updateSubmitButtonLabel();
     }
   }
@@ -983,28 +1065,16 @@
     const prompt = getQueryParam('prompt');
     const isNew = getQueryParam('new');
     if (isNew) {
-      localStorage.removeItem(ACTIVE_PROJECT_ID_KEY);
-      localStorage.removeItem(ACTIVE_PROJECT_VERSION_KEY);
-      localStorage.removeItem(ACTIVE_PROJECT_PROMPT_KEY);
-      localStorage.removeItem(ACTIVE_PROJECT_TITLE_KEY);
-      localStorage.removeItem(ACTIVE_PROJECT_CODE_KEY);
-      localStorage.removeItem(ACTIVE_PROJECT_ATTACHMENTS_KEY);
-      activeProjectAttachments = [];
-      updateAttachmentListDisplay();
-      dynamicCalculatedHTML = "";
-      document.getElementById('previewFrame').srcdoc = "";
-      document.getElementById('codeAreaView').value = "";
+      localStorage.removeItem(ACTIVE_PROJECT_ID_KEY); localStorage.removeItem(ACTIVE_PROJECT_VERSION_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_PROMPT_KEY); localStorage.removeItem(ACTIVE_PROJECT_TITLE_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_CODE_KEY); localStorage.removeItem(ACTIVE_PROJECT_ATTACHMENTS_KEY);
+      activeProjectAttachments = []; updateAttachmentListDisplay();
+      dynamicCalculatedHTML = ""; document.getElementById('previewFrame').srcdoc = ""; document.getElementById('codeAreaView').value = "";
     }
     if (prompt) {
       const inputElement = document.getElementById('workspaceInput');
-      if (inputElement) {
-        inputElement.value = prompt;
-      }
-      setTimeout(() => {
-        if (prompt && inputElement && inputElement.value.trim()) {
-          handlePromptSubmission();
-        }
-      }, 140);
+      if (inputElement) inputElement.value = prompt;
+      setTimeout(() => { if (prompt && inputElement && inputElement.value.trim()) handlePromptSubmission(); }, 140);
     }
   }
 
@@ -1025,7 +1095,10 @@
   refreshCounterDisplayLabel();
   startDailyResetTimer();
   
-  window.handleEndpointRotation();
+  loadFirebaseProviders().then(() => {
+    window.handleEndpointRotation();
+  });
+  
   window.applyVisualConfigurations();
   verifyActiveSessionLoadingState();
   maybeAutoStartFromQuery();
