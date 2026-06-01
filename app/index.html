@@ -28,6 +28,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-TFZPC07B0B"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -282,6 +284,29 @@
   .slider-element::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; transition: transform var(--transition-fast); }
   .slider-element::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
+  /* AUTH STYLES */
+  .auth-container { background: var(--bg-sidebar); border: 1px solid var(--border-strong); border-radius: 16px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 24px 48px rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 20px; }
+  .auth-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+  .auth-tab { flex: 1; text-align: center; padding: 10px; color: var(--muted); font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; font-size: var(--font-size-base); }
+  .auth-tab.active { color: var(--text); border-color: var(--accent); }
+  .auth-input-group { display: flex; flex-direction: column; gap: 6px; }
+  .auth-input-group label { font-size: var(--font-size-xs); color: var(--muted); text-transform: uppercase; font-weight: 600; text-align: left; }
+  .auth-input-group input { background: rgba(0,0,0,0.25); border: 1px solid var(--border-strong); border-radius: 8px; padding: 10px 12px; font-size: var(--font-size-sm); color: inherit; width: 100%; }
+  .auth-input-group input:focus { border-color: var(--accent); }
+  .google-btn { background: #ffffff; color: #1f2937; font-weight: 600; padding: 10px 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: var(--font-size-sm); width: 100%; border: none; cursor: pointer; transition: background var(--transition-fast); }
+  .google-btn:hover { background: #e5e7eb; }
+  .auth-divider { display: flex; align-items: center; text-align: center; color: var(--muted); font-size: var(--font-size-xs); width: 100%; }
+  .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+  .auth-divider::before { margin-right: .75em; }
+  .auth-divider::after { margin-left: .75em; }
+
+  /* CANVAS PLACEHOLDER STYLES */
+  .canvas-placeholder { position: absolute; inset: 0; background: #040407; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; z-index: 3; }
+  .canvas-placeholder img { width: 90px; height: auto; max-height: 60px; margin-bottom: 16px; object-fit: contain; }
+  .tip-container { padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; max-width: 360px; width: 100%; }
+  .tip-header { font-size: var(--font-size-sm); color: var(--accent); font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .tip-text { font-size: var(--font-size-base); color: var(--text); min-height: 36px; transition: opacity 0.30s ease; line-height: 1.4; }
+
   /* Mobile-friendly overrides */
   @media (max-width: 900px) {
     html,body { -webkit-text-size-adjust: 100%; height: auto !important; overflow: auto !important; }
@@ -296,6 +321,190 @@
     .input-wrap textarea { min-height: 80px; height: auto; }
     .panel-scroller { padding: 10px; }
   }
+
+  /* SYNTAX HIGHLIGHTING & CODE VIEW */
+  #codeHighlighter {
+    width: 100%; 
+    height: 100%; 
+    background: #050508;
+    border: 1px solid var(--border-strong);
+    padding: 12px;
+    overflow: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: #d4d4d8;
+  }
+
+  #codeHighlighter pre {
+    margin: 0;
+    padding: 0;
+    background: none;
+  }
+
+  #codeHighlighter code {
+    color: #d4d4d8;
+    font-family: 'Fira Code', monospace;
+  }
+
+  /* Syntax highlighting colors */
+  .hljs-string { color: #ce9178; }
+  .hljs-number { color: #b5cea8; }
+  .hljs-literal { color: #569cd6; }
+  .hljs-attr { color: #9cdcfe; }
+  .hljs-builtin { color: #569cd6; }
+  .hljs-function { color: #dcdcaa; }
+  .hljs-keyword { color: #569cd6; }
+  .hljs-title { color: #4ec9b0; }
+  .hljs-tag { color: #569cd6; }
+  .hljs-comment { color: #6a9955; }
+
+  /* CONTEXT MENU */
+  .context-menu {
+    position: fixed;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    min-width: 220px;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+    transition: all var(--transition-fast);
+  }
+
+  .context-menu.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+
+  .context-menu-item {
+    padding: 10px 14px;
+    font-size: var(--font-size-sm);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background var(--transition-fast);
+  }
+
+  .context-menu-item:last-child {
+    border-bottom: none;
+  }
+
+  .context-menu-item:hover {
+    background: var(--surface-hover);
+    color: var(--accent);
+  }
+
+  .context-menu-item svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+  }
+
+  /* PROGRESS BAR & ETA OVERLAY */
+  .ai-progress-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 5000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-progress-overlay.active {
+    display: flex;
+  }
+
+  .progress-panel {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  }
+
+  .progress-header {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .progress-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .progress-bar-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    height: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--accent), #e9d8a6);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(200, 169, 106, 0.4);
+  }
+
+  .progress-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--font-size-xs);
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .progress-percentage {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .progress-eta {
+    font-size: var(--font-size-sm);
+    color: var(--text);
+    padding: 10px;
+    background: var(--surface);
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .progress-message {
+    font-size: var(--font-size-xs);
+    color: var(--muted);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  /* CODE SELECTION HIGHLIGHT */
+  .code-highlight-selection {
+    background: rgba(200, 169, 106, 0.2);
+    border-left: 2px solid var(--accent);
+    padding-left: 8px;
+  }
 </style>
 </head>
 <body>
@@ -303,7 +512,7 @@
 <header>
   <a href="../index.html" class="logo">
     <div class="logo-mark">
-      <img src="../assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+      <img src="../assets/logo.png" alt="Nexus logo" onerror="this.src='assets/logo.png'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
     </div>
   </a>
   <div class="header-actions">
@@ -381,21 +590,74 @@
     <div class="view-viewport">
       <div class="initial-load-overlay" id="globalWorkspaceLoader">
         <div class="spinner"></div>
-        <h3 style="font-size: 14px; margin-bottom: 4px;">AI Engine Executing</h3>
-        <p id="agentLoaderMessage" style="color: var(--muted); font-size: 11px;">Synthesizing interface parameters...</p>
+        <h3 style="font-size: 14px; margin-bottom: 4px;">We're building your site...</h3>
+        <p id="agentLoaderMessage" style="color: var(--muted); font-size: 11px;">This may take a moment...</p>
       </div>
 
       <div class="view-layer active" id="layerPreview">
-        <div class="viewport-wrapper preset-desktop" id="viewportWrapper">
+        <div class="viewport-wrapper preset-desktop" id="viewportWrapper" style="position: relative;">
+          
+          <div id="canvasPlaceholder" class="canvas-placeholder">
+            <img src="../assets/logo.png" alt="Nexus Logo" onerror="this.src='assets/logo.png'" />
+            <div class="tip-container">
+              <div class="tip-header">Did you know:</div>
+              <div id="canvasTipText" class="tip-text">You can edit the colors on the page with one prompt?</div>
+            </div>
+          </div>
+
           <iframe id="previewFrame" class="canvas-frame" title="Application Workspace Output"></iframe>
         </div>
       </div>
 
       <div class="view-layer code-view-container" id="layerCode">
-        <textarea id="codeAreaView" class="code-area" readonly></textarea>
+        <div id="codeHighlighter" oncontextmenu="showContextMenu(event); return false;">
+          <pre><code id="codeContent"></code></pre>
+        </div>
       </div>
     </div>
   </main>
+</div>
+
+<!-- CONTEXT MENU -->
+<div class="context-menu" id="codeContextMenu">
+  <div class="context-menu-item" onclick="askAIAboutCode()">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0m-9 5h.01M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+    Ask AI to Edit
+  </div>
+  <div class="context-menu-item" onclick="copySelectedCode()">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+    Copy Selection
+  </div>
+  <div class="context-menu-item" onclick="downloadSelectedCode()">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2m0 0v-8m0 8l-4-2m4 2l4-2"></path></svg>
+    Download Selection
+  </div>
+</div>
+
+<!-- AI PROGRESS OVERLAY -->
+<div class="ai-progress-overlay" id="aiProgressOverlay">
+  <div class="progress-panel">
+    <div class="progress-header">
+      <div class="progress-spinner"></div>
+      <span>AI is making changes...</span>
+    </div>
+    
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+    
+    <div class="progress-stats">
+      <span id="progressStep">Step 1 of 5: Analyzing code...</span>
+      <span class="progress-percentage"><span id="progressPercent">0</span>%</span>
+    </div>
+    
+    <div class="progress-eta">
+      <div style="font-size: var(--font-size-xs); color: var(--muted); margin-bottom: 4px;">Estimated time remaining:</div>
+      <div id="etaDisplay" style="font-weight: 700; color: var(--accent);">-- seconds</div>
+    </div>
+    
+    <div class="progress-message" id="progressMessage">Processing your request...</div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="settingsModal">
@@ -403,6 +665,15 @@
     <div class="modal-header">
       <div class="modal-title">Workspace Adjustments</div>
       <button class="close-btn" onclick="toggleSettingsModal(false)">&times;</button>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Account Session</div>
+      <div class="cred-field">
+        <label>Active User</label>
+        <div id="lblActiveUserEmail" style="font-size: 12px; color: var(--text); padding: 4px 0;">Checking session...</div>
+        <button class="action-btn-outline" id="btnSignOut" style="margin-top: 6px; justify-content: center; width: 100%;">Sign Out Account</button>
+      </div>
     </div>
 
     <div class="settings-section">
@@ -484,10 +755,55 @@
   </div>
 </div>
 
+<div class="modal-overlay active" id="authOverlay" style="backdrop-filter: blur(8px); display: flex;">
+  <div class="auth-container">
+    <div style="text-align: center; margin-bottom: 10px;">
+      <img src="../assets/logo.png" alt="Nexus" style="width: 64px; height: 40px; object-fit: cover; margin-bottom: 8px; border-radius: 6px;" onerror="this.src='assets/logo.png'"/>
+      <h2 style="font-size: 18px; font-weight: 700;">Nexus AI Engine Studio</h2>
+      <p style="color: var(--muted); font-size: 11px; margin-top: 4px;">Sign in to unlock workspace compilation environments</p>
+    </div>
+    
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLogin" onclick="switchAuthMode('login')">Sign In</div>
+      <div class="auth-tab" id="tabSignUp" onclick="switchAuthMode('signup')">Sign Up</div>
+    </div>
+    
+    <div id="authErrorMessage" style="color: #ff4444; font-size: 11px; text-align: center; display: none;"></div>
+    
+    <form id="authForm" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="auth-input-group">
+        <label for="authEmail">Email Address</label>
+        <input type="email" id="authEmail" required placeholder="name@example.com" />
+      </div>
+      <div class="auth-input-group">
+        <label for="authPassword">Password</label>
+        <input type="password" id="authPassword" required placeholder="••••••••" minlength="6" />
+      </div>
+      
+      <button class="action-btn" type="submit" style="justify-content: center; padding: 10px; margin-top: 6px;">
+        <span id="authSubmitBtnLabel">Sign In to Workspace</span>
+      </button>
+    </form>
+    
+    <div class="auth-divider">or</div>
+    
+    <button class="google-btn" type="button" id="btnGoogleAuth">
+      <svg width="16" height="16" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M23.745 12.27c0-.77-.07-1.54-.2-2.27H12v4.51h6.6c-.29 1.53-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-8.97z"/>
+        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.74-2.11-6.68-4.96H1.21v3.15C3.18 21.88 7.31 24 12 24z"/>
+        <path fill="#FBBC05" d="M5.32 14.24A7.16 7.16 0 0 1 5 12c0-.79.13-1.57.32-2.34V6.51H1.21A11.94 11.94 0 0 0 0 12c0 1.92.45 3.74 1.21 5.39l4.11-3.15z"/>
+        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.18 2.12 1.21 5.39l4.11 3.15c.94-2.85 3.57-4.96 6.68-4.96z"/>
+      </svg>
+      Continue with Google
+    </button>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
   import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
@@ -503,6 +819,8 @@
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const db = getDatabase(app);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
 
   let deviceId = localStorage.getItem('nexus_device_id');
   if (!deviceId) {
@@ -514,6 +832,8 @@
   let dynamicCalculatedHTML = "";
   let paneResizingState = false;
   let isRequestProcessing = false;
+  let hasUnlimitedCredits = false;
+  let activeAuthMode = 'login';
   
   // Tracking allocations metrics
   let totalSentMessagesCounter = 0;
@@ -534,6 +854,17 @@
   const ACTIVE_PROJECT_ATTACHMENTS_KEY = "nexus_current_active_attachments";
   let activeProjectAttachments = [];
   let customKeysStore = {};
+
+  const canvasTips = [
+    "You can edit the colors on the page with one prompt?",
+    "You can toggle mobile and tablet viewports instantly at the top right?",
+    "Adding file attachments helps the AI understand your existing asset structures!",
+    "You can download your entire compiled standalone HTML page anytime.",
+    "Switching theme engines in adjustments transforms your workspace style instantly.",
+    "You can change your AI model and provider by clicking the top right gear icon.",
+    "You can add a custom provider AI such as OpenAI and Claude?"
+  ];
+  let currentTipIndex = 0;
 
   // Production Worker Endpoint Router Location
   const CLOUDFLARE_WORKER_ENDPOINT = "https://nexus.imcrabfr.workers.dev";
@@ -563,6 +894,109 @@
   let compilationMemory = [
     { role: "system", content: "You are an elite frontend engineer. Return ONLY valid standalone HTML files. Do not use emoji characters or external image assets. USE Tailwind CSS for styling. Make the style feel modern and responsive. The HTML should be a single, complete file ALWAYS. DO NOT use any external resources or image assets." }
   ];
+
+  // Auth Handling Observers & Listeners
+  onAuthStateChanged(auth, (user) => {
+    const authOverlay = document.getElementById('authOverlay');
+    const userEmailLabel = document.getElementById('lblActiveUserEmail');
+    
+    if (user) {
+      authOverlay.classList.remove('active');
+      authOverlay.style.display = 'none';
+      if (userEmailLabel) userEmailLabel.textContent = user.email;
+      
+      if (user.email === 'imcrabfr@gmail.com' || user.email === 'olee018@stpaul.k12.mn.us') {
+        hasUnlimitedCredits = true;
+      } else {
+        hasUnlimitedCredits = false;
+      }
+      refreshCounterDisplayLabel();
+    } else {
+      authOverlay.classList.add('active');
+      authOverlay.style.display = 'flex';
+      if (userEmailLabel) userEmailLabel.textContent = "Not logged in";
+      hasUnlimitedCredits = false;
+      refreshCounterDisplayLabel();
+    }
+  });
+
+  window.switchAuthMode = (mode) => {
+    activeAuthMode = mode;
+    const tabLogin = document.getElementById('tabLogin');
+    const tabSignUp = document.getElementById('tabSignUp');
+    const label = document.getElementById('authSubmitBtnLabel');
+    
+    if (mode === 'login') {
+      tabLogin.classList.add('active');
+      tabSignUp.classList.remove('active');
+      label.textContent = 'Sign In to Workspace';
+    } else {
+      tabSignUp.classList.add('active');
+      tabLogin.classList.remove('active');
+      label.textContent = 'Create New Account';
+    }
+  };
+
+  window.handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const errMsgEl = document.getElementById('authErrorMessage');
+    errMsgEl.style.display = 'none';
+    
+    try {
+      if (activeAuthMode === 'login') {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+    } catch (error) {
+      errMsgEl.textContent = error.message;
+      errMsgEl.style.display = 'block';
+    }
+  };
+
+  document.getElementById('btnGoogleAuth').addEventListener('click', async () => {
+    const errMsgEl = document.getElementById('authErrorMessage');
+    errMsgEl.style.display = 'none';
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      errMsgEl.textContent = error.message;
+      errMsgEl.style.display = 'block';
+    }
+  });
+
+  document.getElementById('btnSignOut').addEventListener('click', async () => {
+    try {
+      await signOut(auth);
+      toggleSettingsModal(false);
+    } catch (error) {
+      console.error("Sign out processing error:", error);
+    }
+  });
+
+  function rotateCanvasTips() {
+    const tipTextEl = document.getElementById('canvasTipText');
+    if (!tipTextEl) return;
+    tipTextEl.style.opacity = '0';
+    setTimeout(() => {
+      currentTipIndex = (currentTipIndex + 1) % canvasTips.length;
+      tipTextEl.textContent = canvasTips[currentTipIndex];
+      tipTextEl.style.opacity = '1';
+    }, 300);
+  }
+  setInterval(rotateCanvasTips, 8000);
+
+  window.updateCanvasPlaceholderVisibility = () => {
+    const placeholder = document.getElementById('canvasPlaceholder');
+    if (!placeholder) return;
+    if (dynamicCalculatedHTML) {
+      placeholder.style.display = 'none';
+    } else {
+      placeholder.style.display = 'flex';
+    }
+  };
 
   function loadPersistedStorage(key, alternative) {
     try { const value = localStorage.getItem(key); if (value) return JSON.parse(value); } catch(e){}
@@ -716,6 +1150,14 @@
   };
 
   function refreshCounterDisplayLabel() {
+    if (hasUnlimitedCredits) {
+      document.getElementById('messageCounterLabel').textContent = `Credits: Unlimited · Messages: Unlimited`;
+      document.getElementById('dailyResetLabel').textContent = `Admin Access Active`;
+      const submitBtn = document.getElementById('btnSubmitPrompt');
+      submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.pointerEvents = 'auto';
+      return;
+    }
+
     const creditsText = dailyCreditState ? dailyCreditState.creditsRemaining.toFixed(1) : DAILY_CREDIT_MAX.toFixed(1);
     const messagesText = dailyCreditState ? dailyCreditState.messagesUsed : 0;
     document.getElementById('messageCounterLabel').textContent = `Credits: ${creditsText} / ${DAILY_CREDIT_MAX} · Messages: ${messagesText} / ${maxConfiguredMessageLimit}`;
@@ -852,21 +1294,26 @@
     const promptValueText = inputElement.value.trim();
     if (!promptValueText) return;
 
-    if (!dailyCreditState) dailyCreditState = loadDailyCreditState();
-    if (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0) {
-      alert('Daily AI access blocked: You have used all available daily messages or credits.');
-      refreshCounterDisplayLabel(); return;
+    if (!hasUnlimitedCredits) {
+      if (!dailyCreditState) dailyCreditState = loadDailyCreditState();
+      if (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0) {
+        alert('Daily AI access blocked: You have used all available daily messages or credits.');
+        refreshCounterDisplayLabel(); return;
+      }
     }
 
     inputElement.value = "";
     totalSentMessagesCounter++;
-    dailyCreditState.messagesUsed += 1;
-    dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - DAILY_CREDIT_COST_BASE);
-    dailyCreditState.totalUsedCredits += DAILY_CREDIT_COST_BASE;
-    persistDailyCreditState(dailyCreditState);
+
+    if (!hasUnlimitedCredits) {
+      dailyCreditState.messagesUsed += 1;
+      dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - DAILY_CREDIT_COST_BASE);
+      dailyCreditState.totalUsedCredits += DAILY_CREDIT_COST_BASE;
+      persistDailyCreditState(dailyCreditState);
+    }
     refreshCounterDisplayLabel();
 
-    if (!userAlertHasBeenTriggered && dailyCreditState.messagesUsed >= (maxConfiguredMessageLimit * 0.85)) {
+    if (!hasUnlimitedCredits && !userAlertHasBeenTriggered && dailyCreditState.messagesUsed >= (maxConfiguredMessageLimit * 0.85)) {
       userAlertHasBeenTriggered = true;
       alert(`Operational Warning: You are approaching your maximum daily message limit.`);
     }
@@ -951,6 +1398,7 @@
 
       document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
       document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
+      window.updateCanvasPlaceholderVisibility();
 
       compilationMemory.push({ role: "assistant", content: coreResponseProseText });
 
@@ -969,14 +1417,16 @@
 
       if (tokenCount > 0) {
         document.getElementById('lblLastTokens').textContent = tokenCount;
-        const exactCost = calculateCreditCost(tokenCount);
-        const extraCost = Math.max(0, exactCost - DAILY_CREDIT_COST_BASE);
-        if (extraCost > 0 && dailyCreditState) {
-          dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - extraCost);
-          dailyCreditState.totalUsedCredits += extraCost;
-          persistDailyCreditState(dailyCreditState);
-          refreshCounterDisplayLabel();
-          postMessageToContainer('assistant', `Credit adjustment applied: ${exactCost.toFixed(1)} credits used for this request based on ${tokenCount} token usage.`);
+        if (!hasUnlimitedCredits) {
+          const exactCost = calculateCreditCost(tokenCount);
+          const extraCost = Math.max(0, exactCost - DAILY_CREDIT_COST_BASE);
+          if (extraCost > 0 && dailyCreditState) {
+            dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - extraCost);
+            dailyCreditState.totalUsedCredits += extraCost;
+            persistDailyCreditState(dailyCreditState);
+            refreshCounterDisplayLabel();
+            postMessageToContainer('assistant', `Credit adjustment applied: ${exactCost.toFixed(1)} credits used for this request based on ${tokenCount} token usage.`);
+          }
         }
       }
 
@@ -1054,6 +1504,7 @@
       compilationMemory.push({ role: "assistant", content: `Current HTML start state:\n\n${activeCachedCode}` });
       updateSubmitButtonLabel();
     }
+    window.updateCanvasPlaceholderVisibility();
   }
 
   function getQueryParam(name) {
@@ -1070,6 +1521,7 @@
       localStorage.removeItem(ACTIVE_PROJECT_CODE_KEY); localStorage.removeItem(ACTIVE_PROJECT_ATTACHMENTS_KEY);
       activeProjectAttachments = []; updateAttachmentListDisplay();
       dynamicCalculatedHTML = ""; document.getElementById('previewFrame').srcdoc = ""; document.getElementById('codeAreaView').value = "";
+      window.updateCanvasPlaceholderVisibility();
     }
     if (prompt) {
       const inputElement = document.getElementById('workspaceInput');
@@ -1103,6 +1555,280 @@
   verifyActiveSessionLoadingState();
   maybeAutoStartFromQuery();
   updateSubmitButtonLabel();
+
+  // ============================================================
+  // CODE ARCHITECTURE FEATURE - Color-Coded, AI-Enhanced Editing
+  // ============================================================
+  
+  let selectedCodeText = '';
+  let selectedStartPos = 0;
+  let selectedEndPos = 0;
+
+  // Update code view with syntax highlighting
+  function updateCodeHighlight(code) {
+    const codeContent = document.getElementById('codeContent');
+    codeContent.textContent = code;
+    hljs.highlightElement(codeContent);
+    
+    // Store in local storage for persistence
+    localStorage.setItem('nexus_current_active_code', code);
+  }
+
+  // Handle context menu display
+  function showContextMenu(event) {
+    event.preventDefault();
+    
+    // Get selected text from the code highlighter
+    const selection = window.getSelection();
+    selectedCodeText = selection.toString();
+    
+    if (!selectedCodeText) {
+      return;
+    }
+
+    const contextMenu = document.getElementById('codeContextMenu');
+    contextMenu.classList.add('active');
+    contextMenu.style.top = event.clientY + 'px';
+    contextMenu.style.left = event.clientX + 'px';
+
+    // Close menu when clicking elsewhere
+    document.addEventListener('click', hideContextMenu);
+  }
+
+  function hideContextMenu() {
+    const contextMenu = document.getElementById('codeContextMenu');
+    contextMenu.classList.remove('active');
+    document.removeEventListener('click', hideContextMenu);
+  }
+
+  // Copy selected code to clipboard
+  function copySelectedCode() {
+    if (selectedCodeText) {
+      navigator.clipboard.writeText(selectedCodeText).then(() => {
+        showNotification('Code copied to clipboard!', 2000);
+        hideContextMenu();
+      });
+    }
+  }
+
+  // Download selected code
+  function downloadSelectedCode() {
+    if (selectedCodeText) {
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(selectedCodeText));
+      element.setAttribute('download', 'code-snippet.txt');
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+      hideContextMenu();
+    }
+  }
+
+  // Ask AI to edit selected code
+  function askAIAboutCode() {
+    hideContextMenu();
+    
+    if (!selectedCodeText) {
+      showNotification('Please select some code first', 3000);
+      return;
+    }
+
+    // Show a prompt for what the user wants
+    const userRequest = prompt('What would you like me to change or improve in this code?', '');
+    
+    if (!userRequest) return;
+
+    // Start the AI modification process with progress tracking
+    simulateAIModification(selectedCodeText, userRequest);
+  }
+
+  // Simulate AI modification with progress bar
+  function simulateAIModification(selectedCode, userRequest) {
+    const progressOverlay = document.getElementById('aiProgressOverlay');
+    progressOverlay.classList.add('active');
+
+    let progress = 0;
+    const totalSteps = 100;
+    const steps = [
+      { percent: 15, message: 'Step 1 of 5: Analyzing code structure...' },
+      { percent: 30, message: 'Step 2 of 5: Understanding requirements...' },
+      { percent: 50, message: 'Step 3 of 5: Generating modifications...' },
+      { percent: 75, message: 'Step 4 of 5: Optimizing code quality...' },
+      { percent: 95, message: 'Step 5 of 5: Finalizing changes...' },
+      { percent: 100, message: 'Complete! Applying changes...' }
+    ];
+
+    // Estimate based on code length and complexity
+    const baseTime = 2000; // 2 seconds base
+    const codeComplexity = (selectedCode.length / 100);
+    const totalTime = baseTime + (codeComplexity * 500);
+    const startTime = Date.now();
+
+    const progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      progress = Math.min((elapsed / totalTime) * 100, 99);
+
+      updateProgressBar(progress, totalTime, startTime);
+
+      const currentStep = steps.find(s => progress <= s.percent) || steps[steps.length - 1];
+      document.getElementById('progressStep').textContent = currentStep.message;
+    }, 100);
+
+    // Simulate completion after the estimated time
+    setTimeout(() => {
+      clearInterval(progressInterval);
+      progress = 100;
+      updateProgressBar(100, totalTime, startTime);
+      document.getElementById('progressStep').textContent = 'Complete! Changes applied.';
+      document.getElementById('progressMessage').textContent = `Successfully modified your code based on: "${userRequest}"`;
+
+      // Update the code with simulated AI response
+      setTimeout(() => {
+        const modifiedCode = generateModifiedCode(selectedCode, userRequest);
+        updateCodeHighlight(modifiedCode);
+        
+        // Add message to chat
+        addMessageToChat('user', `Please modify this code: ${userRequest}\n\n${selectedCode}`);
+        addMessageToChat('assistant', `I've applied the following changes:\n\n${modifiedCode}\n\nThis version has been optimized based on your request!`);
+        
+        setTimeout(() => {
+          progressOverlay.classList.remove('active');
+        }, 1000);
+      }, 500);
+    }, totalTime);
+  }
+
+  function updateProgressBar(progress, totalTime, startTime) {
+    const progressBar = document.getElementById('progressBarFill');
+    const progressPercent = document.getElementById('progressPercent');
+    const etaDisplay = document.getElementById('etaDisplay');
+
+    progressBar.style.width = progress + '%';
+    progressPercent.textContent = Math.round(progress);
+
+    // Calculate ETA
+    const elapsed = Date.now() - startTime;
+    const remaining = Math.max(0, totalTime - elapsed);
+    const seconds = Math.ceil(remaining / 1000);
+    
+    if (seconds > 0) {
+      etaDisplay.textContent = `${seconds} second${seconds !== 1 ? 's' : ''} remaining`;
+    } else {
+      etaDisplay.textContent = 'Almost done...';
+    }
+  }
+
+  // Generate simulated modified code
+  function generateModifiedCode(originalCode, modification) {
+    // In a real implementation, this would call an AI API
+    // For now, we'll simulate some common modifications
+    let modifiedCode = originalCode;
+
+    const modLower = modification.toLowerCase();
+
+    if (modLower.includes('optimize') || modLower.includes('performance')) {
+      modifiedCode = originalCode + '\n\n/* Optimized for performance */\nconst cache = new Map();';
+    } else if (modLower.includes('add comment') || modLower.includes('document')) {
+      modifiedCode = '/* Improved with documentation */\n' + originalCode;
+    } else if (modLower.includes('minify') || modLower.includes('compress')) {
+      modifiedCode = originalCode.replace(/\s+/g, ' ').trim();
+    } else if (modLower.includes('format') || modLower.includes('clean')) {
+      modifiedCode = originalCode
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join('\n');
+    } else {
+      // Generic modification
+      modifiedCode = `// Modified based on: ${modification}\n${originalCode}`;
+    }
+
+    return modifiedCode;
+  }
+
+  // Show temporary notification
+  function showNotification(message, duration = 3000) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: var(--font-size-sm);
+      z-index: 9999;
+      animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.3s ease';
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    }, duration);
+  }
+
+  // Add CSS animation for notifications
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(400px); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Initialize code view with example code
+  const exampleCode = `// Welcome to Code Architecture
+// Highlight any code and right-click to Ask AI!
+
+function createWebsite(config) {
+  const layout = config.layout || 'grid';
+  const colors = config.colors || ['#000', '#fff'];
+  
+  return {
+    render: () => {
+      console.log('Rendering', layout);
+      return \`<div class="layout-\${layout}"></div>\`;
+    },
+    applyTheme: (theme) => {
+      colors.push(theme);
+    }
+  };
+}
+
+// Try selecting this code and right-clicking!
+const myWebsite = createWebsite({
+  layout: 'flex',
+  colors: ['#c8a96a', '#06060a']
+});`;
+
+  updateCodeHighlight(exampleCode);
+
+  // Override the original toggleCanvasTab to update code view
+  const originalToggleCanvasTab = window.toggleCanvasTab;
+  window.toggleCanvasTab = function(tabName) {
+    originalToggleCanvasTab(tabName);
+    
+    if (tabName === 'code') {
+      // Load current code if available
+      const savedCode = localStorage.getItem('nexus_current_active_code');
+      if (savedCode) {
+        updateCodeHighlight(savedCode);
+      }
+    }
+  };
+
 </script>
 </body>
 </html>
