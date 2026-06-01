@@ -3,13 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#06060a" />
 <title>Nexus | Complete Payment</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
-<link rel="icon" href="../assets/logo.png" />
+<link rel="icon" href="assets/logo.png" />
 <style>
   :root {
+  
+  /* Mobile-friendly overrides */
+  @media (max-width: 900px) {
+    html,body { -webkit-text-size-adjust: 100%; height: auto !important; overflow: auto !important; }
+    nav { padding: 12px 16px; }
+    .hero { padding: 80px 20px 60px; }
+    .qr-wrapper { width: 80%; height: auto; }
+    img, iframe, video { max-width: 100%; height: auto; }
+    .btn { min-height: 44px; padding: 10px 14px; }
+  }
     --bg: #0a0a0f;
     --bg-2: #0f0f17;
     --surface: rgba(255,255,255,0.04);
@@ -87,7 +100,7 @@
   /* Payment Container */
   .hero {
     min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; text-align: center; padding: 100px 24px 40px;
+    justify-content: center; text-align: center; padding: 120px 24px 60px;
   }
   
   .eyebrow {
@@ -108,6 +121,53 @@
   }
   .sub { color: var(--muted); font-size: 17px; max-width: 500px; line-height: 1.55; margin-bottom: 40px; }
 
+  /* Goal Tracker */
+  .goal-tracker {
+    width: 100%;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+  .goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .goal-title { color: var(--text); }
+  .goal-amounts { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .goal-amounts span { color: var(--muted); font-weight: 400; font-size: 13px; }
+  
+  .progress-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--grad);
+    border-radius: 999px;
+    width: 0%; /* Set via JS */
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    box-shadow: 0 0 10px rgba(200,169,106,0.5);
+  }
+  /* Shimmer effect on the progress bar */
+  .progress-fill::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite linear;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
   /* Glassmorphic Pay Box */
   .pay-box {
     width: 100%; max-width: 440px;
@@ -116,18 +176,19 @@
     box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(200,169,106,0.08), 0 0 80px rgba(200,169,106,0.08);
     backdrop-filter: blur(20px);
     display: flex; flex-direction: column; align-items: center; gap: 24px;
+    position: relative;
   }
 
   /* Interactive QR Code Wrapper */
   .qr-wrapper {
-    background: #000000; /* Changed to black */
+    background: #000000;
     padding: 16px;
     border-radius: 16px;
     width: 220px;
     height: 220px;
     display: grid;
     place-items: center;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1); /* Adjusted shadow for dark bg */
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
     cursor: zoom-in;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
@@ -135,12 +196,8 @@
     transform: translateY(-2px) scale(1.02);
     box-shadow: inset 0 0 0 1px rgba(200,169,106,0.3), 0 10px 30px rgba(0,0,0,0.5);
   }
-  
   .qr-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 8px;
+    width: 100%; height: 100%; object-fit: contain; border-radius: 8px;
   }
 
   .divider {
@@ -148,58 +205,104 @@
   }
   .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
-  /* Lightbox Overlay */
-  .lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: rgba(5, 5, 10, 0.7);
-    backdrop-filter: blur(16px);
+  /* Donators Link Below Box */
+  .view-donators-btn {
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
+    gap: 6px;
+    transition: color 0.2s;
+    font-family: inherit;
+  }
+  .view-donators-btn:hover { color: var(--accent); }
+
+  /* Lightbox Overlay */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(5, 5, 10, 0.8);
+    backdrop-filter: blur(16px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
     transition: opacity 0.3s ease;
     padding: 20px;
   }
-  .lightbox.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .lightbox img {
-    max-width: 100%;
-    max-height: 85vh;
-    border-radius: 24px;
-    background: #000000;
-    padding: 24px;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1);
-    transform: scale(0.95);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    cursor: zoom-out;
-  }
-  .lightbox.active img {
-    transform: scale(1);
-  }
+  .lightbox.active { opacity: 1; pointer-events: auto; }
+  
   .lightbox-close {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--surface);
-    color: var(--muted);
+    position: absolute; top: 24px; right: 24px;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--surface); color: var(--muted);
     border: 1px solid var(--border-strong);
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    transition: all 0.2s;
+    display: grid; place-items: center; cursor: pointer; transition: all 0.2s;
+    z-index: 1001;
   }
   .lightbox-close:hover {
-    background: rgba(255,255,255,0.1);
-    color: var(--text);
-    transform: scale(1.05);
+    background: rgba(255,255,255,0.1); color: var(--text); transform: scale(1.05);
+  }
+
+  /* Image Modal Content */
+  .lightbox img {
+    max-width: 100%; max-height: 85vh; border-radius: 24px;
+    background: #000000; padding: 24px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1);
+    transform: scale(0.95); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: zoom-out;
+  }
+  .lightbox.active img { transform: scale(1); }
+
+  /* Donators Modal Content (Spring Animation) */
+  .donators-modal {
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 400px;
+    padding: 32px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(200,169,106,0.1);
+    
+    /* The Spring Initial State */
+    transform: scale(0.6) translateY(40px);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    display: none; /* Toggled via JS */
+  }
+  
+  /* The Spring Active State */
+  .lightbox.active .donators-modal.show-spring {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    display: block;
+  }
+
+  .donators-modal h3 {
+    font-size: 24px; margin-bottom: 8px; color: var(--text); font-weight: 600;
+  }
+  .donators-modal p {
+    color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5;
+  }
+  .donators-list {
+    list-style: none; display: flex; flex-direction: column; gap: 10px;
+    max-height: 300px; overflow-y: auto; padding-right: 8px;
+  }
+  /* Custom scrollbar for list */
+  .donators-list::-webkit-scrollbar { width: 4px; }
+  .donators-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  .donator-item {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 12px 16px; border-radius: 12px; font-weight: 500;
+    display: flex; align-items: center; gap: 12px; font-size: 15px;
+  }
+  .donator-item::before {
+    content: "✨"; font-size: 14px;
+  }
+  .empty-state {
+    text-align: center; color: var(--muted); padding: 20px 0; font-size: 14px; font-style: italic;
   }
 
   @media (max-width: 600px) {
@@ -212,25 +315,37 @@
 <body>
 
 <nav>
-  <a href="../index.html" class="logo">
+  <a href="https://nexus.owenlee.xyz" class="logo">
     <div class="logo-mark">
-      <img src="../assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" onerror="this.style.display='none'; this.parentNode.innerText='N'" />
+      <img src="assets/logo.png" alt="Nexus logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" onerror="this.style.display='none'; this.parentNode.innerText='N'" />
     </div>
   </a>
   <div>
-    <a href="../index.html" class="btn btn-ghost">← Back to home</a>
+    <a href="https://nexus.owenlee.xyz" class="btn btn-ghost">← Back to home</a>
   </div>
 </nav>
 
 <div class="hero">
   <div class="eyebrow">Donate</div>
   <h1>Complete your <span class="serif">Donation</span></h1>
-  <p class="sub">Scan the QR code and then complete your donation. (Not required but appreciated!)</p>
+  <p class="sub">Help fund the new nexuswebai.app domain. Scan the QR code or click below to donate.</p>
 
   <div class="pay-box">
     
-    <div class="qr-wrapper" onclick="openLightbox()">
-      <img src="../assets/cashapp/qr.png" alt="Cash App QR Code for $whosowen101">
+    <div class="goal-tracker">
+      <div class="goal-header">
+        <span class="goal-title">Domain Goal (nexuswebai.app)</span>
+        <div class="goal-amounts">
+          <span id="currentAmountDisplay">$0.00</span> <span>/ $10.81</span>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="goalProgressBar"></div>
+      </div>
+    </div>
+
+    <div class="qr-wrapper" onclick="openLightbox('qr')">
+      <img src="assets/cashapp/qr.png" alt="Cash App QR Code for $whosowen101">
     </div>
 
     <div class="divider">or</div>
@@ -242,33 +357,115 @@
       </svg>
         Donate to me
     </a>
-    
   </div>
+
+  <button class="view-donators-btn" onclick="openLightbox('donators')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="9" cy="7" r="4"></circle>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+    </svg>
+    View Donators
+  </button>
 </div>
 
-<div class="lightbox" id="qrLightbox" onclick="closeLightbox(event)">
+<div class="lightbox" id="mainLightbox" onclick="closeLightbox(event)">
   <button class="lightbox-close" aria-label="Close">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
   </button>
-  <img src="../assets/cashapp/qr.png" alt="Enlarged Cash App QR Code">
+  
+  <img id="qrContent" src="assets/cashapp/qr.png" alt="Enlarged Cash App QR Code" style="display: none;">
+  
+  <div id="donatorsContent" class="donators-modal">
+    <h3>Wall of Fame</h3>
+    <p>A massive thank you to the people bringing the new Nexus domain to life!</p>
+    <ul class="donators-list" id="donatorsListContainer">
+      </ul>
+  </div>
 </div>
 
 <script>
-  const lightbox = document.getElementById('qrLightbox');
+  /* ========================================================
+     1. CONFIGURATION (UPDATE THESE VALUES!)
+     ======================================================== */
   
-  function openLightbox() {
+  // Update this number when you receive a donation
+  const currentDonations = 0.00; 
+  const goalAmount = 10.81;
+
+  // Add names here! e.g. ['John Doe', 'Sarah', 'Anonymous']
+const donatorsList = ['Be the first to donate and see your name here!']; 
+
+  /* ========================================================
+     2. LOGIC & INITIALIZATION
+     ======================================================== */
+
+  // Initialize Goal Bar
+  window.addEventListener('DOMContentLoaded', () => {
+    const progressFill = document.getElementById('goalProgressBar');
+    const amountText = document.getElementById('currentAmountDisplay');
+    
+    // Calculate percentage (cap at 100%)
+    let percentage = (currentDonations / goalAmount) * 100;
+    if (percentage > 100) percentage = 100;
+    
+    // Set the display text and bar width
+    amountText.innerText = `$${currentDonations.toFixed(2)}`;
+    // Small delay so the bar animates in smoothly on page load
+    setTimeout(() => {
+      progressFill.style.width = `${percentage}%`;
+    }, 100);
+
+    // Initialize Donators List
+    const listContainer = document.getElementById('donatorsListContainer');
+    
+    if (donatorsList.length === 0) {
+      listContainer.innerHTML = '<div class="empty-state">No donations yet. Be the first to claim a spot!</div>';
+    } else {
+      listContainer.innerHTML = donatorsList.map(name => 
+        `<li class="donator-item">${name}</li>`
+      ).join('');
+    }
+  });
+
+  /* ========================================================
+     3. LIGHTBOX FUNCTIONALITY
+     ======================================================== */
+
+  const lightbox = document.getElementById('mainLightbox');
+  const qrContent = document.getElementById('qrContent');
+  const donatorsContent = document.getElementById('donatorsContent');
+
+  function openLightbox(type) {
+    // Hide both contents first
+    qrContent.style.display = 'none';
+    donatorsContent.classList.remove('show-spring');
+    
+    // Show the requested content
+    if (type === 'qr') {
+      qrContent.style.display = 'block';
+    } else if (type === 'donators') {
+      donatorsContent.classList.add('show-spring');
+    }
+
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden'; // Stop background scrolling
   }
 
   function closeLightbox(e) {
-    // Close if they click the background overlay, the close button, or the big image itself
+    // Close if clicking the background, the close button, or the QR image
     if (e.target === lightbox || e.target.closest('.lightbox-close') || e.target.tagName === 'IMG') {
       lightbox.classList.remove('active');
-      document.body.style.overflow = ''; // Restore scrolling
+      document.body.style.overflow = '';
+      
+      // Delay hiding the spring modal so the fade out completes first
+      setTimeout(() => {
+        donatorsContent.classList.remove('show-spring');
+      }, 300);
     }
   }
 
@@ -277,6 +474,9 @@
     if (e.key === 'Escape' && lightbox.classList.contains('active')) {
       lightbox.classList.remove('active');
       document.body.style.overflow = '';
+      setTimeout(() => {
+        donatorsContent.classList.remove('show-spring');
+      }, 300);
     }
   });
 </script>

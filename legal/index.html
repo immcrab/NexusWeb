@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#06060a" />
 <title>Terms of Service & Privacy Policy | Nexus Web AI builder</title>
 <meta name="description" content="A compelling, high-converting sentence explaining exactly what value your site provides to visitors. Click to explore our solutions.">
 <meta name="robots" content="index, follow">
@@ -212,6 +215,14 @@
     border-top: 1px solid var(--border);
     background: #040407;
     margin-top: auto;
+  }
+  /* Mobile-friendly overrides */
+  @media (max-width: 900px) {
+    html,body { -webkit-text-size-adjust: 100%; height: auto !important; overflow: auto !important; }
+    header { height: auto; padding: 12px 16px; }
+    main { margin: 20px auto; padding: 0 16px; }
+    .legal-box { padding: 20px; border-radius: 12px; }
+    img, iframe, video { max-width: 100%; height: auto; }
   }
 </style>
 </head>
