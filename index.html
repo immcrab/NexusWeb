@@ -301,14 +301,20 @@
     display: inline-flex; align-items: center; gap: 6px;
   }
   .legal-link-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
+  .blue {
+    font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic;
+    color: var(--accent);
+  }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="#" class="logo">
-    <div class="logo-mark">S</div>
-    ScribbleAI
+   <a href="" class="logo">
+    <div class="logo-mark">
+      <img src="assets/logo.png" alt="ScribbleAI logo" onerror="this.src='assets/logo.png'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+    </div>
+    <span>ScribbleAI</span>
   </a>
   <div class="nav-links">
     <a href="#features">Features</a>
@@ -325,7 +331,7 @@
 
 <header class="hero">
   <div class="eyebrow"><span class="dot"></span>Beta Mode</div>
-  <h1>Build your <span class="serif">DREAMS</span></h1>
+  <h1>Build your <b class="Bblue">DREAMS</b></h1>
   <p class="sub">ScribbleAI, Build Anything.</p>
 
   <div class="prompt-wrap">

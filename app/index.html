@@ -19,7 +19,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="A sleek visual preview showcase of the ScribbleAI software dashboard interface.">
-<link rel="icon" href="assets/logo.png" />
+<link rel="icon" href="../assets/logo.png" />
 <meta name="description" content="ScribbleAI builder lets you build modern websites and apps by chatting with AI. Login, deploy, and ship faster." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -411,6 +411,17 @@
     border: none;
   }
 
+  .util-btn.text-accent.dimmed-deploy-btn {
+    color: var(--muted) !important;
+    opacity: 0.55;
+    border-color: transparent;
+    font-weight: 500;
+  }
+  .util-btn.text-accent.dimmed-deploy-btn:hover {
+    opacity: 0.9;
+    color: var(--text) !important;
+  }
+
   .view-viewport {
     flex: 1;
     position: relative;
@@ -652,7 +663,7 @@
     justify-content: space-between;
   }
 
-  .styled-select, .cred-field input[type="password"], .auth-input-group input {
+  .styled-select, .cred-field input[type="password"], .auth-input-group input, .cred-field input[type="text"], .cred-field input[type="email"] {
     width: 100%;
     padding: 8px 12px;
     background: var(--bg-input);
@@ -751,8 +762,7 @@
     color: #1A1A1A;
     font-weight: 600;
     border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    border-radius: 6px; cursor: pointer;
     font-family: inherit;
     font-size: 12px;
     transition: background 0.2s;
@@ -890,6 +900,7 @@
         <button class="util-btn" id="presetTablet" onclick="setCanvasViewport('tablet')">Tablet</button>
         <button class="util-btn" id="presetPhone" onclick="setCanvasViewport('phone')">Mobile</button>
         <div style="width: 1px; height: 12px; background: var(--border); margin: 0 2px;"></div>
+        <button class="util-btn text-accent" id="btnRequestDeployUI" style="color: #10b981 !important;" onclick="openDeploymentModal()">Request Deployment</button>
         <button class="util-btn text-accent" onclick="triggerCodeDownload()">Download</button>
       </div>
     </div>
@@ -999,13 +1010,59 @@
       </div>
       <div class="cred-field">
         <label>API Key</label>
-        <input type="password" id="customApiKeyInput" placeholder="sk-..." />
+        <input type="password" id="customApiKeyInput" placeholder="your-api-key..." />
       </div>
       <button class="action-btn" id="btnSaveProvider" onclick="saveCustomProviderKey()" style="margin-top: 10px; justify-content:center;">Save & Verify Key</button>
       <p id="providerStatusText" style="font-size: 11px; color: var(--muted); margin-top: 5px; text-align: center;"></p>
     </div>
   </div>
 </div>
+
+<div class="modal-overlay" id="deploymentModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Request Project Deployment</div>
+      <button class="close-btn" onclick="closeDeploymentModal()">&times;</button>
+    </div>
+    <div class="settings-section">
+      <p style="font-size: 11.5px; color: var(--muted); margin-bottom: 16px;">Submit your project for official deployment on the ScribbleAI network. Admins will review your request shortly (to verify usually takes 1-2 business days) We will send updates via provided email.</p>
+      <form id="deploymentForm" onsubmit="submitDeploymentRequest(event)">
+        <div class="cred-field">
+          <label>Desired Subdomain</label>
+          <div style="display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
+  <input type="text" id="deploySubdomain" required placeholder="my-awesome-site" style="border: none; background: transparent; flex: 1; outline: none; padding: 8px 12px; color: var(--text); font-family: inherit; font-size: 12px;" />
+  
+  <select id="deployDomain" style="border: none; border-left: 1px solid var(--border); background: var(--bg-surface); color: var(--muted); padding: 8px; outline: none; font-family: inherit; font-size: 12px; cursor: pointer;">
+    <option value=".scribbleai.dev">.scribbleai.dev</option>
+    <option value=".pxplay.top">.pxplay.top</option>
+  </select>
+</div>
+        </div>
+        <div class="cred-field">
+          <label>Why do you want to deploy this project?</label>
+          <textarea id="deployReason" required placeholder="Briefly explain the purpose of this project and why it should be hosted..." style="width: 100%; padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: inherit; font-size: 12px; resize: vertical; min-height: 60px; outline: none;"></textarea>
+        </div>
+        <div class="cred-field">
+          <label>Target Audience / Category</label>
+          <select id="deployCategory" class="styled-select">
+            <option value="personal">Personal Portfolio / Blog</option>
+            <option value="business">Business / Startup</option>
+            <option value="ecommerce">E-Commerce</option>
+            <option value="tool">Web Tool / App</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="cred-field">
+          <label>Contact Email (for status updates)</label>
+          <input type="email" id="deployContact" required class="styled-select" placeholder="you@example.com" />
+        </div>
+        <button class="action-btn" type="submit" id="btnSubmitDeploy" style="margin-top: 16px; justify-content:center; width: 100%;">Submit Deployment Request</button>
+        <p id="deployStatusText" style="font-size: 11px; color: var(--muted); margin-top: 8px; text-align: center;"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay active" id="authOverlay" style="backdrop-filter: blur(8px); display: flex;">
   <div class="auth-container">
     <div style="text-align: center; margin-bottom: 10px;">
@@ -1046,8 +1103,9 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
-  import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+  import { getDatabase, ref, set, get, child, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  
   const firebaseConfig = {
     apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
     authDomain: "sitedropio.firebaseapp.com",
@@ -1058,11 +1116,36 @@
     appId: "1:950561906473:web:45822a85f188c28b20e138",
     measurementId: "G-BY119K5RS2"
   };
+  
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const db = getDatabase(app);
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
+
+  // DEPLOYMENT VIEW PORT (Checks URL before building the dashboard)
+  const urlParams = new URLSearchParams(window.location.search);
+  const deploymentViewId = urlParams.get('deployment');
+
+  if (deploymentViewId) {
+      document.documentElement.innerHTML = '<div style="color:white; font-family:sans-serif; padding:20px; text-align:center;">Loading remote deployment...</div>';
+      const deployRef = ref(db, `deployments/${deploymentViewId}`);
+      get(deployRef).then((snapshot) => {
+          if (snapshot.exists() && snapshot.val().status === 'approved') {
+              const htmlCode = snapshot.val().sourceCode;
+              document.open();
+              document.write(htmlCode);
+              document.close();
+          } else {
+              document.documentElement.innerHTML = '<div style="color:white; font-family:sans-serif; padding:20px; text-align:center;">Deployment not found or not approved.</div>';
+          }
+      }).catch(err => {
+          document.documentElement.innerHTML = `<div style="color:red; font-family:sans-serif; padding:20px; text-align:center;">Error loading deployment: ${err.message}</div>`;
+      });
+      // Halt further script initialization to strictly serve the HTML endpoint.
+      throw new Error("Deployment view mode active. Halting standard builder initialization.");
+  }
+
   let deviceId = localStorage.getItem('nexus_device_id');
   if (!deviceId) {
     deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -1084,6 +1167,8 @@
     });
   }
   let dynamicCalculatedHTML = "";
+  let currentProjectId = null;
+  let deployedProjectId = null;
   let paneResizingState = false;
   let isRequestProcessing = false;
   let hasUnlimitedCredits = false;
@@ -1146,6 +1231,15 @@
       authOverlay.classList.remove('active');
       authOverlay.style.display = 'none';
       if (userEmailLabel) userEmailLabel.textContent = localhostBypass ? 'Localhost Development Mode' : user.email;
+      const params = new URLSearchParams(window.location.search);
+      currentProjectId = params.get('pid') || "default_scribble_project";
+      if (user) {
+        const userDeployRef = ref(db, `users/${user.uid}/deployedProjectId`);
+        onValue(userDeployRef, (snapshot) => {
+          deployedProjectId = snapshot.val();
+          refreshDeploymentButtonState();
+        });
+      }
       if (user && (user.email === 'imcrabfr@gmail.com' || user.email === 'olee018@stpaul.k12.mn.us')) {
         hasUnlimitedCredits = true;
       } else if (localhostBypass) {
@@ -1154,6 +1248,7 @@
         hasUnlimitedCredits = false;
       }
       refreshCounterDisplayLabel();
+      initializeDeploymentListener(); // Initialize listener once auth is verified
     } else {
       authOverlay.classList.add('active');
       authOverlay.style.display = 'flex';
@@ -1162,6 +1257,79 @@
       refreshCounterDisplayLabel();
     }
   });
+
+  // Listener for dynamic User Deployment Status
+  function initializeDeploymentListener() {
+      const currentUid = auth.currentUser ? auth.currentUser.uid : 'anonymous';
+      const checkId = currentUid !== 'anonymous' ? currentUid : deviceId;
+
+      const deployRef = ref(db, 'deployments');
+      onValue(deployRef, (snapshot) => {
+          const deployBtn = document.getElementById('btnRequestDeployUI');
+          if (!deployBtn) return;
+
+          let activeDeploymentId = null;
+          if (snapshot.exists()) {
+              const data = snapshot.val();
+              for (const [key, val] of Object.entries(data)) {
+                  const ownerId = val.userId !== 'anonymous' ? val.userId : val.deviceId;
+                  const projectMatch = val.projectId === currentProjectId || val.requestedProjectId === currentProjectId;
+                  if (ownerId === checkId && val.status === 'approved' && projectMatch) {
+                      activeDeploymentId = key;
+                      break;
+                  }
+              }
+          }
+
+          if (activeDeploymentId) {
+              deployBtn.innerText = 'Save and Deploy';
+              deployBtn.onclick = () => window.updateExistingDeployment(activeDeploymentId);
+          } else {
+              deployBtn.innerText = 'Request Deployment';
+              deployBtn.onclick = window.openDeploymentModal;
+          }
+      });
+  }
+
+  window.refreshDeploymentButtonState = function() {
+    const deployBtn = document.getElementById('btnRequestDeployUI');
+    if (!deployBtn) return;
+    if (deployedProjectId && currentProjectId && deployedProjectId !== currentProjectId) {
+      deployBtn.classList.add('dimmed-deploy-btn');
+      deployBtn.style.opacity = '0.55';
+      deployBtn.style.cursor = 'not-allowed';
+      deployBtn.style.color = 'var(--muted)';
+      deployBtn.disabled = true;
+    } else {
+      deployBtn.classList.remove('dimmed-deploy-btn');
+      deployBtn.style.opacity = '1';
+      deployBtn.style.cursor = 'pointer';
+      deployBtn.style.color = '#10b981';
+      deployBtn.disabled = false;
+    }
+  };
+
+  window.updateExistingDeployment = async (deployId) => {
+      if (!dynamicCalculatedHTML) {
+          alert("Please compile a project first before saving to deployment.");
+          return;
+      }
+      const btn = document.getElementById('btnRequestDeployUI');
+      const originalText = btn.innerText;
+      btn.innerText = 'Saving...';
+      try {
+          await update(ref(db, `deployments/${deployId}`), {
+              sourceCode: dynamicCalculatedHTML,
+              lastUpdated: Date.now()
+          });
+          btn.innerText = 'Saved & Deployed!';
+          setTimeout(() => { btn.innerText = originalText; }, 2000);
+      } catch (err) {
+          alert(`Error saving deployment: ${err.message}`);
+          btn.innerText = originalText;
+      }
+  };
+
   window.switchAuthMode = (mode) => {
     activeAuthMode = mode;
     const tabLogin = document.getElementById('tabLogin');
@@ -1346,6 +1514,87 @@
     document.getElementById('customApiKeyInput').value = '';
   };
   window.closeProviderModal = () => { document.getElementById('providerModal').classList.remove('active'); };
+
+  window.openDeploymentModal = () => {
+    const blocked = deployedProjectId && currentProjectId && deployedProjectId !== currentProjectId;
+    if (blocked) {
+      alert('You already have an active deployed project. Deployment requests for other projects are blocked.');
+      return;
+    }
+
+    document.getElementById('deploymentForm').reset();
+    document.getElementById('deployStatusText').innerText = '';
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      document.getElementById('deployContact').value = currentUser.email;
+    }
+    document.getElementById('deploymentModal').classList.add('active');
+  };
+
+  window.closeDeploymentModal = () => {
+    document.getElementById('deploymentModal').classList.remove('active');
+  };
+  
+  window.submitDeploymentRequest = async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnSubmitDeploy');
+    const statusText = document.getElementById('deployStatusText');
+
+    if (!dynamicCalculatedHTML) {
+        statusText.innerText = 'Error: You must compile a project before requesting deployment.';
+        statusText.style.color = '#ff4444';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = 'Submitting...';
+    statusText.innerText = 'Sending deployment request to server...';
+    statusText.style.color = 'var(--muted)';
+
+    const subdomain = document.getElementById('deploySubdomain').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+    const domainExtension = document.getElementById('deployDomain').value;
+    const fullDomain = `${subdomain}${domainExtension}`;
+    
+    const reason = document.getElementById('deployReason').value.trim();
+    const category = document.getElementById('deployCategory').value;
+    const contact = document.getElementById('deployContact').value.trim();
+    const projectTitle = localStorage.getItem('nexus_current_active_title') || 'Untitled Project';
+    const projectPrompt = localStorage.getItem('nexus_current_active_prompt') || '';
+
+    try {
+      const deployRef = push(ref(db, 'deployments'));
+      await set(deployRef, {
+        subdomain: subdomain,
+        fullDomain: fullDomain,
+        reason: reason,
+        category: category,
+        contactEmail: contact,
+        projectTitle: projectTitle,
+        originalPrompt: projectPrompt,
+        sourceCode: dynamicCalculatedHTML,
+        timestamp: Date.now(),
+        status: 'pending',
+        requestedProjectId: currentProjectId,
+        userId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+        userEmail: auth.currentUser ? auth.currentUser.email : null,
+        deviceId: deviceId
+      });
+      statusText.innerText = 'Deployment request submitted successfully!';
+      statusText.style.color = '#00ff00';
+      setTimeout(() => {
+        closeDeploymentModal();
+        btn.disabled = false;
+        btn.innerText = 'Submit Deployment Request';
+        document.getElementById('deploymentForm').reset();
+      }, 2000);
+    } catch(err) {
+      statusText.innerText = `Error: ${err.message}`;
+      statusText.style.color = '#ff4444';
+      btn.disabled = false;
+      btn.innerText = 'Submit Deployment Request';
+    }
+  };
+
   window.applyVisualConfigurations = () => {
     const selectedTheme = document.getElementById('themeStyleSelect').value;
     const selectedSizing = document.getElementById('textSizeSelect').value;
