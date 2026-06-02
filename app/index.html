@@ -5,334 +5,832 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="theme-color" content="#06060a" />
-<title>Nexus Web AI builder | Build modern websites with AI</title>
+<meta name="theme-color" content="#1A1A1A" />
+<title>ScribbleAI Web Builder | Build modern websites with AI</title>
 <meta name="description" content="A compelling, high-converting sentence explaining exactly what value your site provides to visitors. Click to explore our solutions.">
 <meta name="robots" content="index, follow">
-<meta property="og:site_name" content="BrandName Studio">
+<meta property="og:site_name" content="ScribbleAI Studio">
 <meta property="og:type" content="website">
-
-<meta property="og:url" content="https://nexus.owenlee.xyz/">
-
-<meta property="og:title" content="Transform Your Workflow with Nexus Web AI Studio">
-
+<meta property="og:url" content="https://scribbleai.owenlee.xyz/">
+<meta property="og:title" content="Transform Your Workflow with ScribbleAI Studio">
 <meta property="og:description" content="Discover the tools and framework configurations built to optimize efficiency and upgrade interface scalability.">
-
-<meta property="og:image" content="https://nexus.owenlee.xyz/assets/logo.png">
+<meta property="og:image" content="https://scribbleai.owenlee.xyz/assets/logo.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A sleek visual preview showcase of the Nexus Web AI software dashboard interface.">
+<meta property="og:image:alt" content="A sleek visual preview showcase of the ScribbleAI software dashboard interface.">
 <link rel="icon" href="assets/logo.png" />
-<meta name="description" content="Nexus Web AI builder lets you build modern websites and apps by chatting with AI. Login, deploy, and ship faster." />
+<meta name="description" content="ScribbleAI builder lets you build modern websites and apps by chatting with AI. Login, deploy, and ship faster." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TFZPC07B0B"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
 
-  gtag('config', 'G-TFZPC07B0B');
-</script>
 <style>
   :root {
-    --bg: #06060a;
-    --bg-sidebar: #0b0b14;
-    --surface: rgba(255,255,255,0.03);
-    --surface-hover: rgba(255,255,255,0.08);
-    --border: rgba(255,255,255,0.06);
-    --border-strong: rgba(255,255,255,0.12);
-    --text: #f5f5f7;
-    --muted: #8e8e9f;
-    --accent: #c8a96a;
-    --accent-glow: rgba(200,169,106,0.15);
-    --grad: linear-gradient(135deg, #e9d8a6 0%, #c8a96a 40%, #8c6f3f 100%);
+    --bg-main: #1A1A1A;
+    --accent: #2776F5;
+    --text: #FFFFFF;
+    --muted: #A0A0A5;
+    --border: #2E2E33;
+    --bg-surface: #222226;
+    --bg-panel: #1E1E22;
+    --bg-input: #2A2A30;
     --font-size-base: 12.5px;
-    --font-size-sm: 11px;
-    --font-size-xs: 10px;
-    --radius: 8px;
-    --transition-fast: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  [data-theme="light"] {
-    --bg: #f3f4f6;
-    --bg-sidebar: #ffffff;
-    --surface: rgba(0,0,0,0.03);
-    --surface-hover: rgba(0,0,0,0.06);
-    --border: rgba(0,0,0,0.08);
-    --border-strong: rgba(0,0,0,0.15);
-    --text: #1f2937;
-    --muted: #6b7280;
-    --accent: #0284c7;
-    --accent-glow: rgba(2,132,199,0.12);
-    --grad: linear-gradient(135deg, #38bdf8 0%, #0284c7 40%, #0369a1 100%);
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
-  [data-theme="hacker"] {
-    --bg: #000000;
-    --bg-sidebar: #050505;
-    --surface: rgba(0,255,0,0.04);
-    --surface-hover: rgba(0,255,0,0.1);
-    --border: rgba(0,255,0,0.2);
-    --border-strong: rgba(0,255,0,0.4);
-    --text: #00ff00;
-    --muted: #008800;
-    --accent: #00ff00;
-    --accent-glow: rgba(0,255,0,0.15);
-    --grad: linear-gradient(135deg, #00ff00 0%, #00cc00 40%, #006600 100%);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: radial-gradient(circle at top right, var(--accent-glow), transparent 25%), var(--bg);
-    color: var(--text); font-family: 'Inter', sans-serif; font-size: var(--font-size-base);
-    -webkit-font-smoothing: antialiased; height: 100vh; overflow: hidden; display: flex; flex-direction: column;
-    transition: background var(--transition-slow), color var(--transition-slow);
+    background-color: var(--bg-main) !important;
+    color: var(--text) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: var(--font-size-base);
+    overflow-x: hidden;
   }
-  button, select, input, textarea { font-family: inherit; color: inherit; outline: none; transition: all var(--transition-fast); }
-  button { cursor: pointer; border: none; background: none; }
-  button:active { transform: scale(0.96); opacity: 0.85; }
-  .styled-select {
-    display: inline-flex;
-    width: 100%;
-    min-width: 140px;
-    padding: 11px 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.14);
-    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
-    color: var(--text);
-    box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%23F5F5F7' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 14px 14px;
-  }
-  .styled-select:hover, .styled-select:focus {
-    border-color: rgba(200,169,106,0.8);
-    box-shadow: inset 0 1px 1px rgba(255,255,255,0.08), 0 0 0 6px rgba(200,169,106,0.08);
-    outline: none;
-  }
-  .styled-select option { color: var(--text); background: var(--bg-sidebar); }
 
-  /* TOP BAR */
   header {
-    height: 44px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    height: 56px;
   }
-  .app-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .logo-mark {
-    width: 48px;
-    height: 31px;
-    border-radius: 11px;
-    display: grid;
-    place-items: center;
-    color: #0a0a0f;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text);
     font-weight: 800;
-    font-size: 14px;
-    background: none;
+    font-size: 16px;
+    letter-spacing: -0.02em;
   }
-  .header-actions { display: flex; align-items: center; gap: 12px; }
-  .status-badge {
-    font-size: var(--font-size-sm); padding: 4px 10px; border-radius: 999px; background: var(--accent-glow);
-    color: var(--accent); border: 1px solid var(--border); display: flex; align-items: center; gap: 6px;
+
+  .logo-mark {
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--accent);
   }
-  .pulse-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
-  @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .projects-nav-btn, .icon-btn, .action-btn, .action-btn-outline, .util-btn, .tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 12px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
 
   .icon-btn {
-    display: flex; align-items: center; justify-content: center; width: 30px; height: 30px;
-    border-radius: 50%; color: var(--muted); background: var(--surface); border: 1px solid transparent;
+    padding: 6px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
   }
-  .icon-btn:hover { color: var(--text); background: var(--surface-hover); border-color: var(--border); }
 
-  /* PROJECTS NAVIGATION INTERFACE ELEMENTS */
-  .projects-nav-btn {
-    font-size: var(--font-size-sm); color: var(--text); padding: 5px 11px; border-radius: 6px;
-    border: 1px solid var(--border-strong); background: var(--surface); display: flex; align-items: center; gap: 6px;
-    text-decoration: none; font-weight: 500; transition: all var(--transition-fast);
+  .icon-btn:hover {
+    background: var(--border);
+    color: var(--accent);
   }
-  .projects-nav-btn:hover { background: var(--surface-hover); border-color: var(--accent); }
 
-  /* CONTAINER LAYOUT */
-  .workspace-container { display: flex; flex: 1; height: calc(100vh - 44px); width: 100%; position: relative; }
-  
+  .action-btn {
+    background: var(--accent);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  .action-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .action-btn-outline {
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+  }
+
+  .action-btn-outline:hover {
+    background: var(--border);
+  }
+
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(39, 118, 245, 0.1);
+    border: 1px solid rgba(39, 118, 245, 0.2);
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(39, 118, 245, 0.7);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 118, 245, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(39, 118, 245, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 118, 245, 0); }
+  }
+
+  .workspace-container {
+    display: flex;
+    height: calc(100vh - 56px);
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-main);
+  }
+
   .chat-sidebar {
-    width: 380px; min-width: 280px; max-width: 700px; background: var(--bg-sidebar);
-    border-right: 1px solid var(--border); display: flex; flex-direction: column; position: relative; z-index: 5;
-    transition: background var(--transition-slow);
+    width: 340px;
+    min-width: 280px;
+    max-width: 600px;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    z-index: 10;
   }
 
-  /* DRAGGABLE RESIZER */
-  .resizer { width: 6px; background: var(--border); cursor: col-resize; z-index: 15; transition: background var(--transition-fast); position: relative; }
-  .resizer:hover, .resizer.dragging { background: var(--accent); }
-  .resizer::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); height: 30px; width: 2px; background: rgba(255,255,255,0.2); border-radius: 2px; }
+  .panel-scroller {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+  }
 
-  /* SCROLLER PANEL FOR CONTROLS */
-  .panel-scroller { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-bottom: 1px solid var(--border); }
-  .panel-row { display: flex; align-items: center; justify-content: space-between; font-size: var(--font-size-sm); color: var(--muted); }
-  .panel-row span strong { color: var(--text); }
+  .panel-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .panel-row strong {
+    color: var(--text);
+  }
 
   .attachments-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .attachments-header {
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+
+  .attachments-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .attachments-note {
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .attachment-list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 120px;
+    overflow-y: auto;
+  }
+
+  .attachment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 11px;
+  }
+
+  .attachment-item button {
+    background: transparent;
+    border: none;
+    color: #FF4444;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .history-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .message {
+    padding: 12px;
+    border-radius: 8px;
+    line-height: 1.5;
+    font-size: 12px;
+    max-width: 90%;
+    word-break: break-word;
+  }
+
+  .message.assistant {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    align-self: flex-start;
+  }
+
+  .message.user {
+    background: var(--accent);
+    color: #FFFFFF;
+    align-self: flex-end;
+  }
+
+  .input-container {
+    padding: 16px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+  }
+
+  .input-wrap {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: rgba(255,255,255,0.04);
+    background: var(--bg-input);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 12px;
+    padding: 10px;
+    border-radius: 8px;
   }
-  .attachments-header { color: var(--text); font-size: 12px; font-weight: 700; }
-  .attachments-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .attachments-note { color: var(--muted); font-size: 11px; }
-  .attachment-list { display: grid; gap: 8px; max-height: 180px; overflow-y: auto; padding-right: 2px; }
-  .attachment-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; }
-  .attachment-item strong { font-size: 12px; }
-  .attachment-item span { color: var(--muted); font-size: 11px; }
-  .attachment-item button { background: rgba(255,255,255,0.08); color: var(--text); padding: 4px 8px; border-radius: 8px; font-size: 11px; }
-  .attachment-item button:hover { background: rgba(255,255,255,0.12); }
 
-  /* HISTORY & STREAMING ANIMATION */
-  .history-container { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
-  
-  .message {
-    padding: 10px 12px; border-radius: var(--radius); max-width: 95%; line-height: 1.45;
-    transform-origin: bottom left; opacity: 0; transform: translateY(8px);
-    animation: msgShow 0.35s forwards cubic-bezier(0.23, 1, 0.32, 1);
+  .input-wrap textarea {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    resize: none;
+    min-height: 60px;
+    font-family: inherit;
+    font-size: 12.5px;
+    outline: none;
   }
-  @keyframes msgShow { to { transform: translateY(0); opacity: 1; } }
 
-  .message.user { background: var(--surface); border: 1px solid var(--border); align-self: flex-end; color: var(--text); transform-origin: bottom right; }
-  .message.assistant { background: rgba(255,255,255,0.01); border: 1px solid var(--border); align-self: flex-start; }
+  .input-wrap textarea::placeholder {
+    color: var(--muted);
+  }
 
-  /* INPUT WRAPPER */
-  .input-container { padding: 12px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.15); }
-  
-  .input-wrap { background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 8px; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-  .input-wrap:focus-within { border-color: var(--accent); }
-  .input-wrap textarea { width: 100%; background: none; border: none; resize: none; min-height: 40px; height: 40px; font-size: var(--font-size-base); color: var(--text); }
-  
-  .input-action-row { display: flex; justify-content: space-between; align-items: center; }
-  .counter-display { font-size: var(--font-size-xs); color: var(--muted); }
-  .action-btn { background: var(--grad); color: #0a0a0f; font-weight: 600; padding: 6px 12px; border-radius: 6px; font-size: var(--font-size-sm); display: flex; align-items: center; gap: 6px; }
-  .action-btn-outline { background: transparent; border: 1px solid var(--border-strong); color: var(--text); font-weight: 500; padding: 6px 12px; border-radius: 6px; font-size: var(--font-size-sm); display: flex; align-items: center; gap: 6px; transition: all var(--transition-fast); }
-  .action-btn-outline:hover { background: var(--surface-hover); border-color: var(--accent); }
-  [data-theme="hacker"] .action-btn { color: #000; }
+  .input-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-  /* CANVAS STRUCTURES */
-  .preview-canvas { flex: 1; display: flex; flex-direction: column; background: #020204; overflow: hidden; position: relative; }
-  .canvas-header { height: 44px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 4; }
-  .header-left, .header-right { display: flex; align-items: center; gap: 6px; }
-  
-  .tab-btn { font-size: var(--font-size-base); color: var(--muted); padding: 4px 10px; border-radius: 5px; font-weight: 500; }
-  .tab-btn:hover { color: var(--text); background: var(--surface); }
-  .tab-btn.active { color: var(--text); background: var(--surface-hover); border: 1px solid var(--border); }
+  .counter-display {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
 
-  .util-btn { font-size: var(--font-size-sm); color: var(--muted); padding: 4px 8px; border-radius: 5px; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; gap: 4px; }
-  .util-btn:hover { color: var(--text); border-color: var(--border-strong); }
-  .util-btn.active { color: var(--text); background: var(--surface-hover); border-color: var(--accent); }
+  .resizer {
+    width: 4px;
+    background: transparent;
+    cursor: col-resize;
+    transition: background 0.2s;
+    position: relative;
+    z-index: 20;
+  }
 
-  .view-viewport { flex: 1; width: 100%; position: relative; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px 16px 44px 16px; background: #040407; }
-  
+  .resizer:hover, .resizer.dragging {
+    background: var(--accent);
+  }
+
+  .preview-canvas {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-main);
+    height: 100%;
+    position: relative;
+  }
+
+  .canvas-header {
+    height: 48px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+  }
+
+  .header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tab-btn {
+    border-radius: 0;
+    height: 48px;
+    border-bottom: 2px solid transparent;
+    padding: 0 16px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .tab-btn.active {
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+    background: rgba(39, 118, 245, 0.05);
+  }
+
+  .util-btn {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+  }
+
+  .util-btn.active {
+    background: var(--accent);
+    color: #FFFFFF;
+    border-color: var(--accent);
+  }
+
+  .util-btn.text-accent {
+    color: var(--accent) !important;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+  }
+
+  .view-viewport {
+    flex: 1;
+    position: relative;
+    background: #111113;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .view-layer {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .view-layer.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .viewport-wrapper {
-    width: 100%; height: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-radius: var(--radius);
-    overflow: hidden; border: 1px solid var(--border-strong); background: #fff;
-    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), height 0.4s ease; position: relative;
+    background: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
   }
-  .viewport-wrapper.preset-phone { width: 375px; height: 100%; max-height: 740px; }
-  .viewport-wrapper.preset-tablet { width: 768px; height: 100%; max-height: 920px; }
-  .viewport-wrapper.preset-desktop { width: 100%; height: 100%; }
 
-  .canvas-frame { width: 100%; height: 100%; border: none; background: #fff; display: block; }
-  
-  .view-layer { position: absolute; inset: 16px 16px 44px 16px; border-radius: var(--radius); overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all var(--transition-slow); }
-  .view-layer.active { opacity: 1; pointer-events: auto; transform: translateY(0); z-index: 2; }
-  .code-view-container { background: #050508; border: 1px solid var(--border-strong); padding: 12px; }
-  .code-area { width: 100%; height: 100%; background: none; border: none; resize: none; color: #d4d4d8; font-family: 'Fira Code', monospace; font-size: var(--font-size-sm); line-height: 1.5; }
+  .viewport-wrapper.preset-desktop {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
 
-  .initial-load-overlay { position: absolute; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; transition: opacity var(--transition-fast); }
-  .initial-load-overlay.active { display: flex; opacity: 1; }
-  .spinner { width: 36px; height: 36px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+  .viewport-wrapper.preset-tablet {
+    width: 768px;
+    height: 95%;
+    border-radius: 12px;
+    border: 8px solid var(--border);
+  }
+
+  .viewport-wrapper.preset-phone {
+    width: 375px;
+    height: 85%;
+    border-radius: 24px;
+    border: 12px solid var(--border);
+  }
+
+  .canvas-placeholder {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    z-index: 5;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .canvas-placeholder img {
+    width: 56px;
+    height: 56px;
+    opacity: 0.8;
+  }
+
+  .tip-container {
+    max-width: 280px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+
+  .tip-header {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .tip-text {
+    font-size: 11.5px;
+    color: var(--text);
+    line-height: 1.4;
+    transition: opacity 0.3s;
+  }
+
+  .canvas-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #FFFFFF;
+  }
+
+  .code-view-container {
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    background: #111113;
+  }
+
+  .code-area {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #A9B7C6;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    resize: none;
+    outline: none;
+    line-height: 1.5;
+  }
+
+  .initial-load-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .initial-load-overlay.active {
+    display: flex;
+  }
+
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 2.5px solid rgba(255,255,255,0.1);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* SETTINGS MODAL overlay */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity var(--transition-fast); display: flex; align-items: center; justify-content: center; }
-  .modal-overlay.active { opacity: 1; pointer-events: auto; }
-  .modal-content { background: var(--bg-sidebar); border: 1px solid var(--border-strong); border-radius: 12px; width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; padding: 20px; transform: scale(0.95); transition: all var(--transition-fast); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-  .modal-overlay.active .modal-content { transform: scale(1); }
-  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-  .modal-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-  .close-btn { background: var(--surface); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--muted); }
-  .close-btn:hover { background: var(--surface-hover); color: var(--text); }
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+  }
 
-  .settings-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
-  .settings-title { font-size: var(--font-size-xs); font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
-  .cred-field { display: flex; flex-direction: column; gap: 8px; }
-  .cred-field label { font-size: var(--font-size-xs); color: var(--muted); font-weight: 600; text-transform: uppercase; display: flex; justify-content: space-between; }
-  .cred-field select, .cred-field input { background: rgba(0,0,0,0.25); border: 1px solid var(--border-strong); border-radius: 6px; padding: 8px 10px; font-size: var(--font-size-sm); color: inherit; width: 100%; }
-  .cred-field select:focus, .cred-field input:focus { border-color: var(--accent); }
-  
-  /* SLIDER STYLE OPTIONS */
-  .slider-element { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); outline: none; margin: 6px 0; }
-  .slider-element::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; transition: transform var(--transition-fast); }
-  .slider-element::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .modal-overlay.active {
+    display: flex;
+  }
 
-  /* AUTH STYLES */
-  .auth-container { background: var(--bg-sidebar); border: 1px solid var(--border-strong); border-radius: 16px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 24px 48px rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 20px; }
-  .auth-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
-  .auth-tab { flex: 1; text-align: center; padding: 10px; color: var(--muted); font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; font-size: var(--font-size-base); }
-  .auth-tab.active { color: var(--text); border-color: var(--accent); }
-  .auth-input-group { display: flex; flex-direction: column; gap: 6px; }
-  .auth-input-group label { font-size: var(--font-size-xs); color: var(--muted); text-transform: uppercase; font-weight: 600; text-align: left; }
-  .auth-input-group input { background: rgba(0,0,0,0.25); border: 1px solid var(--border-strong); border-radius: 8px; padding: 10px 12px; font-size: var(--font-size-sm); color: inherit; width: 100%; }
-  .auth-input-group input:focus { border-color: var(--accent); }
-  .google-btn { background: #ffffff; color: #1f2937; font-weight: 600; padding: 10px 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: var(--font-size-sm); width: 100%; border: none; cursor: pointer; transition: background var(--transition-fast); }
-  .google-btn:hover { background: #e5e7eb; }
-  .auth-divider { display: flex; align-items: center; text-align: center; color: var(--muted); font-size: var(--font-size-xs); width: 100%; }
-  .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
-  .auth-divider::before { margin-right: .75em; }
-  .auth-divider::after { margin-left: .75em; }
+  .modal-content {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 440px;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
 
-  /* CANVAS PLACEHOLDER STYLES */
-  .canvas-placeholder { position: absolute; inset: 0; background: #040407; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; z-index: 3; }
-  .canvas-placeholder img { width: 90px; height: auto; max-height: 60px; margin-bottom: 16px; object-fit: contain; }
-  .tip-container { padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; max-width: 360px; width: 100%; }
-  .tip-header { font-size: var(--font-size-sm); color: var(--accent); font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .tip-text { font-size: var(--font-size-base); color: var(--text); min-height: 36px; transition: opacity 0.30s ease; line-height: 1.4; }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
 
-  /* Mobile-friendly overrides */
-  @media (max-width: 900px) {
-    html,body { -webkit-text-size-adjust: 100%; height: auto !important; overflow: auto !important; }
-    header { padding: 12px 14px; height: auto; }
-    .nav-links { display: none; }
-    .workspace-container { flex-direction: column; height: auto !important; }
-    .chat-sidebar { width: 100% !important; min-width: 0 !important; max-width: 100% !important; order: 2; border-right: none; border-top: 1px solid var(--border); }
-    .preview-canvas { order: 1; width: 100%; }
-    .viewport-wrapper { width: 100% !important; max-height: none; height: auto !important; }
-    img, iframe, video { max-width: 100%; height: auto; }
-    .btn, .action-btn, .icon-btn { min-height: 44px; padding: 10px 14px; touch-action: manipulation; }
-    .input-wrap textarea { min-height: 80px; height: auto; }
-    .panel-scroller { padding: 10px; }
+  .modal-title {
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .close-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .close-btn:hover {
+    color: var(--text);
+  }
+
+  .settings-section {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .settings-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .settings-title {
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .cred-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .cred-field:last-child { margin-bottom: 0; }
+
+  .cred-field label {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .styled-select, .cred-field input[type="password"], .auth-input-group input {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+  }
+
+  .styled-select:focus, .cred-field input:focus, .auth-input-group input:focus {
+    border-color: var(--accent);
+  }
+
+  .slider-element {
+    width: 100%;
+    accent-color: var(--accent);
+    background: var(--border);
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .auth-container {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+  }
+
+  .auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+  }
+
+  .auth-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+  }
+
+  .auth-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .auth-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .auth-input-group label {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    margin: 12px 0;
+  }
+
+  .auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .auth-divider:not(:empty)::before { margin-right: .5em; }
+  .auth-divider:not(:empty)::after { margin-left: .5em; }
+
+  .google-btn {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background: #FFFFFF;
+    color: #1A1A1A;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    transition: background 0.2s;
+  }
+
+  .google-btn:hover {
+    background: #E6E6E6;
+  }
+
+  /* MOBILE RESPONSIVE ADAPTATIONS */
+  @media (max-width: 768px) {
+    header {
+      padding: 8px 12px;
+    }
+    .header-actions {
+      gap: 8px;
+    }
+    .projects-nav-btn {
+      padding: 6px;
+    }
+    .projects-nav-btn svg {
+      margin: 0;
+    }
+    /* Hide text strings on small toolbars for density */
+    .projects-nav-btn text, .projects-nav-btn span, #runtimeStatus {
+      display: none !important;
+    }
+    .status-badge {
+      padding: 6px;
+      border-radius: 50%;
+    }
+    .workspace-container {
+      flex-direction: column;
+      height: calc(100vh - 56px);
+    }
+    .chat-sidebar {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+      height: 45%;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .resizer {
+      display: none !important;
+    }
+    .preview-canvas {
+      height: 55%;
+      width: 100%;
+    }
+    .canvas-header .header-right {
+      display: none; /* Viewport adjustment tools hidden on physical mobile layouts */
+    }
+    .viewport-wrapper.preset-tablet, .viewport-wrapper.preset-phone {
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
+      border-radius: 0 !important;
+    }
+    .modal-content {
+      width: 95%;
+      max-height: 85vh;
+    }
   }
 </style>
 </head>
 <body>
-
 <header>
   <a href="../index.html" class="logo">
     <div class="logo-mark">
-      <img src="../assets/logo.png" alt="Nexus logo" onerror="this.src='assets/logo.png'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+      <img src="../assets/logo.png" alt="ScribbleAI logo" onerror="this.src='assets/logo.png'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
     </div>
+    <span>ScribbleAI</span>
   </a>
   <div class="header-actions">
     <a href="../projects/" class="projects-nav-btn">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-      Projects
+      <span>Projects</span>
     </a>
     <div class="status-badge">
       <span class="pulse-dot"></span> <span id="runtimeStatus">Workspace Active</span>
@@ -342,12 +840,11 @@
     </button>
   </div>
 </header>
-
 <div class="workspace-container">
   <aside class="chat-sidebar" id="sidebarContainer">
     <div class="panel-scroller">
       <div class="panel-row">
-        <span>Active: <strong id="lblActiveNode">Nexus</strong></span>
+        <span>Active: <strong id="lblActiveNode">ScribbleAI</strong></span>
         <span>Tokens: <strong id="lblLastTokens">0</strong></span>
       </div>
       <div class="attachments-panel">
@@ -360,13 +857,11 @@
         <div id="attachmentList" class="attachment-list">No attachments yet.</div>
       </div>
     </div>
-
     <div class="history-container" id="chatHistory">
       <div class="message assistant">
-        Welcome to Nexus! Describe your site, and I'll generate the code for you. You can also ask me to design variations or optimize your existing structure. Let's build something amazing together!
+        Welcome to ScribbleAI! Describe your site, and I'll generate the code for you. You can also ask me to design variations or optimize your existing structure. Let's build something amazing together!
       </div>
     </div>
-
     <div class="input-container">
       <div class="input-wrap">
         <textarea id="workspaceInput" placeholder="Describe layout changes or ask to design structural variants..."></textarea>
@@ -383,9 +878,7 @@
       </div>
     </div>
   </aside>
-
   <div class="resizer" id="dragSplitResizer"></div>
-
   <main class="preview-canvas">
     <div class="canvas-header">
       <div class="header-left">
@@ -397,46 +890,39 @@
         <button class="util-btn" id="presetTablet" onclick="setCanvasViewport('tablet')">Tablet</button>
         <button class="util-btn" id="presetPhone" onclick="setCanvasViewport('phone')">Mobile</button>
         <div style="width: 1px; height: 12px; background: var(--border); margin: 0 2px;"></div>
-        <button class="util-btn text-accent" onclick="triggerCodeDownload()" style="color: var(--accent);">Download</button>
+        <button class="util-btn text-accent" onclick="triggerCodeDownload()">Download</button>
       </div>
     </div>
-
     <div class="view-viewport">
       <div class="initial-load-overlay" id="globalWorkspaceLoader">
         <div class="spinner"></div>
         <h3 style="font-size: 14px; margin-bottom: 4px;">We're building your site...</h3>
         <p id="agentLoaderMessage" style="color: var(--muted); font-size: 11px;">This may take a moment...</p>
       </div>
-
       <div class="view-layer active" id="layerPreview">
         <div class="viewport-wrapper preset-desktop" id="viewportWrapper" style="position: relative;">
-          
           <div id="canvasPlaceholder" class="canvas-placeholder">
-            <img src="../assets/logo.png" alt="Nexus Logo" onerror="this.src='assets/logo.png'" />
+            <img src="../assets/logo.png" alt="ScribbleAI Logo" onerror="this.src='assets/logo.png'" />
             <div class="tip-container">
               <div class="tip-header">Did you know:</div>
               <div id="canvasTipText" class="tip-text">You can edit the colors on the page with one prompt?</div>
             </div>
           </div>
-
           <iframe id="previewFrame" class="canvas-frame" title="Application Workspace Output"></iframe>
         </div>
       </div>
-
       <div class="view-layer code-view-container" id="layerCode">
         <textarea id="codeAreaView" class="code-area" readonly></textarea>
       </div>
     </div>
   </main>
 </div>
-
 <div class="modal-overlay" id="settingsModal">
   <div class="modal-content">
     <div class="modal-header">
       <div class="modal-title">Workspace Adjustments</div>
       <button class="close-btn" onclick="toggleSettingsModal(false)">&times;</button>
     </div>
-
     <div class="settings-section">
       <div class="settings-title">Account Session</div>
       <div class="cred-field">
@@ -445,13 +931,12 @@
         <button class="action-btn-outline" id="btnSignOut" style="margin-top: 6px; justify-content: center; width: 100%;">Sign Out Account</button>
       </div>
     </div>
-
     <div class="settings-section">
       <div class="settings-title">Theme & Layout Appearance</div>
       <div class="cred-field">
         <label>Visual Style Presets</label>
         <select id="themeStyleSelect" class="styled-select" onchange="applyVisualConfigurations()">
-          <option value="dark">Dark Space (Default)</option>
+          <option value="dark" selected>Dark Space (Default)</option>
           <option value="light">Light Minimal</option>
           <option value="hacker">Hacker Terminal</option>
         </select>
@@ -465,7 +950,6 @@
         </select>
       </div>
     </div>
-
     <div class="settings-section">
       <div class="settings-title">Usage Restraints Configuration</div>
       <div class="cred-field">
@@ -473,7 +957,6 @@
         <input type="range" id="maxMessagesLimitSlider" class="slider-element" min="5" max="20" value="20" oninput="updateMaxAllocationParameters()" />
       </div>
     </div>
-
     <div class="settings-section">
       <div class="settings-title" style="display:flex; justify-content:space-between; align-items:center;">
         <span>AI Endpoint Infrastructure</span>
@@ -498,7 +981,6 @@
     </div>
   </div>
 </div>
-
 <div class="modal-overlay" id="providerModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -524,22 +1006,18 @@
     </div>
   </div>
 </div>
-
 <div class="modal-overlay active" id="authOverlay" style="backdrop-filter: blur(8px); display: flex;">
   <div class="auth-container">
     <div style="text-align: center; margin-bottom: 10px;">
-      <img src="../assets/logo.png" alt="Nexus" style="width: 64px; height: 40px; object-fit: cover; margin-bottom: 8px; border-radius: 6px;" onerror="this.src='assets/logo.png'"/>
-      <h2 style="font-size: 18px; font-weight: 700;">Nexus AI Engine Studio</h2>
+      <img src="../assets/logo.png" alt="ScribbleAI" style="width: 64px; height: 40px; object-fit: cover; margin-bottom: 8px; border-radius: 6px;" onerror="this.src='assets/logo.png'"/>
+      <h2 style="font-size: 18px; font-weight: 700; color: #FFFFFF;">ScribbleAI Studio</h2>
       <p style="color: var(--muted); font-size: 11px; margin-top: 4px;">Sign in to unlock workspace compilation environments</p>
     </div>
-    
     <div class="auth-tabs">
       <div class="auth-tab active" id="tabLogin" onclick="switchAuthMode('login')">Sign In</div>
       <div class="auth-tab" id="tabSignUp" onclick="switchAuthMode('signup')">Sign Up</div>
     </div>
-    
     <div id="authErrorMessage" style="color: #ff4444; font-size: 11px; text-align: center; display: none;"></div>
-    
     <form id="authForm" onsubmit="handleAuthSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
       <div class="auth-input-group">
         <label for="authEmail">Email Address</label>
@@ -549,14 +1027,11 @@
         <label for="authPassword">Password</label>
         <input type="password" id="authPassword" required placeholder="••••••••" minlength="6" />
       </div>
-      
       <button class="action-btn" type="submit" style="justify-content: center; padding: 10px; margin-top: 6px;">
         <span id="authSubmitBtnLabel">Sign In to Workspace</span>
       </button>
     </form>
-    
     <div class="auth-divider">or</div>
-    
     <button class="google-btn" type="button" id="btnGoogleAuth">
       <svg width="16" height="16" viewBox="0 0 24 24">
         <path fill="#4285F4" d="M23.745 12.27c0-.77-.07-1.54-.2-2.27H12v4.51h6.6c-.29 1.53-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-8.97z"/>
@@ -568,13 +1043,11 @@
     </button>
   </div>
 </div>
-
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
   import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
   const firebaseConfig = {
     apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
     authDomain: "sitedropio.firebaseapp.com",
@@ -585,24 +1058,18 @@
     appId: "1:950561906473:web:45822a85f188c28b20e138",
     measurementId: "G-BY119K5RS2"
   };
-
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const db = getDatabase(app);
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
-
   let deviceId = localStorage.getItem('nexus_device_id');
   if (!deviceId) {
     deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('nexus_device_id', deviceId);
   }
-
-  // Check if running on localhost - bypass auth if so
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '::1';
-  
   if (isLocalhost) {
-    // Auto-bypass authentication for localhost development
     localStorage.setItem('nexus_localhost_bypass', 'true');
     document.addEventListener('DOMContentLoaded', () => {
       const authOverlay = document.getElementById('authOverlay');
@@ -616,19 +1083,14 @@
       refreshCounterDisplayLabel();
     });
   }
-
-  // Core Operational States
   let dynamicCalculatedHTML = "";
   let paneResizingState = false;
   let isRequestProcessing = false;
   let hasUnlimitedCredits = false;
   let activeAuthMode = 'login';
-  
-  // Tracking allocations metrics
   let totalSentMessagesCounter = 0;
   let maxConfiguredMessageLimit = 20;
   let userAlertHasBeenTriggered = false;
-
   const DAILY_CREDIT_STORE = "nexusDailyCreditState";
   const DAY_MESSAGE_CAP = 20;
   const DAILY_CREDIT_MAX = 20;
@@ -643,7 +1105,6 @@
   const ACTIVE_PROJECT_ATTACHMENTS_KEY = "nexus_current_active_attachments";
   let activeProjectAttachments = [];
   let customKeysStore = {};
-
   const canvasTips = [
     "You can edit the colors on the page with one prompt?",
     "You can toggle mobile and tablet viewports instantly at the top right?",
@@ -654,11 +1115,7 @@
     "You can add a custom provider AI such as OpenAI and Claude?"
   ];
   let currentTipIndex = 0;
-
-  // Production Worker Endpoint Router Location
   const CLOUDFLARE_WORKER_ENDPOINT = "https://nexus.imcrabfr.workers.dev";
-
-  // FIXED CATALOG KEYS
   const ENGINE_VARIATIONS = {
     github: [
       { name: "GPT-4o Production [Standard]", value: "gpt-4o" },
@@ -677,24 +1134,18 @@
       { name: "Mixtral 8x7B (Standard MoE)", value: "open-mixtral-8x7b" }
     ]
   };
-  
   maxConfiguredMessageLimit = loadPersistedStorage(ALLOCATION_LIMIT_STORE, 20);
-
   let compilationMemory = [
     { role: "system", content: "You are an elite frontend engineer. Return ONLY valid standalone HTML files. Do not use emoji characters or external image assets. USE Tailwind CSS for styling. Make the style feel modern and responsive. The HTML should be a single, complete file ALWAYS. DO NOT use any external resources or image assets." }
   ];
-
-  // Auth Handling Observers & Listeners
   onAuthStateChanged(auth, (user) => {
     const authOverlay = document.getElementById('authOverlay');
     const userEmailLabel = document.getElementById('lblActiveUserEmail');
     const localhostBypass = localStorage.getItem('nexus_localhost_bypass') === 'true';
-    
     if (user || localhostBypass) {
       authOverlay.classList.remove('active');
       authOverlay.style.display = 'none';
       if (userEmailLabel) userEmailLabel.textContent = localhostBypass ? 'Localhost Development Mode' : user.email;
-      
       if (user && (user.email === 'imcrabfr@gmail.com' || user.email === 'olee018@stpaul.k12.mn.us')) {
         hasUnlimitedCredits = true;
       } else if (localhostBypass) {
@@ -711,13 +1162,11 @@
       refreshCounterDisplayLabel();
     }
   });
-
   window.switchAuthMode = (mode) => {
     activeAuthMode = mode;
     const tabLogin = document.getElementById('tabLogin');
     const tabSignUp = document.getElementById('tabSignUp');
     const label = document.getElementById('authSubmitBtnLabel');
-    
     if (mode === 'login') {
       tabLogin.classList.add('active');
       tabSignUp.classList.remove('active');
@@ -728,14 +1177,12 @@
       label.textContent = 'Create New Account';
     }
   };
-
   window.handleAuthSubmit = async (e) => {
     e.preventDefault();
     const email = document.getElementById('authEmail').value.trim();
     const password = document.getElementById('authPassword').value;
     const errMsgEl = document.getElementById('authErrorMessage');
     errMsgEl.style.display = 'none';
-    
     try {
       if (activeAuthMode === 'login') {
         await signInWithEmailAndPassword(auth, email, password);
@@ -747,7 +1194,6 @@
       errMsgEl.style.display = 'block';
     }
   };
-
   document.getElementById('btnGoogleAuth').addEventListener('click', async () => {
     const errMsgEl = document.getElementById('authErrorMessage');
     errMsgEl.style.display = 'none';
@@ -758,7 +1204,6 @@
       errMsgEl.style.display = 'block';
     }
   });
-
   document.getElementById('btnSignOut').addEventListener('click', async () => {
     try {
       await signOut(auth);
@@ -767,7 +1212,6 @@
       console.error("Sign out processing error:", error);
     }
   });
-
   function rotateCanvasTips() {
     const tipTextEl = document.getElementById('canvasTipText');
     if (!tipTextEl) return;
@@ -779,7 +1223,6 @@
     }, 300);
   }
   setInterval(rotateCanvasTips, 8000);
-
   window.updateCanvasPlaceholderVisibility = () => {
     const placeholder = document.getElementById('canvasPlaceholder');
     if (!placeholder) return;
@@ -789,13 +1232,11 @@
       placeholder.style.display = 'flex';
     }
   };
-
   function loadPersistedStorage(key, alternative) {
     try { const value = localStorage.getItem(key); if (value) return JSON.parse(value); } catch(e){}
     return JSON.parse(JSON.stringify(alternative));
   }
   function persistStorage(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
-
   function getTodayKey() {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
@@ -805,7 +1246,6 @@
     next.setHours(24, 0, 0, 0);
     return next.getTime();
   }
-
   function loadDailyCreditState() {
     const today = getTodayKey();
     let state = loadPersistedStorage(DAILY_CREDIT_STORE, null);
@@ -816,15 +1256,12 @@
     if (!state.resetAt) state.resetAt = getMidnightTimestamp();
     return state;
   }
-
   function persistDailyCreditState(state) { persistStorage(DAILY_CREDIT_STORE, state); }
-
   function calculateCreditCost(tokenCount) {
     if (!tokenCount || tokenCount <= 0) return DAILY_CREDIT_COST_BASE;
     const extraSteps = Math.floor(tokenCount / 1500);
     return Math.min(DAILY_CREDIT_MAX, DAILY_CREDIT_COST_BASE + extraSteps * 0.5);
   }
-
   function updateResetTimer() {
     if (!dailyCreditState) return;
     const now = Date.now();
@@ -835,9 +1272,7 @@
     refreshCounterDisplayLabel();
   }
   function startDailyResetTimer() { setInterval(updateResetTimer, 1000); }
-
   let dailyCreditState = loadDailyCreditState();
-
   function getResetCountdownText() {
     const remainingMs = Math.max(0, dailyCreditState.resetAt - Date.now());
     const hours = String(Math.floor(remainingMs / 3600000)).padStart(2, '0');
@@ -845,10 +1280,8 @@
     const seconds = String(Math.floor((remainingMs % 60000) / 1000)).padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`;
   }
-
   function getActiveAttachmentsFromStorage() { return loadPersistedStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, []); }
   function persistCurrentAttachments() { persistStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, activeProjectAttachments); }
-
   function readFileAsDataURL(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -857,7 +1290,6 @@
       reader.readAsDataURL(file);
     });
   }
-
   async function handleAttachmentFiles(fileList) {
     if (!fileList || !fileList.length) return;
     const selectedFiles = Array.from(fileList);
@@ -870,14 +1302,12 @@
     const uploadInput = document.getElementById('attachmentUpload');
     if (uploadInput) uploadInput.value = '';
   }
-
   window.handleAttachmentFiles = handleAttachmentFiles;
   window.removeAttachment = (attachmentId) => {
     activeProjectAttachments = activeProjectAttachments.filter(a => a.id !== attachmentId);
     persistCurrentAttachments();
     updateAttachmentListDisplay();
   };
-
   function updateAttachmentListDisplay() {
     const list = document.getElementById('attachmentList');
     if (!list) return;
@@ -891,7 +1321,6 @@
         <button type="button" onclick="removeAttachment('${att.id}')">Remove</button>
       </div>`).join('');
   }
-
   function getProjectsManifest() {
     const raw = loadPersistedStorage(PROJECTS_MANIFEST_KEY, []);
     return raw.map(project => {
@@ -904,24 +1333,19 @@
       return project;
     });
   }
-
   function saveProjectsManifest(manifest) { persistStorage(PROJECTS_MANIFEST_KEY, manifest); }
-
   const sidebarContainer = document.getElementById('sidebarContainer');
   const splitResizer = document.getElementById('dragSplitResizer');
   splitResizer.addEventListener('mousedown', (e) => { paneResizingState = true; splitResizer.classList.add('dragging'); document.body.style.cursor = 'col-resize'; e.preventDefault(); });
   document.addEventListener('mousemove', (e) => { if (!paneResizingState) return; const boundaryWidth = Math.max(280, Math.min(e.clientX, window.innerWidth - 320)); sidebarContainer.style.width = `${boundaryWidth}px`; sidebarContainer.style.flex = 'none'; });
   document.addEventListener('mouseup', () => { if (paneResizingState) { paneResizingState = false; splitResizer.classList.remove('dragging'); document.body.style.cursor = ''; } });
-
   window.toggleSettingsModal = (displayState) => { document.getElementById('settingsModal').classList.toggle('active', displayState); };
-
   window.openProviderModal = () => { 
     document.getElementById('providerModal').classList.add('active'); 
     document.getElementById('providerStatusText').innerText = '';
     document.getElementById('customApiKeyInput').value = '';
   };
   window.closeProviderModal = () => { document.getElementById('providerModal').classList.remove('active'); };
-
   window.applyVisualConfigurations = () => {
     const selectedTheme = document.getElementById('themeStyleSelect').value;
     const selectedSizing = document.getElementById('textSizeSelect').value;
@@ -931,7 +1355,6 @@
     if (selectedSizing === "large") variableSize = "14px";
     document.documentElement.style.setProperty('--font-size-base', variableSize);
   };
-
   window.updateMaxAllocationParameters = () => {
     const sliderElement = document.getElementById('maxMessagesLimitSlider');
     maxConfiguredMessageLimit = parseInt(sliderElement.value, 10);
@@ -940,7 +1363,6 @@
     refreshCounterDisplayLabel();
     if (totalSentMessagesCounter < (maxConfiguredMessageLimit * 0.85)) userAlertHasBeenTriggered = false;
   };
-
   function refreshCounterDisplayLabel() {
     if (hasUnlimitedCredits) {
       document.getElementById('messageCounterLabel').textContent = `Credits: Unlimited · Messages: Unlimited`;
@@ -949,7 +1371,6 @@
       submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.pointerEvents = 'auto';
       return;
     }
-
     const creditsText = dailyCreditState ? dailyCreditState.creditsRemaining.toFixed(1) : DAILY_CREDIT_MAX.toFixed(1);
     const messagesText = dailyCreditState ? dailyCreditState.messagesUsed : 0;
     document.getElementById('messageCounterLabel').textContent = `Credits: ${creditsText} / ${DAILY_CREDIT_MAX} · Messages: ${messagesText} / ${maxConfiguredMessageLimit}`;
@@ -961,19 +1382,16 @@
       submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.pointerEvents = 'auto';
     }
   }
-
   function updateSubmitButtonLabel() {
     const labelEl = document.getElementById('submitBtnLabel');
     if (!labelEl) return;
     const activeCachedCode = localStorage.getItem('nexus_current_active_code');
     labelEl.textContent = activeCachedCode ? 'Build Changes' : 'Build';
   }
-
   window.handleEndpointRotation = () => {
     const activeProvider = document.getElementById('providerSelect').value;
     const modelSelectionElement = document.getElementById('modelSelect');
     modelSelectionElement.innerHTML = '';
-    
     if (ENGINE_VARIATIONS[activeProvider]) {
       ENGINE_VARIATIONS[activeProvider].forEach(engine => {
         const optionNode = document.createElement('option');
@@ -983,7 +1401,6 @@
       });
     }
   };
-
   async function loadFirebaseProviders() {
     try {
       const snapshot = await get(child(ref(db), `apiKeys/${deviceId}`));
@@ -991,12 +1408,10 @@
         const data = snapshot.val();
         const providerSelect = document.getElementById('providerSelect');
         const customGroup = document.getElementById('customProviderGroup');
-        
         for (const [providerId, providerData] of Object.entries(data)) {
           customKeysStore[providerId] = providerData.apiKey;
           if (providerData.models) {
              ENGINE_VARIATIONS[providerId] = providerData.models;
-             
              const optionsScope = customGroup ? Array.from(customGroup.children) : Array.from(providerSelect.options);
              if (!optionsScope.some(opt => opt.value === providerId)) {
                const option = document.createElement('option');
@@ -1015,17 +1430,13 @@
       console.error("Firebase Key Load Error:", err);
     }
   }
-
   window.saveCustomProviderKey = async () => {
     const provider = document.getElementById('customProviderType').value;
     const apiKey = document.getElementById('customApiKeyInput').value.trim();
     const statusText = document.getElementById('providerStatusText');
-    
     if (!apiKey) { statusText.innerText = 'Please enter an API key.'; statusText.style.color = '#ff4444'; return; }
-    
     statusText.innerText = 'Verifying key...';
     statusText.style.color = 'var(--muted)';
-    
     try {
       let models = [];
       if (provider === 'openai') {
@@ -1045,32 +1456,24 @@
           {name: 'Claude 3 Haiku', value: 'claude-3-haiku-20240307'}
         ];
       }
-      
-      // Save securely to firebase
       await set(ref(db, `apiKeys/${deviceId}/${provider}`), { apiKey: apiKey, models: models });
-      
       statusText.innerText = 'Key saved and models retrieved successfully!';
       statusText.style.color = '#00ff00';
-      
-      // Reload UI dynamically
       await loadFirebaseProviders();
       document.getElementById('providerSelect').value = provider;
       window.handleEndpointRotation();
-      
       setTimeout(() => closeProviderModal(), 1500);
     } catch(err) {
       statusText.innerText = `Error: ${err.message}`;
       statusText.style.color = '#ff4444';
     }
   };
-
   window.toggleCanvasTab = (activeTabTarget) => {
     document.getElementById('btnTabPreview').classList.toggle('active', activeTabTarget === 'preview');
     document.getElementById('btnTabCode').classList.toggle('active', activeTabTarget === 'code');
     document.getElementById('layerPreview').classList.toggle('active', activeTabTarget === 'preview');
     document.getElementById('layerCode').classList.toggle('active', activeTabTarget === 'code');
   };
-
   window.setCanvasViewport = (dimensionsPreset) => {
     ['desktop', 'tablet', 'phone'].forEach(p => {
       document.getElementById(`preset${p.charAt(0).toUpperCase() + p.slice(1)}`).classList.remove('active');
@@ -1079,13 +1482,11 @@
     document.getElementById(`preset${dimensionsPreset.charAt(0).toUpperCase() + dimensionsPreset.slice(1)}`).classList.add('active');
     document.getElementById('viewportWrapper').classList.add(`preset-${dimensionsPreset}`);
   };
-
   window.handlePromptSubmission = async () => {
     if (isRequestProcessing) return;
     const inputElement = document.getElementById('workspaceInput');
     const promptValueText = inputElement.value.trim();
     if (!promptValueText) return;
-
     if (!hasUnlimitedCredits) {
       if (!dailyCreditState) dailyCreditState = loadDailyCreditState();
       if (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0) {
@@ -1093,10 +1494,8 @@
         refreshCounterDisplayLabel(); return;
       }
     }
-
     inputElement.value = "";
     totalSentMessagesCounter++;
-
     if (!hasUnlimitedCredits) {
       dailyCreditState.messagesUsed += 1;
       dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - DAILY_CREDIT_COST_BASE);
@@ -1104,19 +1503,15 @@
       persistDailyCreditState(dailyCreditState);
     }
     refreshCounterDisplayLabel();
-
     if (!hasUnlimitedCredits && !userAlertHasBeenTriggered && dailyCreditState.messagesUsed >= (maxConfiguredMessageLimit * 0.85)) {
       userAlertHasBeenTriggered = true;
       alert(`Operational Warning: You are approaching your maximum daily message limit.`);
     }
-
     await launchSystemBuildPipeline(promptValueText);
   };
-
   async function callCustomProvider(provider, model, messages, apiKey) {
     let coreResponseProseText = "";
     let usageTokens = 0;
-    
     if (provider === 'openai') {
       const req = await fetch('https://api.openai.com/v1/chat/completions', {
         method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
@@ -1151,22 +1546,17 @@
     }
     return { coreResponseProseText, usageTokens };
   }
-
   async function launchSystemBuildPipeline(userInstructionPrompt) {
     const globalLoaderOverlay = document.getElementById('globalWorkspaceLoader');
     const selectedProviderHub = document.getElementById('providerSelect').value;
     const selectedEngineTarget = document.getElementById('modelSelect').value;
-
     globalLoaderOverlay.classList.add('active');
     document.getElementById('agentLoaderMessage').textContent = "Assembling framework layout matrix elements...";
     postMessageToContainer('user', userInstructionPrompt);
-
     try {
       compilationMemory.push({ role: "user", content: userInstructionPrompt });
       let coreResponseProseText = "";
       let tokenCount = 0;
-
-      // Determine routing path based on whether the provider relies on native Keys or Cloudflare Worker
       if (customKeysStore[selectedProviderHub]) {
          const directCall = await callCustomProvider(selectedProviderHub, selectedEngineTarget, compilationMemory, customKeysStore[selectedProviderHub]);
          coreResponseProseText = directCall.coreResponseProseText;
@@ -1184,29 +1574,22 @@
         coreResponseProseText = dataPayloadJson.choices[0].message.content;
         tokenCount = dataPayloadJson.usage?.total_tokens || 0;
       }
-      
       const codeMarkdownRegexMatch = /```html([\s\S]*?)```/i.exec(coreResponseProseText);
       dynamicCalculatedHTML = codeMarkdownRegexMatch ? codeMarkdownRegexMatch[1].trim() : coreResponseProseText.trim();
-
       document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
       document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
       window.updateCanvasPlaceholderVisibility();
-
       compilationMemory.push({ role: "assistant", content: coreResponseProseText });
-
       let customSentenceSummary = coreResponseProseText.replace(/```html[\s\S]*?```/gi, '').replace(/```[\s\S]*?```/gi, '').trim();
       if (!customSentenceSummary || customSentenceSummary.length < 5) {
         customSentenceSummary = "Canvas layouts refreshed; generated modern components successfully via structural synthesis paths.";
       } else if (customSentenceSummary.length > 180) {
         customSentenceSummary = customSentenceSummary.substring(0, 177) + "...";
       }
-
       postMessageToContainer('assistant', customSentenceSummary);
       saveActiveProjectToLocalStorage(userInstructionPrompt, dynamicCalculatedHTML);
-
       const buildSummaryMessage = createBuildCompletionSummary(userInstructionPrompt, selectedProviderHub, selectedEngineTarget, dynamicCalculatedHTML);
       postMessageToContainer('assistant', buildSummaryMessage);
-
       if (tokenCount > 0) {
         document.getElementById('lblLastTokens').textContent = tokenCount;
         if (!hasUnlimitedCredits) {
@@ -1221,20 +1604,20 @@
           }
         }
       }
-
     } catch (compilationError) {
       postMessageToContainer('assistant', `Compilation Processing Aborted: ${compilationError.message}`);
     } finally {
       globalLoaderOverlay.classList.remove('active');
     }
   }
-
   function createBuildCompletionSummary(userPrompt, providerName, engineName, htmlPayload) {
     const promptTitle = userPrompt.trim().replace(/\s+/g, ' ');
     const trimmedPrompt = promptTitle.length > 90 ? `${promptTitle.substring(0, 87)}...` : promptTitle;
-    return `Build complete from prompt: "${trimmedPrompt}".\n\nWhat it made: a fully assembled HTML layout matching your request, including the page structure, sections, and content blocks required for the chosen site type.\n\nHow it works: the generated HTML is rendered in the live preview and exposed in the code tab; it is also saved as a versioned project in LocalStorage so you can continue editing later.\n\nWhat it used: the ${providerName} provider with the ${engineName} engine, plus the AI build pipeline to synthesize HTML directly from your prompt.`;
+    return `Build complete from prompt: "${trimmedPrompt}".
+What it made: a fully assembled HTML layout matching your request, including the page structure, sections, and content blocks required for the chosen site type.
+How it works: the generated HTML is rendered in the live preview and exposed in the code tab; it is also saved as a versioned project in LocalStorage so you can continue editing later.
+What it used: the ${providerName} provider with the ${engineName} engine, plus the AI build pipeline to synthesize HTML directly from your prompt.`;
   }
-
   function postMessageToContainer(roleDesignation, blockMessageCopy) {
     const historicalContainerBox = document.getElementById('chatHistory');
     const dynamicMessageCard = document.createElement('div');
@@ -1243,20 +1626,16 @@
     historicalContainerBox.appendChild(dynamicMessageCard);
     historicalContainerBox.scrollTop = historicalContainerBox.scrollHeight;
   }
-
   function saveActiveProjectToLocalStorage(userPromptIntent, htmlPayload) {
     try {
       const registeredProjects = getProjectsManifest();
       const activeProjectId = localStorage.getItem(ACTIVE_PROJECT_ID_KEY);
       const versionId = `ver_${Date.now()}`;
       const existingProjectIndex = registeredProjects.findIndex(p => p.id === activeProjectId);
-
       const derivedName = userPromptIntent.split(/[.?!,]/)[0].substring(0, 35).trim() || "Generated Project Layout";
       let projectName = derivedName;
       if (existingProjectIndex !== -1 && registeredProjects[existingProjectIndex].name) projectName = registeredProjects[existingProjectIndex].name;
-
       const versionObject = { versionId, label: `Version ${existingProjectIndex === -1 ? 1 : registeredProjects[existingProjectIndex].versions.length + 1}`, timestamp: new Date().toLocaleString(), prompt: userPromptIntent, sourceCode: htmlPayload, attachments: activeProjectAttachments };
-
       let activeProjectIdToSave = activeProjectId;
       if (existingProjectIndex !== -1) {
         registeredProjects[existingProjectIndex].versions.unshift(versionObject);
@@ -1264,7 +1643,6 @@
         activeProjectIdToSave = `proj_${Date.now()}`;
         registeredProjects.unshift({ id: activeProjectIdToSave, name: projectName, versions: [versionObject] });
       }
-
       saveProjectsManifest(registeredProjects);
       localStorage.setItem(ACTIVE_PROJECT_ID_KEY, activeProjectIdToSave);
       localStorage.setItem(ACTIVE_PROJECT_VERSION_KEY, versionId);
@@ -1274,36 +1652,32 @@
       updateSubmitButtonLabel();
     } catch (err) { console.error("Local project persistence error encountered:", err); }
   }
-
   function verifyActiveSessionLoadingState() {
     const activeCachedCode = localStorage.getItem(ACTIVE_PROJECT_CODE_KEY);
     const activeProjectTitle = localStorage.getItem(ACTIVE_PROJECT_TITLE_KEY);
     const activeProjectVersionId = localStorage.getItem(ACTIVE_PROJECT_VERSION_KEY);
     const activeProjectPrompt = localStorage.getItem(ACTIVE_PROJECT_PROMPT_KEY);
-
     if (activeCachedCode) {
       dynamicCalculatedHTML = activeCachedCode;
       document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
       document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
-      document.getElementById('lblActiveNode').textContent = activeProjectTitle || "Nexus";
+      document.getElementById('lblActiveNode').textContent = activeProjectTitle || "ScribbleAI";
       activeProjectAttachments = getActiveAttachmentsFromStorage();
       updateAttachmentListDisplay();
-      
       const currentTitle = activeProjectTitle || "Loaded Workspace";
       postMessageToContainer('assistant', `Loaded external project: "<strong>${currentTitle}</strong>" successfully into the preview viewport memory workspace layout matrix.`);
       compilationMemory.push({ role: "assistant", content: `The active project version ${activeProjectVersionId || ''} has been loaded. Use the current HTML below as the starting point for all further requested edits.` });
       if (activeProjectPrompt) compilationMemory.push({ role: "assistant", content: `Previous prompt for this version: ${activeProjectPrompt}` });
-      compilationMemory.push({ role: "assistant", content: `Current HTML start state:\n\n${activeCachedCode}` });
+      compilationMemory.push({ role: "assistant", content: `Current HTML start state:
+${activeCachedCode}` });
       updateSubmitButtonLabel();
     }
     window.updateCanvasPlaceholderVisibility();
   }
-
   function getQueryParam(name) {
     const params = new URLSearchParams(window.location.search);
     return params.get(name);
   }
-
   function maybeAutoStartFromQuery() {
     const prompt = getQueryParam('prompt');
     const isNew = getQueryParam('new');
@@ -1321,28 +1695,23 @@
       setTimeout(() => { if (prompt && inputElement && inputElement.value.trim()) handlePromptSubmission(); }, 140);
     }
   }
-
   window.triggerCodeDownload = () => {
     if (!dynamicCalculatedHTML) return alert("Compile application layouts first.");
     const formattingBlob = new Blob([dynamicCalculatedHTML], { type: "text/html" });
     const virtualLinkElement = document.createElement("a");
     virtualLinkElement.href = URL.createObjectURL(formattingBlob);
-    virtualLinkElement.download = "nexus-compiled-workspace.html";
+    virtualLinkElement.download = "scribble-compiled-workspace.html";
     document.body.appendChild(virtualLinkElement);
     virtualLinkElement.click();
     document.body.removeChild(virtualLinkElement);
   };
-
-  // Run Initialization Sequences
   document.getElementById('maxMessagesLimitSlider').value = maxConfiguredMessageLimit;
   document.getElementById('lblSliderLimitValue').textContent = `${maxConfiguredMessageLimit} Messages`;
   refreshCounterDisplayLabel();
   startDailyResetTimer();
-  
   loadFirebaseProviders().then(() => {
     window.handleEndpointRotation();
   });
-  
   window.applyVisualConfigurations();
   verifyActiveSessionLoadingState();
   maybeAutoStartFromQuery();
