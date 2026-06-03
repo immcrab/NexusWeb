@@ -6,13 +6,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="theme-color" content="#1A1A1A" />
-<title>ScribbleAI Web Builder | Build modern websites with AI</title>
+<title>ScribbleAI | Build Better With AI</title>
 <meta name="description" content="A compelling, high-converting sentence explaining exactly what value your site provides to visitors. Click to explore our solutions.">
 <meta name="robots" content="index, follow">
-<meta property="og:site_name" content="ScribbleAI Studio">
+<meta property="og:site_name" content="ScribbleAI">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://scribbleai.owenlee.xyz/">
-<meta property="og:title" content="Transform Your Workflow with ScribbleAI Studio">
+<meta property="og:title" content="Transform Your Workflow with ScribbleAI">
 <meta property="og:description" content="Discover the tools and framework configurations built to optimize efficiency and upgrade interface scalability.">
 <meta property="og:image" content="https://scribbleai.owenlee.xyz/assets/logo.png">
 <meta property="og:image:type" content="image/png">
@@ -20,812 +20,11 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="A sleek visual preview showcase of the ScribbleAI software dashboard interface.">
 <link rel="icon" href="../assets/logo.png" />
+<meta name="description" content="ScribbleAI builder lets you build modern websites and apps by chatting with AI. Login, deploy, and ship faster." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css">
-
-<style>
-  :root {
-    --bg-main: #1A1A1A;
-    --accent: #2776F5;
-    --text: #FFFFFF;
-    --muted: #A0A0A5;
-    --border: #2E2E33;
-    --bg-surface: #222226;
-    --bg-panel: #1E1E22;
-    --bg-input: #2A2A30;
-    --font-size-base: 12.5px;
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    background-color: var(--bg-main) !important;
-    color: var(--text) !important;
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-size: var(--font-size-base);
-    overflow-x: hidden;
-  }
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px;
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--border);
-    height: 56px;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 800;
-    font-size: 16px;
-    letter-spacing: -0.02em;
-  }
-
-  .logo-mark {
-    width: 28px;
-    height: 28px;
-    margin-right: 8px;
-    border-radius: 6px;
-    overflow: hidden;
-    background: var(--accent);
-  }
-
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .projects-nav-btn, .icon-btn, .action-btn, .action-btn-outline, .util-btn, .tab-btn {
-    background: transparent;
-    border: none;
-    color: var(--text);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-family: inherit;
-    font-size: 12px;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-
-  .icon-btn {
-    padding: 6px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-  }
-
-  .icon-btn:hover {
-    background: var(--border);
-    color: var(--accent);
-  }
-
-  .action-btn {
-    background: var(--accent);
-    color: #FFFFFF;
-    font-weight: 600;
-  }
-
-  .action-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-  }
-
-  .action-btn-outline {
-    border: 1px solid var(--border);
-    background: var(--bg-input);
-  }
-
-  .action-btn-outline:hover {
-    background: var(--border);
-  }
-
-  .status-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(39, 118, 245, 0.1);
-    border: 1px solid rgba(39, 118, 245, 0.2);
-    padding: 4px 10px;
-    border-radius: 50px;
-    font-size: 11px;
-    color: var(--accent);
-    font-weight: 500;
-  }
-
-  .pulse-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(39, 118, 245, 0.7);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 118, 245, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(39, 118, 245, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 118, 245, 0); }
-  }
-
-  .workspace-container {
-    display: flex;
-    height: calc(100vh - 56px);
-    width: 100vw;
-    position: relative;
-    overflow: hidden;
-    background: var(--bg-main);
-  }
-
-  .chat-sidebar {
-    width: 340px;
-    min-width: 280px;
-    max-width: 600px;
-    background: var(--bg-panel);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    position: relative;
-    z-index: 10;
-  }
-
-  .panel-scroller {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .panel-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .panel-row strong {
-    color: var(--text);
-  }
-
-  .attachments-panel {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    padding: 12px;
-    border-radius: 8px;
-  }
-
-  .attachments-header {
-    font-weight: 700;
-    margin-bottom: 8px;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--muted);
-  }
-
-  .attachments-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .attachments-note {
-    font-size: 10px;
-    color: var(--muted);
-  }
-
-  .attachment-list {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-height: 120px;
-    overflow-y: auto;
-  }
-
-  .attachment-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 8px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-size: 11px;
-  }
-
-  .attachment-item button {
-    background: transparent;
-    border: none;
-    color: #FF4444;
-    cursor: pointer;
-    font-size: 10px;
-    font-weight: 600;
-  }
-
-  .history-container {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .message {
-    padding: 12px;
-    border-radius: 8px;
-    line-height: 1.5;
-    font-size: 12px;
-    max-width: 90%;
-    word-break: break-word;
-  }
-
-  .message.assistant {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    align-self: flex-start;
-  }
-
-  .message.user {
-    background: var(--accent);
-    color: #FFFFFF;
-    align-self: flex-end;
-  }
-
-  .input-container {
-    padding: 16px;
-    background: var(--bg-panel);
-    border-top: 1px solid var(--border);
-  }
-
-  .input-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    padding: 10px;
-    border-radius: 8px;
-  }
-
-  .input-wrap textarea {
-    background: transparent;
-    border: none;
-    color: var(--text);
-    resize: none;
-    min-height: 60px;
-    font-family: inherit;
-    font-size: 12.5px;
-    outline: none;
-  }
-
-  .input-wrap textarea::placeholder {
-    color: var(--muted);
-  }
-
-  .input-action-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .counter-display {
-    display: block;
-    font-size: 10px;
-    color: var(--muted);
-    margin-bottom: 2px;
-  }
-
-  .resizer {
-    width: 4px;
-    background: transparent;
-    cursor: col-resize;
-    transition: background 0.2s;
-    position: relative;
-    z-index: 20;
-  }
-
-  .resizer:hover, .resizer.dragging {
-    background: var(--accent);
-  }
-
-  .preview-canvas {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-main);
-    height: 100%;
-    position: relative;
-  }
-
-  .canvas-header {
-    height: 48px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg-surface);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 16px;
-  }
-
-  .header-left, .header-right {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .tab-btn {
-    border-radius: 0;
-    height: 48px;
-    border-bottom: 2px solid transparent;
-    padding: 0 16px;
-    font-weight: 600;
-    color: var(--muted);
-  }
-
-  .tab-btn.active {
-    border-bottom-color: var(--accent);
-    color: var(--accent);
-    background: rgba(39, 118, 245, 0.05);
-  }
-
-  .util-btn {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    color: var(--muted);
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-  }
-
-  .util-btn.active {
-    background: var(--accent);
-    color: #FFFFFF;
-    border-color: var(--accent);
-  }
-
-  .util-btn.text-accent {
-    color: var(--accent) !important;
-    font-weight: 700;
-    background: transparent;
-    border: none;
-  }
-
-  /* Unhighlighted/Dimmed Request deployment button styles */
-  .util-btn.text-accent.dimmed-deploy-btn {
-    color: var(--muted) !important;
-    opacity: 0.55;
-    border-color: transparent;
-    font-weight: 500;
-  }
-  .util-btn.text-accent.dimmed-deploy-btn:hover {
-    opacity: 0.9;
-    color: var(--text) !important;
-  }
-
-  .view-viewport {
-    flex: 1;
-    position: relative;
-    background: #111113;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .view-layer {
-    display: none;
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-
-  .view-layer.active {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .viewport-wrapper {
-    background: #FFFFFF;
-    width: 100%;
-    height: 100%;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  }
-
-  .viewport-wrapper.preset-desktop {
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
-  }
-
-  .viewport-wrapper.preset-tablet {
-    width: 768px;
-    height: 95%;
-    border-radius: 12px;
-    border: 8px solid var(--border);
-  }
-
-  .viewport-wrapper.preset-phone {
-    width: 375px;
-    height: 85%;
-    border-radius: 24px;
-    border: 12px solid var(--border);
-  }
-
-  .canvas-placeholder {
-    position: absolute;
-    inset: 0;
-    background: var(--bg-main);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    z-index: 5;
-    text-align: center;
-    padding: 24px;
-  }
-
-  .canvas-placeholder img {
-    width: 56px;
-    height: 56px;
-    opacity: 0.8;
-  }
-
-  .tip-container {
-    max-width: 280px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    padding: 12px 16px;
-    border-radius: 8px;
-  }
-
-  .tip-header {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .tip-text {
-    font-size: 11.5px;
-    color: var(--text);
-    line-height: 1.4;
-    transition: opacity 0.3s;
-  }
-
-  .canvas-frame {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: #FFFFFF;
-  }
-
-  .code-view-container {
-    width: 100%;
-    height: 100%;
-    padding: 16px;
-    background: #111113;
-  }
-
-  .code-area {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: none;
-    color: #A9B7C6;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 12px;
-    resize: none;
-    outline: none;
-    line-height: 1.5;
-  }
-
-  .initial-load-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(26, 26, 26, 0.95);
-    backdrop-filter: blur(4px);
-    z-index: 100;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-
-  .initial-load-overlay.active {
-    display: flex;
-  }
-
-  .spinner {
-    width: 28px;
-    height: 28px;
-    border: 2.5px solid rgba(255,255,255,0.1);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 12px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-  }
-
-  .modal-overlay.active {
-    display: flex;
-  }
-
-  .modal-content {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    width: 100%;
-    max-width: 440px;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .modal-title {
-    font-weight: 700;
-    font-size: 14px;
-  }
-
-  .close-btn {
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    font-size: 20px;
-    cursor: pointer;
-    line-height: 1;
-  }
-
-  .close-btn:hover {
-    color: var(--text);
-  }
-
-  .settings-section {
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .settings-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .settings-title {
-    font-weight: 700;
-    font-size: 10px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-    letter-spacing: 0.05em;
-  }
-
-  .cred-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-
-  .cred-field:last-child { margin-bottom: 0; }
-
-  .cred-field label {
-    font-size: 11px;
-    color: var(--muted);
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .styled-select, .cred-field input[type="password"], .auth-input-group input, .cred-field input[type="text"], .cred-field input[type="email"] {
-    width: 100%;
-    padding: 8px 12px;
-    background: var(--bg-input);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 12px;
-    outline: none;
-  }
-
-  .styled-select:focus, .cred-field input:focus, .auth-input-group input:focus {
-    border-color: var(--accent);
-  }
-
-  .slider-element {
-    width: 100%;
-    accent-color: var(--accent);
-    background: var(--border);
-    height: 4px;
-    border-radius: 2px;
-    outline: none;
-    cursor: pointer;
-  }
-
-  .auth-container {
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    width: 100%;
-    max-width: 360px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.7);
-  }
-
-  .auth-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 18px;
-  }
-
-  .auth-tab {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 600;
-    border-bottom: 2px solid transparent;
-  }
-
-  .auth-tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
-  .auth-input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .auth-input-group label {
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .auth-divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: var(--muted);
-    font-size: 10px;
-    text-transform: uppercase;
-    margin: 12px 0;
-  }
-
-  .auth-divider::before, .auth-divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .auth-divider:not(:empty)::before { margin-right: .5em; }
-  .auth-divider:not(:empty)::after { margin-left: .5em; }
-
-  .google-btn {
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px;
-    background: #FFFFFF;
-    color: #1A1A1A;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px; cursor: pointer;
-    font-family: inherit;
-    font-size: 12px;
-    transition: background 0.2s;
-  }
-
-  .google-btn:hover {
-    background: #E6E6E6;
-  }
-
-  @media (max-width: 768px) {
-    header {
-      padding: 8px 12px;
-    }
-    .header-actions {
-      gap: 8px;
-    }
-    .projects-nav-btn {
-      padding: 6px;
-    }
-    .projects-nav-btn svg {
-      margin: 0;
-    }
-    .projects-nav-btn text, .projects-nav-btn span, #runtimeStatus {
-      display: none !important;
-    }
-    .status-badge {
-      padding: 6px;
-      border-radius: 50%;
-    }
-    .workspace-container {
-      flex-direction: column;
-      height: calc(100vh - 56px);
-    }
-    .chat-sidebar {
-      width: 100% !important;
-      max-width: 100% !important;
-      min-width: 100% !important;
-      height: 45%;
-      border-right: none;
-      border-bottom: 1px solid var(--border);
-    }
-    .resizer {
-      display: none !important;
-    }
-    .preview-canvas {
-      height: 55%;
-      width: 100%;
-    }
-    .canvas-header .header-right {
-      display: none;
-    }
-    .viewport-wrapper.preset-tablet, .viewport-wrapper.preset-phone {
-      width: 100% !important;
-      height: 100% !important;
-      border: none !important;
-      border-radius: 0 !important;
-    }
-    .modal-content {
-      width: 95%;
-      max-height: 85vh;
-    }
-  }
-</style>
+<link rel="stylesheet" href="../assets/app.css">
 </head>
 <body>
 <header>
@@ -907,6 +106,14 @@
         <div class="spinner"></div>
         <h3 style="font-size: 14px; margin-bottom: 4px;">We're building your site...</h3>
         <p id="agentLoaderMessage" style="color: var(--muted); font-size: 11px;">This may take a moment...</p>
+        
+        <div style="width: 70%; max-width: 320px; height: 6px; background: var(--border); border-radius: 4px; margin-top: 16px; overflow: hidden; position: relative;">
+          <div id="loaderProgressBar" style="width: 0%; height: 100%; background: #10b981; transition: width 0.4s ease;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; width: 70%; max-width: 320px; margin-top: 8px; font-size: 11px; color: var(--muted); font-weight: 500;">
+          <span id="loaderProgressText">0% Completed</span>
+          <span id="loaderTimeText">Est. 1m 30s</span>
+        </div>
       </div>
       <div class="view-layer active" id="layerPreview">
         <div class="viewport-wrapper preset-desktop" id="viewportWrapper" style="position: relative;">
@@ -926,7 +133,6 @@
     </div>
   </main>
 </div>
-
 <div class="modal-overlay" id="settingsModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -973,14 +179,15 @@
         <button class="action-btn-outline" onclick="openProviderModal()" style="padding: 4px 8px; font-size: 10px;">+ Add New Provider</button>
       </div>
       <div class="cred-field">
-        <label>Provider Hub</label> 
-        <select id="providerSelect" class="styled-select" onchange="window.handleEndpointRotation()"> 
-          <optgroup label="Main Free Providers"> 
-            <option value="github" selected>GitHub Models API Hub</option> 
-            <option value="groq">Groq Cloud System (Fast Execution)</option> 
-            <option value="mistral">Mistral AI (Free Tier)</option> 
-          </optgroup> 
-          <optgroup id="customProviderGroup" label="Custom API Keys (Self-Configured)"> </optgroup> 
+        <label>Provider Hub</label>
+        <select id="providerSelect" class="styled-select" onchange="window.handleEndpointRotation()">
+          <optgroup label="Main Free Providers">
+            <option value="github" selected>GitHub Models API Hub</option>
+            <option value="groq">Groq Cloud System (Fast Execution)</option>
+            <option value="mistral">Mistral AI (Free Tier)</option>
+          </optgroup>
+          <optgroup id="customProviderGroup" label="Custom API Keys (Self-Configured)">
+            </optgroup>
         </select>
       </div>
       <div class="cred-field">
@@ -990,7 +197,6 @@
     </div>
   </div>
 </div>
-
 <div class="modal-overlay" id="providerModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -1024,17 +230,18 @@
       <button class="close-btn" onclick="closeDeploymentModal()">&times;</button>
     </div>
     <div class="settings-section">
-      <p style="font-size: 11.5px; color: var(--muted); margin-bottom: 16px;">Submit your project for official deployment on the ScribbleAI network. Admins will review your request shortly (to verify usually takes 1-2 business days). We will send updates via the provided email Address.</p>
+      <p style="font-size: 11.5px; color: var(--muted); margin-bottom: 16px;">Submit your project for official deployment on the ScribbleAI network. Admins will review your request shortly (to verify usually takes 1-2 business days) We will send updates via provided email.</p>
       <form id="deploymentForm" onsubmit="submitDeploymentRequest(event)">
         <div class="cred-field">
           <label>Desired Subdomain</label>
           <div style="display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
-            <input type="text" id="deploySubdomain" required placeholder="my-awesome-site" style="border: none; background: transparent; flex: 1; outline: none; padding: 8px 12px; color: var(--text); font-family: inherit; font-size: 12px;" />
-            <select id="deployDomain" style="border: none; border-left: 1px solid var(--border); background: var(--bg-surface); color: var(--muted); padding: 8px; outline: none; font-family: inherit; font-size: 12px; cursor: pointer;">
-              <option value=".scribbleai.dev">.scribbleai.dev</option>
-              <option value=".pxplay.top">.pxplay.top</option>
-            </select>
-          </div>
+  <input type="text" id="deploySubdomain" required placeholder="my-awesome-site" style="border: none; background: transparent; flex: 1; outline: none; padding: 8px 12px; color: var(--text); font-family: inherit; font-size: 12px;" />
+  
+  <select id="deployDomain" style="border: none; border-left: 1px solid var(--border); background: var(--bg-surface); color: var(--muted); padding: 8px; outline: none; font-family: inherit; font-size: 12px; cursor: pointer;">
+    <option value=".scribbleai.dev">.scribbleai.dev</option>
+    <option value=".pxplay.top">.pxplay.top</option>
+  </select>
+</div>
         </div>
         <div class="cred-field">
           <label>Why do you want to deploy this project?</label>
@@ -1046,8 +253,8 @@
             <option value="personal">Personal Portfolio / Blog</option>
             <option value="business">Business / Startup</option>
             <option value="ecommerce">E-Commerce</option>
-            <option value="tool">Web Tool / App</option> 
-            <option value="other">Other</option> 
+            <option value="tool">Web Tool / App</option>
+            <option value="other">Other</option>
           </select>
         </div>
         <div class="cred-field">
@@ -1098,13 +305,12 @@
     </button>
   </div>
 </div>
-
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
   import { getDatabase, ref, set, get, child, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
+  
   const firebaseConfig = {
     apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
     authDomain: "sitedropio.firebaseapp.com",
@@ -1113,97 +319,408 @@
     storageBucket: "sitedropio.firebasestorage.app",
     messagingSenderId: "950561906473",
     appId: "1:950561906473:web:45822a85f188c28b20e138",
-    measurementId: "G-K6H9M5M8S8"
+    measurementId: "G-BY119K5RS2"
   };
-
+  
   const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
   const db = getDatabase(app);
   const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
 
-  const isLocalhost = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
-  let currentProjectId = null;
-  let deployedProjectId = null; 
+  // DEPLOYMENT VIEW PORT
+  const urlParams = new URLSearchParams(window.location.search);
+  const deploymentViewId = urlParams.get('deployment');
+
+  if (deploymentViewId) {
+      document.documentElement.innerHTML = '<div style="color:white; font-family:sans-serif; padding:20px; text-align:center;">Loading remote deployment...</div>';
+      const deployRef = ref(db, `deployments/${deploymentViewId}`);
+      get(deployRef).then((snapshot) => {
+          if (snapshot.exists() && snapshot.val().status === 'approved') {
+              const htmlCode = snapshot.val().sourceCode;
+              document.open();
+              document.write(htmlCode);
+              document.close();
+          } else {
+              document.documentElement.innerHTML = '<div style="color:white; font-family:sans-serif; padding:20px; text-align:center;">Deployment not found or not approved.</div>';
+          }
+      }).catch(err => {
+          document.documentElement.innerHTML = `<div style="color:red; font-family:sans-serif; padding:20px; text-align:center;">Error loading deployment: ${err.message}</div>`;
+      });
+      throw new Error("Deployment view mode active. Halting standard builder initialization.");
+  }
+
+  let deviceId = localStorage.getItem('nexus_device_id');
+  if (!deviceId) {
+    deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('nexus_device_id', deviceId);
+  }
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '::1';
+  if (isLocalhost) {
+    localStorage.setItem('nexus_localhost_bypass', 'true');
+    document.addEventListener('DOMContentLoaded', () => {
+      const authOverlay = document.getElementById('authOverlay');
+      if (authOverlay) {
+        authOverlay.classList.remove('active');
+        authOverlay.style.display = 'none';
+      }
+      const userEmailLabel = document.getElementById('lblActiveUserEmail');
+      if (userEmailLabel) userEmailLabel.textContent = 'Localhost Development Mode';
+      hasUnlimitedCredits = true;
+      refreshCounterDisplayLabel();
+    });
+  }
   let dynamicCalculatedHTML = "";
-  let maxConfiguredMessageLimit = 20;
-  let currentSessionMessagesSent = 0;
+  let currentProjectId = null;
+  let deployedProjectId = null;
+  let paneResizingState = false;
+  let isRequestProcessing = false;
   let hasUnlimitedCredits = false;
+  let activeAuthMode = 'login';
+  let totalSentMessagesCounter = 0;
+  let maxConfiguredMessageLimit = 20;
+  let userAlertHasBeenTriggered = false;
+  let activeLoadingInterval = null;
+  
+  const DAILY_CREDIT_STORE = "nexusDailyCreditState";
+  const DAY_MESSAGE_CAP = 20;
+  const DAILY_CREDIT_MAX = 20;
+  const DAILY_CREDIT_COST_BASE = 0.5;
+  const ALLOCATION_LIMIT_STORE = "nexusAllocationLimit";
+  const PROJECTS_MANIFEST_KEY = "nexus_projects_manifest";
+  const ACTIVE_PROJECT_ID_KEY = "nexus_current_active_project_id";
+  const ACTIVE_PROJECT_VERSION_KEY = "nexus_current_active_version_id";
+  const ACTIVE_PROJECT_TITLE_KEY = "nexus_current_active_title";
+  const ACTIVE_PROJECT_CODE_KEY = "nexus_current_active_code";
+  const ACTIVE_PROJECT_PROMPT_KEY = "nexus_current_active_prompt";
+  const ACTIVE_PROJECT_ATTACHMENTS_KEY = "nexus_current_active_attachments";
+  let activeProjectAttachments = [];
+  let customKeysStore = {};
+  const canvasTips = [
+    "You can edit the colors on the page with one prompt?",
+    "You can toggle mobile and tablet viewports instantly at the top right?",
+    "Adding file attachments helps the AI understand your existing asset structures!",
+    "You can download your entire compiled standalone HTML page anytime.",
+    "Switching theme engines in adjustments transforms your workspace style instantly.",
+    "You can change your AI model and provider by clicking the top right gear icon.",
+    "You can add a custom provider AI such as OpenAI and Claude?"
+  ];
+  let currentTipIndex = 0;
+  const CLOUDFLARE_WORKER_ENDPOINT = "https://nexus.imcrabfr.workers.dev";
+  const ENGINE_VARIATIONS = {
+    github: [
+      { name: "GPT-4o Production [Standard]", value: "gpt-4o" },
+      { name: "DeepSeek R1 [Reasoning Framework]", value: "DeepSeek-R1" }
+    ],
+    groq: [
+      { name: "Llama 3.3 70B [Ultra Speed]", value: "llama-3.3-70b-versatile" },
+      { name: "DeepSeek R1 Distill 70B", value: "deepseek-r1-distill-llama-70b" }
+    ],
+    mistral: [
+      { name: "Mistral Large (Flagship Free)", value: "mistral-large-latest" },
+      { name: "Mistral Small (Fast & Light)", value: "mistral-small-latest" },
+      { name: "Codestral (Advanced Coding)", value: "codestral-latest" },
+      { name: "Pixtral 12B (Vision & Text)", value: "pixtral-12b-latest" },
+      { name: "Mixtral 8x22B (High Capacity MoE)", value: "open-mixtral-8x22b" },
+      { name: "Mixtral 8x7B (Standard MoE)", value: "open-mixtral-8x7b" }
+    ]
+  };
+  maxConfiguredMessageLimit = loadPersistedStorage(ALLOCATION_LIMIT_STORE, 20);
+  let compilationMemory = [
+    { role: "system", content: "You are an elite frontend engineer. Return ONLY valid standalone HTML files. Do not use emoji characters or external image assets. USE Tailwind CSS for styling. Make the style feel modern and responsive. The HTML should be a single, complete file ALWAYS. DO NOT use any external resources or image assets." }
+  ];
+  onAuthStateChanged(auth, (user) => {
+    const authOverlay = document.getElementById('authOverlay');
+    const userEmailLabel = document.getElementById('lblActiveUserEmail');
+    const localhostBypass = localStorage.getItem('nexus_localhost_bypass') === 'true';
+    if (user || localhostBypass) {
+      authOverlay.classList.remove('active');
+      authOverlay.style.display = 'none';
+      if (userEmailLabel) userEmailLabel.textContent = localhostBypass ? 'Localhost Development Mode' : user.email;
+      const params = new URLSearchParams(window.location.search);
+      currentProjectId = params.get('pid') || "default_scribble_project";
+      if (user) {
+        const userDeployRef = ref(db, `users/${user.uid}/deployedProjectId`);
+        onValue(userDeployRef, (snapshot) => {
+          deployedProjectId = snapshot.val();
+          refreshDeploymentButtonState();
+        });
+      }
+      if (user && (user.email === 'imcrabfr@gmail.com' || user.email === 'olee018@stpaul.k12.mn.us')) {
+        hasUnlimitedCredits = true;
+      } else if (localhostBypass) {
+        hasUnlimitedCredits = true;
+      } else {
+        hasUnlimitedCredits = false;
+      }
+      refreshCounterDisplayLabel();
+      initializeDeploymentListener();
+    } else {
+      authOverlay.classList.add('active');
+      authOverlay.style.display = 'flex';
+      if (userEmailLabel) userEmailLabel.textContent = "Not logged in";
+      hasUnlimitedCredits = false;
+      refreshCounterDisplayLabel();
+    }
+  });
 
-  // Track attachment storage references locally
-  let workspaceAttachments = [];
+  function initializeDeploymentListener() {
+      const currentUid = auth.currentUser ? auth.currentUser.uid : 'anonymous';
+      const checkId = currentUid !== 'anonymous' ? currentUid : deviceId;
 
-  // Update visual deployment configuration triggers dynamically
+      const deployRef = ref(db, 'deployments');
+      onValue(deployRef, (snapshot) => {
+          const deployBtn = document.getElementById('btnRequestDeployUI');
+          if (!deployBtn) return;
+
+          let activeDeploymentId = null;
+          if (snapshot.exists()) {
+              const data = snapshot.val();
+              for (const [key, val] of Object.entries(data)) {
+                  const ownerId = val.userId !== 'anonymous' ? val.userId : val.deviceId;
+                  const projectMatch = val.projectId === currentProjectId || val.requestedProjectId === currentProjectId;
+                  if (ownerId === checkId && val.status === 'approved' && projectMatch) {
+                      activeDeploymentId = key;
+                      break;
+                  }
+              }
+          }
+
+          if (activeDeploymentId) {
+              deployBtn.innerText = 'Save and Deploy';
+              deployBtn.onclick = () => window.updateExistingDeployment(activeDeploymentId);
+          } else {
+              deployBtn.innerText = 'Request Deployment';
+              deployBtn.onclick = window.openDeploymentModal;
+          }
+      });
+  }
+
   window.refreshDeploymentButtonState = function() {
     const deployBtn = document.getElementById('btnRequestDeployUI');
     if (!deployBtn) return;
-    
     if (deployedProjectId && currentProjectId && deployedProjectId !== currentProjectId) {
       deployBtn.classList.add('dimmed-deploy-btn');
-      deployBtn.style.setProperty('color', 'var(--muted)', 'important');
+      deployBtn.style.opacity = '0.55';
+      deployBtn.style.cursor = 'not-allowed';
+      deployBtn.style.color = 'var(--muted)';
       deployBtn.disabled = true;
     } else {
       deployBtn.classList.remove('dimmed-deploy-btn');
-      deployBtn.style.setProperty('color', '#10b981', 'important');
+      deployBtn.style.opacity = '1';
+      deployBtn.style.cursor = 'pointer';
+      deployBtn.style.color = '#10b981';
       deployBtn.disabled = false;
     }
   };
 
-  onAuthStateChanged(auth, (user) => {
-    const overlay = document.getElementById('authOverlay');
-    const userEmailLabel = document.getElementById('lblActiveUserEmail');
-    const localhostBypass = isLocalhost || localStorage.getItem('nexus_localhost_bypass') === 'true';
-    if (isLocalhost) {
-      localStorage.setItem('nexus_localhost_bypass', 'true');
-    }
-
-    if (user || localhostBypass) {
-      if (overlay) overlay.style.display = 'none';
-      if (userEmailLabel) userEmailLabel.textContent = localhostBypass ? 'Localhost Development Mode' : user.email;
-      if (localhostBypass) {
-        hasUnlimitedCredits = true;
-        maxConfiguredMessageLimit = Infinity;
+  window.updateExistingDeployment = async (deployId) => {
+      if (!dynamicCalculatedHTML) {
+          alert("Please compile a project first before saving to deployment.");
+          return;
       }
-      
-      const params = new URLSearchParams(window.location.search);
-      currentProjectId = params.get('pid') || "default_scribble_project";
-
-      if (user) {
-        // Keep dynamic synchronization loops running for tracking active deployments
-        const userDeployRef = ref(db, `users/${user.uid}/deployedProjectId`);
-        onValue(userDeployRef, (snapshot) => {
-          deployedProjectId = snapshot.val();
-          window.refreshDeploymentButtonState();
-        });
-
-        // Pull current canvas structure files
-        const projectRef = ref(db, `users/${user.uid}/projects/${currentProjectId}/compiledData`);
-        onValue(projectRef, (snapshot) => {
-          if (snapshot.exists()) {
-            dynamicCalculatedHTML = snapshot.val();
-            document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
-            document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
-            window.updateCanvasPlaceholderVisibility();
-          }
-        });
-
-        // Synchronize prompt message limits
-        const statsRef = ref(db, `users/${user.uid}/usageStats`);
-        onValue(statsRef, (snapshot) => {
-          if (snapshot.exists()) {
-            const data = snapshot.val();
-            currentSessionMessagesSent = data.messagesSent || 0;
-            maxConfiguredMessageLimit = data.maxLimit || 20;
-            refreshCounterDisplayLabel();
-          }
-        });
-      } else {
-        refreshCounterDisplayLabel();
+      const btn = document.getElementById('btnRequestDeployUI');
+      const originalText = btn.innerText;
+      btn.innerText = 'Saving...';
+      try {
+          await update(ref(db, `deployments/${deployId}`), {
+              sourceCode: dynamicCalculatedHTML,
+              lastUpdated: Date.now()
+          });
+          btn.innerText = 'Saved & Deployed!';
+          setTimeout(() => { btn.innerText = originalText; }, 2000);
+      } catch (err) {
+          alert(`Error saving deployment: ${err.message}`);
+          btn.innerText = originalText;
       }
+  };
+
+  window.switchAuthMode = (mode) => {
+    activeAuthMode = mode;
+    const tabLogin = document.getElementById('tabLogin');
+    const tabSignUp = document.getElementById('tabSignUp');
+    const label = document.getElementById('authSubmitBtnLabel');
+    if (mode === 'login') {
+      tabLogin.classList.add('active');
+      tabSignUp.classList.remove('active');
+      label.textContent = 'Sign In to Workspace';
     } else {
-      if (overlay) overlay.style.display = 'flex';
+      tabSignUp.classList.add('active');
+      tabLogin.classList.remove('active');
+      label.textContent = 'Create New Account';
+    }
+  };
+  window.handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const errMsgEl = document.getElementById('authErrorMessage');
+    errMsgEl.style.display = 'none';
+    try {
+      if (activeAuthMode === 'login') {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+    } catch (error) {
+      errMsgEl.textContent = error.message;
+      errMsgEl.style.display = 'block';
+    }
+  };
+  document.getElementById('btnGoogleAuth').addEventListener('click', async () => {
+    const errMsgEl = document.getElementById('authErrorMessage');
+    errMsgEl.style.display = 'none';
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      errMsgEl.textContent = error.message;
+      errMsgEl.style.display = 'block';
     }
   });
+  document.getElementById('btnSignOut').addEventListener('click', async () => {
+    try {
+      await signOut(auth);
+      toggleSettingsModal(false);
+    } catch (error) {
+      console.error("Sign out processing error:", error);
+    }
+  });
+  function rotateCanvasTips() {
+    const tipTextEl = document.getElementById('canvasTipText');
+    if (!tipTextEl) return;
+    tipTextEl.style.opacity = '0';
+    setTimeout(() => {
+      currentTipIndex = (currentTipIndex + 1) % canvasTips.length;
+      tipTextEl.textContent = canvasTips[currentTipIndex];
+      tipTextEl.style.opacity = '1';
+    }, 300);
+  }
+  setInterval(rotateCanvasTips, 8000);
+  window.updateCanvasPlaceholderVisibility = () => {
+    const placeholder = document.getElementById('canvasPlaceholder');
+    if (!placeholder) return;
+    if (dynamicCalculatedHTML) {
+      placeholder.style.display = 'none';
+    } else {
+      placeholder.style.display = 'flex';
+    }
+  };
+  function loadPersistedStorage(key, alternative) {
+    try { const value = localStorage.getItem(key); if (value) return JSON.parse(value); } catch(e){}
+    return JSON.parse(JSON.stringify(alternative));
+  }
+  function persistStorage(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+  function getTodayKey() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  }
+  function getMidnightTimestamp() {
+    const next = new Date();
+    next.setHours(24, 0, 0, 0);
+    return next.getTime();
+  }
+  function loadDailyCreditState() {
+    const today = getTodayKey();
+    let state = loadPersistedStorage(DAILY_CREDIT_STORE, null);
+    if (!state || state.date !== today) {
+      state = { date: today, creditsRemaining: DAILY_CREDIT_MAX, totalUsedCredits: 0, messagesUsed: 0, resetAt: getMidnightTimestamp() };
+      persistStorage(DAILY_CREDIT_STORE, state);
+    }
+    if (!state.resetAt) state.resetAt = getMidnightTimestamp();
+    return state;
+  }
+  function persistDailyCreditState(state) { persistStorage(DAILY_CREDIT_STORE, state); }
+  function calculateCreditCost(tokenCount) {
+    if (!tokenCount || tokenCount <= 0) return DAILY_CREDIT_COST_BASE;
+    const extraSteps = Math.floor(tokenCount / 1500);
+    return Math.min(DAILY_CREDIT_MAX, DAILY_CREDIT_COST_BASE + extraSteps * 0.5);
+  }
+  function updateResetTimer() {
+    if (!dailyCreditState) return;
+    const now = Date.now();
+    if (now >= dailyCreditState.resetAt) {
+      dailyCreditState = { date: getTodayKey(), creditsRemaining: DAILY_CREDIT_MAX, totalUsedCredits: 0, messagesUsed: 0, resetAt: getMidnightTimestamp() };
+      persistDailyCreditState(dailyCreditState);
+    }
+    refreshCounterDisplayLabel();
+  }
+  function startDailyResetTimer() { setInterval(updateResetTimer, 1000); }
+  let dailyCreditState = loadDailyCreditState();
+  function getResetCountdownText() {
+    const remainingMs = Math.max(0, dailyCreditState.resetAt - Date.now());
+    const hours = String(Math.floor(remainingMs / 3600000)).padStart(2, '0');
+    const minutes = String(Math.floor((remainingMs % 3600000) / 60000)).padStart(2, '0');
+    const seconds = String(Math.floor((remainingMs % 60000) / 1000)).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  }
+  function getActiveAttachmentsFromStorage() { return loadPersistedStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, []); }
+  function persistCurrentAttachments() { persistStorage(ACTIVE_PROJECT_ATTACHMENTS_KEY, activeProjectAttachments); }
+  function readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+  async function handleAttachmentFiles(fileList) {
+    if (!fileList || !fileList.length) return;
+    const selectedFiles = Array.from(fileList);
+    const attachments = await Promise.all(selectedFiles.map(async (file) => ({
+      id: `att_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, name: file.name, type: file.type || 'application/octet-stream', size: file.size, data: await readFileAsDataURL(file)
+    })));
+    activeProjectAttachments = [...activeProjectAttachments, ...attachments];
+    persistCurrentAttachments();
+    updateAttachmentListDisplay();
+    const uploadInput = document.getElementById('attachmentUpload');
+    if (uploadInput) uploadInput.value = '';
+  }
+  window.handleAttachmentFiles = handleAttachmentFiles;
+  window.removeAttachment = (attachmentId) => {
+    activeProjectAttachments = activeProjectAttachments.filter(a => a.id !== attachmentId);
+    persistCurrentAttachments();
+    updateAttachmentListDisplay();
+  };
+  function updateAttachmentListDisplay() {
+    const list = document.getElementById('attachmentList');
+    if (!list) return;
+    if (!activeProjectAttachments.length) {
+      list.innerHTML = '<div class="attachment-item" style="justify-content:center;">No attachments yet.</div>';
+      return;
+    }
+    list.innerHTML = activeProjectAttachments.map(att => `
+      <div class="attachment-item">
+        <div><strong>${att.name}</strong><div><span>${att.type || 'file'} · ${Math.round(att.size / 1024)} KB</span></div></div>
+        <button type="button" onclick="removeAttachment('${att.id}')">Remove</button>
+      </div>`).join('');
+  }
+  function getProjectsManifest() {
+    const raw = loadPersistedStorage(PROJECTS_MANIFEST_KEY, []);
+    return raw.map(project => {
+      if (project && project.sourceCode && !Array.isArray(project.versions)) {
+        return {
+          id: project.id || `proj_${Date.now()}`, name: project.name || "Generated Project Layout",
+          versions: [{ versionId: `ver_${Date.now()}`, label: "Version 1", timestamp: project.timestamp || new Date().toLocaleString(), prompt: project.prompt || "Legacy imported project", sourceCode: project.sourceCode }]
+        };
+      }
+      return project;
+    });
+  }
+  function saveProjectsManifest(manifest) { persistStorage(PROJECTS_MANIFEST_KEY, manifest); }
+  const sidebarContainer = document.getElementById('sidebarContainer');
+  const splitResizer = document.getElementById('dragSplitResizer');
+  splitResizer.addEventListener('mousedown', (e) => { paneResizingState = true; splitResizer.classList.add('dragging'); document.body.style.cursor = 'col-resize'; e.preventDefault(); });
+  document.addEventListener('mousemove', (e) => { if (!paneResizingState) return; const boundaryWidth = Math.max(280, Math.min(e.clientX, window.innerWidth - 320)); sidebarContainer.style.width = `${boundaryWidth}px`; sidebarContainer.style.flex = 'none'; });
+  document.addEventListener('mouseup', () => { if (paneResizingState) { paneResizingState = false; splitResizer.classList.remove('dragging'); document.body.style.cursor = ''; } });
+  window.toggleSettingsModal = (displayState) => { document.getElementById('settingsModal').classList.toggle('active', displayState); };
+  window.openProviderModal = () => { 
+    document.getElementById('providerModal').classList.add('active'); 
+    document.getElementById('providerStatusText').innerText = '';
+    document.getElementById('customApiKeyInput').value = '';
+  };
+  window.closeProviderModal = () => { document.getElementById('providerModal').classList.remove('active'); };
 
-  window.openDeploymentModal = function() {
+  window.openDeploymentModal = () => {
     const blocked = deployedProjectId && currentProjectId && deployedProjectId !== currentProjectId;
     if (blocked) {
       alert('You already have an active deployed project. Deployment requests for other projects are blocked.');
@@ -1211,268 +728,505 @@
     }
 
     document.getElementById('deploymentForm').reset();
-    document.getElementById('deployStatusText').textContent = "";
+    document.getElementById('deployStatusText').innerText = '';
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      document.getElementById('deployContact').value = currentUser.email;
+    }
     document.getElementById('deploymentModal').classList.add('active');
   };
 
-  window.closeDeploymentModal = function() {
+  window.closeDeploymentModal = () => {
     document.getElementById('deploymentModal').classList.remove('active');
   };
-
-  window.submitDeploymentRequest = async function(event) {
-    event.preventDefault();
+  
+  window.submitDeploymentRequest = async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnSubmitDeploy');
     const statusText = document.getElementById('deployStatusText');
-    const submitBtn = document.getElementById('btnSubmitDeploy');
 
-    statusText.style.color = "var(--muted)";
-    statusText.textContent = "Processing active deployment updates...";
-    submitBtn.disabled = true;
+    if (!dynamicCalculatedHTML) {
+        statusText.innerText = 'Error: You must compile a project before requesting deployment.';
+        statusText.style.color = '#ff4444';
+        return;
+    }
 
-    const reqPayload = {
-      subdomain: document.getElementById('deploySubdomain').value.trim(),
-      domain: document.getElementById('deployDomain').value,
-      fullDomain: `${document.getElementById('deploySubdomain').value.trim()}${document.getElementById('deployDomain').value}`,
-      reason: document.getElementById('deployReason').value.trim(),
-      category: document.getElementById('deployCategory').value,
-      contactEmail: document.getElementById('deployContact').value.trim(),
-      projectId: currentProjectId,
-      requestedProjectId: currentProjectId,
-      userId: auth.currentUser ? auth.currentUser.uid : null,
-      userEmail: auth.currentUser ? auth.currentUser.email : null,
-      htmlContent: dynamicCalculatedHTML,
-      requestedAt: new Date().toISOString(),
-      status: "pending"
-    };
+    btn.disabled = true;
+    btn.innerText = 'Submitting...';
+    statusText.innerText = 'Sending deployment request to server...';
+    statusText.style.color = 'var(--muted)';
+
+    const subdomain = document.getElementById('deploySubdomain').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+    const domainExtension = document.getElementById('deployDomain').value;
+    const fullDomain = `${subdomain}${domainExtension}`;
+    
+    const reason = document.getElementById('deployReason').value.trim();
+    const category = document.getElementById('deployCategory').value;
+    const contact = document.getElementById('deployContact').value.trim();
+    const projectTitle = localStorage.getItem('nexus_current_active_title') || 'Untitled Project';
+    const projectPrompt = localStorage.getItem('nexus_current_active_prompt') || '';
 
     try {
-      const globalQueueRef = push(ref(db, 'deployments'));
-      await set(globalQueueRef, reqPayload);
-
-      statusText.style.color = "#10b981";
-      statusText.textContent = "Deployment requested successfully!";
+      const deployRef = push(ref(db, 'deployments'));
+      await set(deployRef, {
+        subdomain: subdomain,
+        fullDomain: fullDomain,
+        reason: reason,
+        category: category,
+        contactEmail: contact,
+        projectTitle: projectTitle,
+        originalPrompt: projectPrompt,
+        sourceCode: dynamicCalculatedHTML,
+        timestamp: Date.now(),
+        status: 'pending',
+        requestedProjectId: currentProjectId,
+        userId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+        userEmail: auth.currentUser ? auth.currentUser.email : null,
+        deviceId: deviceId
+      });
+      statusText.innerText = 'Deployment request submitted successfully!';
+      statusText.style.color = '#00ff00';
       setTimeout(() => {
-        window.closeDeploymentModal();
-        submitBtn.disabled = false;
-      }, 1500);
-    } catch (err) {
-      statusText.style.color = "#ff4444";
-      statusText.textContent = "Deployment write failed: " + err.message;
-      submitBtn.disabled = false;
+        closeDeploymentModal();
+        btn.disabled = false;
+        btn.innerText = 'Submit Deployment Request';
+        document.getElementById('deploymentForm').reset();
+      }, 2000);
+    } catch(err) {
+      statusText.innerText = `Error: ${err.message}`;
+      statusText.style.color = '#ff4444';
+      btn.disabled = false;
+      btn.innerText = 'Submit Deployment Request';
     }
   };
 
-  // Attachments Array and Parsing Functions
-  window.handleAttachmentFiles = function(files) {
-    const listContainer = document.getElementById('attachmentList');
-    if (files.length === 0) return;
-    listContainer.innerHTML = "";
-    workspaceAttachments = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      workspaceAttachments.push(file.name);
-      
-      const item = document.createElement('div');
-      item.className = "attachment-item";
-      item.innerHTML = `<span>${file.name}</span><button onclick="removeAttachmentItem(${i})">Remove</button>`;
-      listContainer.appendChild(item);
-    }
+  window.applyVisualConfigurations = () => {
+    const selectedTheme = document.getElementById('themeStyleSelect').value;
+    const selectedSizing = document.getElementById('textSizeSelect').value;
+    document.documentElement.setAttribute('data-theme', selectedTheme);
+    let variableSize = "12.5px";
+    if (selectedSizing === "small") variableSize = "11.5px";
+    if (selectedSizing === "large") variableSize = "14px";
+    document.documentElement.style.setProperty('--font-size-base', variableSize);
   };
-
-  window.removeAttachmentItem = function(index) {
-    workspaceAttachments.splice(index, 1);
-    const listContainer = document.getElementById('attachmentList');
-    if (workspaceAttachments.length === 0) {
-      listContainer.innerHTML = "No attachments yet.";
+  window.updateMaxAllocationParameters = () => {
+    const sliderElement = document.getElementById('maxMessagesLimitSlider');
+    maxConfiguredMessageLimit = parseInt(sliderElement.value, 10);
+    document.getElementById('lblSliderLimitValue').textContent = `${maxConfiguredMessageLimit} Messages`;
+    persistStorage(ALLOCATION_LIMIT_STORE, maxConfiguredMessageLimit);
+    refreshCounterDisplayLabel();
+    if (totalSentMessagesCounter < (maxConfiguredMessageLimit * 0.85)) userAlertHasBeenTriggered = false;
+  };
+  function refreshCounterDisplayLabel() {
+    if (hasUnlimitedCredits) {
+      document.getElementById('messageCounterLabel').textContent = `Credits: Unlimited · Messages: Unlimited`;
+      document.getElementById('dailyResetLabel').textContent = `Admin Access Active`;
+      const submitBtn = document.getElementById('btnSubmitPrompt');
+      submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.pointerEvents = 'auto';
       return;
     }
-    listContainer.innerHTML = "";
-    workspaceAttachments.forEach((name, i) => {
-      const item = document.createElement('div');
-      item.className = "attachment-item";
-      item.innerHTML = `<span>${name}</span><button onclick="removeAttachmentItem(${i})">Remove</button>`;
-      listContainer.appendChild(item);
-    });
-  };
-
-  // Prompt logic parsing
-  window.handlePromptSubmission = async function() {
-    const txtArea = document.getElementById('workspaceInput');
-    const promptValue = txtArea.value.trim();
-    if (!promptValue) return;
-
-    if (!hasUnlimitedCredits && currentSessionMessagesSent >= maxConfiguredMessageLimit) {
-      alert("Daily compilation limitations reached. Please adjust parameters in setup.");
-      return;
+    const creditsText = dailyCreditState ? dailyCreditState.creditsRemaining.toFixed(1) : DAILY_CREDIT_MAX.toFixed(1);
+    const messagesText = dailyCreditState ? dailyCreditState.messagesUsed : 0;
+    document.getElementById('messageCounterLabel').textContent = `Credits: ${creditsText} / ${DAILY_CREDIT_MAX} · Messages: ${messagesText} / ${maxConfiguredMessageLimit}`;
+    document.getElementById('dailyResetLabel').textContent = `Resets in: ${getResetCountdownText()}`;
+    const submitBtn = document.getElementById('btnSubmitPrompt');
+    if (dailyCreditState && (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0)) {
+      submitBtn.disabled = true; submitBtn.style.opacity = '0.6'; submitBtn.style.pointerEvents = 'none';
+    } else {
+      submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.style.pointerEvents = 'auto';
     }
-
-    const loader = document.getElementById('globalWorkspaceLoader');
-    loader.classList.add('active');
-    
-    // Output message visually to chat history list view elements
-    const history = document.getElementById('chatHistory');
-    const userMsg = document.createElement('div');
-    userMsg.className = "message user";
-    userMsg.textContent = promptValue;
-    history.appendChild(userMsg);
-    history.scrollTop = history.scrollHeight;
-
-    txtArea.value = "";
-
-    setTimeout(async () => {
-      try {
-        // Construct code update templates
-        dynamicCalculatedHTML = `<!DOCTYPE html><html><head><title>ScribbleAI Preview</title><style>body { background: #121214; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; } .card { background: #1e1e22; padding: 32px; border-radius: 12px; border: 1px solid #2e2e33; text-align: center; max-width: 400px; box-shadow: 0 8px 30px rgba(0,0,0,0.3); }</style></head><body><div class="card"><h2>Compiled Framework Structure</h2><p>Successfully processed layout requests matching: "${promptValue.replace(/"/g, '&quot;')}"</p></div></body></html>`;
-        
-        if (auth.currentUser) {
-          const userRef = ref(db, `users/${auth.currentUser.uid}/projects/${currentProjectId}`);
-          await update(userRef, { compiledData: dynamicCalculatedHTML });
-          
-          currentSessionMessagesSent++;
-          await update(ref(db, `users/${auth.currentUser.uid}/usageStats`), {
-            messagesSent: currentSessionMessagesSent
-          });
-        }
-
-        const botMsg = document.createElement('div');
-        botMsg.className = "message assistant";
-        botMsg.textContent = "I have successfully analyzed your architecture parameters and re-compiled the live preview canvas environment layout references.";
-        history.appendChild(botMsg);
-        history.scrollTop = history.scrollHeight;
-
-      } catch (err) {
-        console.error(err);
-      } finally {
-        loader.classList.remove('active');
-      }
-    }, 1200);
-  };
-
-  // System structural limits slider management
-  window.updateMaxAllocationParameters = async function() {
-    const slider = document.getElementById('maxMessagesLimitSlider');
-    const display = document.getElementById('lblSliderLimitValue');
-    display.textContent = `${slider.value} Messages`;
-    
-    if (auth.currentUser) {
-      await update(ref(db, `users/${auth.currentUser.uid}/usageStats`), {
-        maxLimit: parseInt(slider.value)
+  }
+  function updateSubmitButtonLabel() {
+    const labelEl = document.getElementById('submitBtnLabel');
+    if (!labelEl) return;
+    const activeCachedCode = localStorage.getItem('nexus_current_active_code');
+    labelEl.textContent = activeCachedCode ? 'Build Changes' : 'Build';
+  }
+  window.handleEndpointRotation = () => {
+    const activeProvider = document.getElementById('providerSelect').value;
+    const modelSelectionElement = document.getElementById('modelSelect');
+    modelSelectionElement.innerHTML = '';
+    if (ENGINE_VARIATIONS[activeProvider]) {
+      ENGINE_VARIATIONS[activeProvider].forEach(engine => {
+        const optionNode = document.createElement('option');
+        optionNode.value = engine.value;
+        optionNode.textContent = engine.name;
+        modelSelectionElement.appendChild(optionNode);
       });
     }
   };
-
-  function refreshCounterDisplayLabel() {
-    const displayLabel = document.getElementById('messageCounterLabel');
-    if (displayLabel) {
-      if (hasUnlimitedCredits) {
-        displayLabel.textContent = `Credits: Unlimited · Messages: Unlimited`;
-      } else {
-        displayLabel.textContent = `Credits: 20.0 / 20 · Messages: ${currentSessionMessagesSent} / ${maxConfiguredMessageLimit}`;
+  async function loadFirebaseProviders() {
+    try {
+      const snapshot = await get(child(ref(db), `apiKeys/${deviceId}`));
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const providerSelect = document.getElementById('providerSelect');
+        const customGroup = document.getElementById('customProviderGroup');
+        for (const [providerId, providerData] of Object.entries(data)) {
+          customKeysStore[providerId] = providerData.apiKey;
+          if (providerData.models) {
+             ENGINE_VARIATIONS[providerId] = providerData.models;
+             const optionsScope = customGroup ? Array.from(customGroup.children) : Array.from(providerSelect.options);
+             if (!optionsScope.some(opt => opt.value === providerId)) {
+               const option = document.createElement('option');
+               option.value = providerId;
+               option.textContent = `Custom: ${providerId.charAt(0).toUpperCase() + providerId.slice(1)}`;
+               if (customGroup) {
+                 customGroup.appendChild(option);
+               } else {
+                 providerSelect.appendChild(option);
+               }
+             }
+          }
+        }
       }
+    } catch(err) {
+      console.error("Firebase Key Load Error:", err);
     }
   }
+  window.saveCustomProviderKey = async () => {
+    const provider = document.getElementById('customProviderType').value;
+    const apiKey = document.getElementById('customApiKeyInput').value.trim();
+    const statusText = document.getElementById('providerStatusText');
+    if (!apiKey) { statusText.innerText = 'Please enter an API key.'; statusText.style.color = '#ff4444'; return; }
+    statusText.innerText = 'Verifying key...';
+    statusText.style.color = 'var(--muted)';
+    try {
+      let models = [];
+      if (provider === 'openai') {
+        const res = await fetch('https://api.openai.com/v1/models', { headers: { 'Authorization': `Bearer ${apiKey}` }});
+        if(!res.ok) throw new Error('Invalid OpenAI Key');
+        const data = await res.json();
+        models = data.data.filter(m => m.id.includes('gpt')).map(m => ({name: m.id, value: m.id}));
+      } else if (provider === 'gemini') {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        if(!res.ok) throw new Error('Invalid Gemini Key');
+        const data = await res.json();
+        models = data.models.filter(m => m.name.includes('gemini') || m.name.includes('learn')).map(m => ({name: m.displayName || m.name.split('/')[1], value: m.name.replace('models/', '')}));
+      } else if (provider === 'anthropic') {
+        models = [
+          {name: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet-20241022'},
+          {name: 'Claude 3 Opus', value: 'claude-3-opus-20240229'},
+          {name: 'Claude 3 Haiku', value: 'claude-3-haiku-20240307'}
+        ];
+      }
+      await set(ref(db, `apiKeys/${deviceId}/${provider}`), { apiKey: apiKey, models: models });
+      statusText.innerText = 'Key saved and models retrieved successfully!';
+      statusText.style.color = '#00ff00';
+      await loadFirebaseProviders();
+      document.getElementById('providerSelect').value = provider;
+      window.handleEndpointRotation();
+      setTimeout(() => closeProviderModal(), 1500);
+    } catch(err) {
+      statusText.innerText = `Error: ${err.message}`;
+      statusText.style.color = '#ff4444';
+    }
+  };
+  window.toggleCanvasTab = (activeTabTarget) => {
+    document.getElementById('btnTabPreview').classList.toggle('active', activeTabTarget === 'preview');
+    document.getElementById('btnTabCode').classList.toggle('active', activeTabTarget === 'code');
+    document.getElementById('layerPreview').classList.toggle('active', activeTabTarget === 'preview');
+    document.getElementById('layerCode').classList.toggle('active', activeTabTarget === 'code');
+  };
+  window.setCanvasViewport = (dimensionsPreset) => {
+    ['desktop', 'tablet', 'phone'].forEach(p => {
+      document.getElementById(`preset${p.charAt(0).toUpperCase() + p.slice(1)}`).classList.remove('active');
+      document.getElementById('viewportWrapper').classList.remove(`preset-${p}`);
+    });
+    document.getElementById(`preset${dimensionsPreset.charAt(0).toUpperCase() + dimensionsPreset.slice(1)}`).classList.add('active');
+    document.getElementById('viewportWrapper').classList.add(`preset-${dimensionsPreset}`);
+  };
 
-  function startDailyResetTimer() {
-    const timerLabel = document.getElementById('dailyResetLabel');
-    let secondsLeft = 86400;
-    setInterval(() => {
-      secondsLeft--;
-      if(secondsLeft <= 0) secondsLeft = 86400;
-      const h = Math.floor(secondsLeft / 3600).toString().padStart(2, '0');
-      const m = Math.floor((secondsLeft % 3600) / 60).toString().padStart(2, '0');
-      const s = (secondsLeft % 60).toString().padStart(2, '0');
-      if (timerLabel) timerLabel.textContent = `Resets in: ${h}:${m}:${s}`;
+  // --- NEW LOAD/PROGRESS BAR LOGIC ---
+  function startDynamicLoader() {
+    let progress = 0;
+    let timeRemaining = 8-25; // Approx 1m 30s
+    
+    document.getElementById('loaderProgressBar').style.width = '0%';
+    document.getElementById('loaderProgressText').innerText = '0% Completed';
+    document.getElementById('loaderTimeText').innerText = `Est. 1m 30s`;
+    
+    const statusMessages = [
+      "Reasoning your request...",
+      "building your code...",
+      "Styling...",
+      "Adding JavaScript...",
+      "Looking over your code..."
+    ];
+    let stepIdx = 0;
+
+    activeLoadingInterval = setInterval(() => {
+      progress += Math.random() * 2.5; 
+      if (progress > 96) progress = 96; // Hold at 96% until done
+
+      if (timeRemaining > 0 && Math.random() > 0.3) timeRemaining--;
+
+      const mins = Math.floor(timeRemaining / 60);
+      const secs = timeRemaining % 60;
+      const timeStr = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+
+      document.getElementById('loaderProgressBar').style.width = `${progress}%`;
+      document.getElementById('loaderProgressText').innerText = `${Math.floor(progress)}% Completed`;
+      document.getElementById('loaderTimeText').innerText = `Est. ${timeStr}`;
+
+      if (Math.random() > 0.85 && stepIdx < statusMessages.length) {
+        document.getElementById('agentLoaderMessage').innerText = statusMessages[stepIdx];
+        stepIdx++;
+      }
     }, 1000);
   }
 
-  // Handle provider registration schemas
-  window.loadFirebaseProviders = async function() {
-    console.log("Endpoint models loaded.");
-  };
+  function stopDynamicLoader() {
+    if (activeLoadingInterval) clearInterval(activeLoadingInterval);
+    document.getElementById('loaderProgressBar').style.width = '100%';
+    document.getElementById('loaderProgressText').innerText = '100% Completed';
+    document.getElementById('loaderTimeText').innerText = `Ready!`;
+  }
 
-  window.handleEndpointRotation = function() {
-    const select = document.getElementById('providerSelect');
-    const modelSelect = document.getElementById('modelSelect');
-    modelSelect.innerHTML = "";
-    
-    if (select.value === "github") {
-      modelSelect.innerHTML = `<option value="gpt-4o">GPT-4o Compilation Node</option><option value="meta-llama-3">Llama 3 Ultra</option>`;
-    } else {
-      modelSelect.innerHTML = `<option value="default-speed">Fast Pipeline Optimized</option>`;
-    }
-  };
+  // --- NEW CODE TYPING SIMULATOR ---
+  function typeCodeIntoView(codeStr) {
+    return new Promise(resolve => {
+      const codeArea = document.getElementById('codeAreaView');
+      codeArea.value = "";
+      const chunkSize = Math.max(1, Math.floor(codeStr.length / 80)); // Fast typing chunks
+      let index = 0;
+      
+      const typeInterval = setInterval(() => {
+        if (index >= codeStr.length) {
+          clearInterval(typeInterval);
+          resolve();
+        } else {
+          codeArea.value += codeStr.substring(index, index + chunkSize);
+          index += chunkSize;
+          codeArea.scrollTop = codeArea.scrollHeight; 
+        }
+      }, 15); 
+    });
+  }
 
-  // Base utilities UI adjustments
-  window.toggleSettingsModal = function(show) {
-    document.getElementById('settingsModal').classList.toggle('active', show);
-  };
-  window.openProviderModal = function() { document.getElementById('providerModal').classList.add('active'); };
-  window.closeProviderModal = function() { document.getElementById('providerModal').classList.remove('active'); };
-
-  window.toggleCanvasTab = function(tabName) {
-    document.getElementById('btnTabPreview').classList.toggle('active', tabName === 'preview');
-    document.getElementById('btnTabCode').classList.toggle('active', tabName === 'code');
-    document.getElementById('layerPreview').classList.toggle('active', tabName === 'preview');
-    document.getElementById('layerCode').classList.toggle('active', tabName === 'code');
-  };
-
-  window.setCanvasViewport = function(preset) {
-    const wrapper = document.getElementById('viewportWrapper');
-    wrapper.className = "viewport-wrapper preset-" + preset;
-    document.getElementById('presetDesktop').classList.toggle('active', preset === 'desktop');
-    document.getElementById('presetTablet').classList.toggle('active', preset === 'tablet');
-    document.getElementById('presetPhone').classList.toggle('active', preset === 'phone');
-  };
-
-  window.updateCanvasPlaceholderVisibility = function() {
-    const placeholder = document.getElementById('canvasPlaceholder');
-    if(placeholder) {
-      placeholder.style.display = dynamicCalculatedHTML ? 'none' : 'flex';
-    }
-  };
-
-  window.applyVisualConfigurations = function() {
-    const theme = document.getElementById('themeStyleSelect').value;
-    const size = document.getElementById('textSizeSelect').value;
-    console.log(`Preferences configured: Base Theme ${theme}, Font Scale ${size}`);
-  };
-
-  window.handleAuthSubmit = async function(event) {
-    event.preventDefault();
-    const isLogin = document.getElementById('tabLogin').classList.contains('active');
-    const email = document.getElementById('authEmail').value;
-    const pass = document.getElementById('authPassword').value;
-    const errBox = document.getElementById('authErrorMessage');
-    
-    try {
-      if(isLogin) {
-        await signInWithEmailAndPassword(auth, email, pass);
-      } else {
-        await createUserWithEmailAndPassword(auth, email, pass);
+  window.handlePromptSubmission = async () => {
+    if (isRequestProcessing) return;
+    const inputElement = document.getElementById('workspaceInput');
+    const promptValueText = inputElement.value.trim();
+    if (!promptValueText) return;
+    if (!hasUnlimitedCredits) {
+      if (!dailyCreditState) dailyCreditState = loadDailyCreditState();
+      if (dailyCreditState.messagesUsed >= maxConfiguredMessageLimit || dailyCreditState.creditsRemaining <= 0) {
+        alert('Daily AI access blocked: You have used all available daily messages or credits.');
+        refreshCounterDisplayLabel(); return;
       }
-    } catch(e) {
-      errBox.textContent = e.message;
-      errBox.style.display = 'block';
     }
+    inputElement.value = "";
+    totalSentMessagesCounter++;
+    if (!hasUnlimitedCredits) {
+      dailyCreditState.messagesUsed += 1;
+      dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - DAILY_CREDIT_COST_BASE);
+      dailyCreditState.totalUsedCredits += DAILY_CREDIT_COST_BASE;
+      persistDailyCreditState(dailyCreditState);
+    }
+    refreshCounterDisplayLabel();
+    if (!hasUnlimitedCredits && !userAlertHasBeenTriggered && dailyCreditState.messagesUsed >= (maxConfiguredMessageLimit * 0.85)) {
+      userAlertHasBeenTriggered = true;
+      alert(`Operational Warning: You are approaching your maximum daily message limit.`);
+    }
+    await launchSystemBuildPipeline(promptValueText);
   };
+  async function callCustomProvider(provider, model, messages, apiKey) {
+    let coreResponseProseText = "";
+    let usageTokens = 0;
+    if (provider === 'openai') {
+      const req = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: "POST", headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+        body: JSON.stringify({ model: model, messages: messages, temperature: 0.25 })
+      });
+      const data = await req.json();
+      if(data.error) throw new Error(data.error.message);
+      coreResponseProseText = data.choices[0].message.content;
+      usageTokens = data.usage?.total_tokens || 0;
+    } else if (provider === 'gemini') {
+      const contents = messages.filter(m=>m.role!=='system').map(m => ({ role: m.role==='assistant'?'model':'user', parts: [{text: m.content}] }));
+      const systemInstruction = { parts: [{text: messages.find(m=>m.role==='system')?.content || ""}] };
+      const req = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: contents, systemInstruction: systemInstruction, generationConfig: {temperature: 0.25} })
+      });
+      const data = await req.json();
+      if(data.error) throw new Error(data.error.message);
+      coreResponseProseText = data.candidates[0].content.parts[0].text;
+      usageTokens = data.usageMetadata?.totalTokenCount || 0;
+    } else if (provider === 'anthropic') {
+      const anthropicMsgs = messages.filter(m=>m.role!=='system');
+      const systemStr = messages.find(m=>m.role==='system')?.content || "";
+      const req = await fetch('https://api.anthropic.com/v1/messages', {
+        method: "POST", headers: { "x-api-key": apiKey, "anthropic-version": "2023-06-01", "content-type": "application/json", "anthropic-dangerous-direct-browser-access": "true" },
+        body: JSON.stringify({ model: model, messages: anthropicMsgs, system: systemStr, max_tokens: 4096, temperature: 0.25 })
+      });
+      const data = await req.json();
+      if(data.error) throw new Error(data.error.message);
+      coreResponseProseText = data.content[0].text;
+      usageTokens = (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0);
+    }
+    return { coreResponseProseText, usageTokens };
+  }
+  async function launchSystemBuildPipeline(userInstructionPrompt) {
+    const globalLoaderOverlay = document.getElementById('globalWorkspaceLoader');
+    const selectedProviderHub = document.getElementById('providerSelect').value;
+    const selectedEngineTarget = document.getElementById('modelSelect').value;
+    
+    globalLoaderOverlay.classList.add('active');
+    startDynamicLoader(); 
 
-  window.switchAuthMode = function(mode) {
-    document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
-    document.getElementById('tabSignUp').classList.toggle('active', mode === 'signup');
-    document.getElementById('authSubmitBtnLabel').textContent = mode === 'login' ? 'Sign In to Workspace' : 'Create New Account';
-  };
-
-  document.getElementById('btnGoogleAuth').onclick = async () => {
+    postMessageToContainer('user', userInstructionPrompt);
     try {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-    } catch (e) {
-      alert(e.message);
-    }
-  };
+      compilationMemory.push({ role: "user", content: userInstructionPrompt });
+      let coreResponseProseText = "";
+      let tokenCount = 0;
+      if (customKeysStore[selectedProviderHub]) {
+         const directCall = await callCustomProvider(selectedProviderHub, selectedEngineTarget, compilationMemory, customKeysStore[selectedProviderHub]);
+         coreResponseProseText = directCall.coreResponseProseText;
+         tokenCount = directCall.usageTokens;
+      } else {
+        const networkCompilationStream = await fetch(CLOUDFLARE_WORKER_ENDPOINT, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ provider: selectedProviderHub, model: selectedEngineTarget, messages: compilationMemory, temperature: 0.25 })
+        });
+        if (!networkCompilationStream.ok) {
+          const errorText = await networkCompilationStream.text();
+          throw new Error(`Edge node framework returned processing errors: ${networkCompilationStream.status} - ${errorText}`);
+        }
+        const dataPayloadJson = await networkCompilationStream.json();
+        coreResponseProseText = dataPayloadJson.choices[0].message.content;
+        tokenCount = dataPayloadJson.usage?.total_tokens || 0;
+      }
+      
+      stopDynamicLoader(); 
+      
+      const codeMarkdownRegexMatch = /```html([\s\S]*?)```/i.exec(coreResponseProseText);
+      dynamicCalculatedHTML = codeMarkdownRegexMatch ? codeMarkdownRegexMatch[1].trim() : coreResponseProseText.trim();
+      
+      document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
+      window.updateCanvasPlaceholderVisibility();
 
-  document.getElementById('btnSignOut').onclick = () => signOut(auth);
-  
+      // Initiate Code Typing Stream Effect
+      typeCodeIntoView(dynamicCalculatedHTML);
+
+      compilationMemory.push({ role: "assistant", content: coreResponseProseText });
+      
+      // Parse Custom AI Summary Message
+      let customSentenceSummary = coreResponseProseText.replace(/```html[\s\S]*?```/gi, '').replace(/```[\s\S]*?```/gi, '').trim();
+      if (!customSentenceSummary || customSentenceSummary.length < 5) {
+        customSentenceSummary = "I have successfully processed your request and generated the structural layout based on your prompt.";
+      }
+      
+      // Exact Credit Cost Calculation
+      let exactCost = 0;
+      if (tokenCount > 0) exactCost = calculateCreditCost(tokenCount);
+
+      // Construct the custom message appending the stats
+      let aiResponseText = customSentenceSummary;
+      aiResponseText += `<br><br><div style="font-size: 11px; color: var(--muted); padding-top: 6px; border-top: 1px solid var(--border); margin-top: 8px;"><strong>Usage Context:</strong> Consumed <strong>${tokenCount} tokens</strong> for this compilation, adjusting your balance by <strong>${exactCost.toFixed(2)} credits</strong>.</div>`;
+      
+      postMessageToContainer('assistant', aiResponseText);
+      saveActiveProjectToLocalStorage(userInstructionPrompt, dynamicCalculatedHTML);
+
+      if (tokenCount > 0) {
+        document.getElementById('lblLastTokens').textContent = tokenCount;
+        if (!hasUnlimitedCredits) {
+          const extraCost = Math.max(0, exactCost - DAILY_CREDIT_COST_BASE);
+          if (extraCost > 0 && dailyCreditState) {
+            dailyCreditState.creditsRemaining = Math.max(0, dailyCreditState.creditsRemaining - extraCost);
+            dailyCreditState.totalUsedCredits += extraCost;
+            persistDailyCreditState(dailyCreditState);
+            refreshCounterDisplayLabel();
+          }
+        }
+      }
+    } catch (compilationError) {
+      stopDynamicLoader(); 
+      postMessageToContainer('assistant', `Compilation Processing Aborted: ${compilationError.message}`);
+    } finally {
+      setTimeout(() => {
+         globalLoaderOverlay.classList.remove('active');
+      }, 500); // Give user half a second to see '100% Ready'
+    }
+  }
+
+  function postMessageToContainer(roleDesignation, blockMessageCopy) {
+    const historicalContainerBox = document.getElementById('chatHistory');
+    const dynamicMessageCard = document.createElement('div');
+    dynamicMessageCard.className = `message ${roleDesignation}`;
+    dynamicMessageCard.innerHTML = blockMessageCopy.replace(/\n/g, '<br>');
+    historicalContainerBox.appendChild(dynamicMessageCard);
+    historicalContainerBox.scrollTop = historicalContainerBox.scrollHeight;
+  }
+  function saveActiveProjectToLocalStorage(userPromptIntent, htmlPayload) {
+    try {
+      const registeredProjects = getProjectsManifest();
+      const activeProjectId = localStorage.getItem(ACTIVE_PROJECT_ID_KEY);
+      const versionId = `ver_${Date.now()}`;
+      const existingProjectIndex = registeredProjects.findIndex(p => p.id === activeProjectId);
+      const derivedName = userPromptIntent.split(/[.?!,]/)[0].substring(0, 35).trim() || "Generated Project Layout";
+      let projectName = derivedName;
+      if (existingProjectIndex !== -1 && registeredProjects[existingProjectIndex].name) projectName = registeredProjects[existingProjectIndex].name;
+      const versionObject = { versionId, label: `Version ${existingProjectIndex === -1 ? 1 : registeredProjects[existingProjectIndex].versions.length + 1}`, timestamp: new Date().toLocaleString(), prompt: userPromptIntent, sourceCode: htmlPayload, attachments: activeProjectAttachments };
+      let activeProjectIdToSave = activeProjectId;
+      if (existingProjectIndex !== -1) {
+        registeredProjects[existingProjectIndex].versions.unshift(versionObject);
+      } else {
+        activeProjectIdToSave = `proj_${Date.now()}`;
+        registeredProjects.unshift({ id: activeProjectIdToSave, name: projectName, versions: [versionObject] });
+      }
+      saveProjectsManifest(registeredProjects);
+      localStorage.setItem(ACTIVE_PROJECT_ID_KEY, activeProjectIdToSave);
+      localStorage.setItem(ACTIVE_PROJECT_VERSION_KEY, versionId);
+      localStorage.setItem(ACTIVE_PROJECT_CODE_KEY, htmlPayload);
+      localStorage.setItem(ACTIVE_PROJECT_TITLE_KEY, projectName);
+      localStorage.setItem(ACTIVE_PROJECT_PROMPT_KEY, userPromptIntent);
+      updateSubmitButtonLabel();
+    } catch (err) { console.error("Local project persistence error encountered:", err); }
+  }
+  function verifyActiveSessionLoadingState() {
+    const activeCachedCode = localStorage.getItem(ACTIVE_PROJECT_CODE_KEY);
+    const activeProjectTitle = localStorage.getItem(ACTIVE_PROJECT_TITLE_KEY);
+    const activeProjectVersionId = localStorage.getItem(ACTIVE_PROJECT_VERSION_KEY);
+    const activeProjectPrompt = localStorage.getItem(ACTIVE_PROJECT_PROMPT_KEY);
+    if (activeCachedCode) {
+      dynamicCalculatedHTML = activeCachedCode;
+      document.getElementById('previewFrame').srcdoc = dynamicCalculatedHTML;
+      document.getElementById('codeAreaView').value = dynamicCalculatedHTML;
+      document.getElementById('lblActiveNode').textContent = activeProjectTitle || "ScribbleAI";
+      activeProjectAttachments = getActiveAttachmentsFromStorage();
+      updateAttachmentListDisplay();
+      const currentTitle = activeProjectTitle || "Loaded Workspace";
+      postMessageToContainer('assistant', `Loaded external project: "<strong>${currentTitle}</strong>" successfully into the preview viewport memory workspace layout matrix.`);
+      compilationMemory.push({ role: "assistant", content: `The active project version ${activeProjectVersionId || ''} has been loaded. Use the current HTML below as the starting point for all further requested edits.` });
+      if (activeProjectPrompt) compilationMemory.push({ role: "assistant", content: `Previous prompt for this version: ${activeProjectPrompt}` });
+      compilationMemory.push({ role: "assistant", content: `Current HTML start state:\n${activeCachedCode}` });
+      updateSubmitButtonLabel();
+    }
+    window.updateCanvasPlaceholderVisibility();
+  }
+  function getQueryParam(name) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(name);
+  }
+  function maybeAutoStartFromQuery() {
+    const prompt = getQueryParam('prompt');
+    const isNew = getQueryParam('new');
+    if (isNew) {
+      localStorage.removeItem(ACTIVE_PROJECT_ID_KEY); localStorage.removeItem(ACTIVE_PROJECT_VERSION_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_PROMPT_KEY); localStorage.removeItem(ACTIVE_PROJECT_TITLE_KEY);
+      localStorage.removeItem(ACTIVE_PROJECT_CODE_KEY); localStorage.removeItem(ACTIVE_PROJECT_ATTACHMENTS_KEY);
+      activeProjectAttachments = []; updateAttachmentListDisplay();
+      dynamicCalculatedHTML = ""; document.getElementById('previewFrame').srcdoc = ""; document.getElementById('codeAreaView').value = "";
+      window.updateCanvasPlaceholderVisibility();
+    }
+    if (prompt) {
+      const inputElement = document.getElementById('workspaceInput');
+      if (inputElement) inputElement.value = prompt;
+      setTimeout(() => { if (prompt && inputElement && inputElement.value.trim()) handlePromptSubmission(); }, 140);
+    }
+  }
   window.triggerCodeDownload = () => {
     if (!dynamicCalculatedHTML) return alert("Compile application layouts first.");
     const formattingBlob = new Blob([dynamicCalculatedHTML], { type: "text/html" });
@@ -1483,63 +1237,17 @@
     virtualLinkElement.click();
     document.body.removeChild(virtualLinkElement);
   };
-
-  // Drag and Drop side-bar scaling system handler
-  const resizer = document.getElementById('dragSplitResizer');
-  const sidebar = document.getElementById('sidebarContainer');
-  let isDraggingWorkspaceSplit = false;
-
-  resizer.addEventListener('mousedown', (e) => {
-    isDraggingWorkspaceSplit = true;
-    resizer.classList.add('dragging');
-    document.body.style.cursor = 'col-resize';
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (!isDraggingWorkspaceSplit) return;
-    const currentWidth = e.clientX;
-    if (currentWidth > 260 && currentWidth < 550) {
-      sidebar.style.width = `${currentWidth}px`;
-    }
-  });
-
-  document.addEventListener('mouseup', () => {
-    if (isDraggingWorkspaceSplit) {
-      isDraggingWorkspaceSplit = false;
-      resizer.classList.remove('dragging');
-      document.body.style.cursor = 'default';
-    }
-  });
-
-  // Cycle randomized placeholder background workflow tips
-  const tipsArray = [
-    "You can edit the colors on the page with one prompt.",
-    "Type 'Make it mobile friendly' to build responsive media break grids automatically.",
-    "You can click 'Download' at any point to save your code architecture natively.",
-    "Add complex interactive element workflows by asking for specific framework JS logic blocks."
-  ];
-  setInterval(() => {
-    const tipEl = document.getElementById('canvasTipText');
-    if(tipEl) {
-      tipEl.style.opacity = 0;
-      setTimeout(() => {
-        tipEl.textContent = tipsArray[Math.floor(Math.random() * tipsArray.length)];
-        tipEl.style.opacity = 1;
-      }, 300);
-    }
-  }, 7000);
-
-  // Trigger base configuration parameters seamlessly
   document.getElementById('maxMessagesLimitSlider').value = maxConfiguredMessageLimit;
   document.getElementById('lblSliderLimitValue').textContent = `${maxConfiguredMessageLimit} Messages`;
-  
   refreshCounterDisplayLabel();
   startDailyResetTimer();
-  window.loadFirebaseProviders().then(() => {
+  loadFirebaseProviders().then(() => {
     window.handleEndpointRotation();
   });
   window.applyVisualConfigurations();
-  window.updateCanvasPlaceholderVisibility();
+  verifyActiveSessionLoadingState();
+  maybeAutoStartFromQuery();
+  updateSubmitButtonLabel();
 </script>
 </body>
 </html>
