@@ -269,3 +269,18 @@
     font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic;
     color: var(--accent);
   }
+  /* Styling to position the button in the hero section */
+.new-chat-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px; /* Space between button and the H1 title */
+}
+
+.btn-massive {
+  font-size: 18px;
+  padding: 16px 48px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  /* This ensures it uses the same styles as your existing .btn-primary */
+}
