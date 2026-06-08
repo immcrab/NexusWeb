@@ -75,16 +75,55 @@
   .google-sign-in-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
   .google-sign-in-btn:not(:disabled):hover { background: #e5e5e5; }
 
-  /* Notification Box Container */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 10002; padding: 20px; }
+  /* --- RESPONSIVE MODAL SYSTEM --- */
+  .modal-overlay { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.8); 
+    backdrop-filter: blur(8px); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 10002; 
+    padding: 20px; 
+  }
   .modal-overlay.active { display: flex; }
-  .modal { width: 100%; max-width: 460px; background: #242424; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 36px; position: relative; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); font-family: 'Inter', sans-serif; }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #A0A0A0; cursor: pointer; }
-  .modal-close:hover { color: #fff; }
-  .modal-badge { display:inline-block; padding:4px 12px; background:rgba(39, 118, 245, 0.1); color:#2776F5; font-size:12px; font-weight:700; border-radius:999px; margin-bottom:16px; border:1px solid rgba(39, 118, 245, 0.3); }
   
-  .vote-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 500; color: #A0A0A0; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; flex: 1; }
+  .modal { 
+    width: 100%; 
+    max-width: 460px; 
+    max-height: calc(100vh - 40px);
+    background: #242424; 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    border-radius: 16px; 
+    padding: 36px; 
+    position: relative; 
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+    font-family: 'Inter', sans-serif; 
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #A0A0A0; cursor: pointer; z-index: 10; }
+  .modal-close:hover { color: #fff; }
+  .modal-badge { display:inline-block; padding:4px 12px; background:rgba(39, 118, 245, 0.1); color:#2776F5; font-size:12px; font-weight:700; border-radius:999px; margin-bottom:16px; border:1px solid rgba(39, 118, 245, 0.3); align-self: flex-start; flex-shrink: 0; }
+  
+  /* Scrollable container for long dynamic updates */
+  .modal-scroll-area {
+    overflow-y: auto;
+    flex-grow: 1;
+    margin-bottom: 24px;
+    padding-right: 4px;
+  }
+  /* Custom scrollbar styling for webkit layout Engines */
+  .modal-scroll-area::-webkit-scrollbar { width: 6px; }
+  .modal-scroll-area::-webkit-scrollbar-track { background: transparent; }
+  .modal-scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+  
+  .vote-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 6px; font-size: 13px; font-weight: 500; color: #A0A0A0; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; flex: 1; }
   .vote-btn:hover { color: #fff; border-color: rgba(255, 255, 255, 0.2); background: rgba(255,255,255,0.08); }
 
   .nav-changelog-link {
@@ -94,9 +133,19 @@
     font-weight: 500;
     margin-right: 16px;
     transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
   }
-  .nav-changelog-link:hover {
-    color: #fff;
+  .nav-changelog-link:hover { color: #fff; }
+
+  /* Mobile Responsive adjustments */
+  @media (max-width: 768px) {
+    .modal {
+      padding: 24px;
+      max-height: calc(100vh - 30px);
+    }
+    .modal-close { top: 16px; right: 16px; }
+    .nav-changelog-link { margin-right: 12px; font-size: 13px; }
   }
 </style>
 </head>
@@ -219,11 +268,14 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <div class="modal-badge">✨ LATEST PATCH</div>
-    <h3 id="homePopupTitle" style="font-size: 24px; margin: 0 0 12px 0; color: #fff; font-weight: 700;"></h3>
-    <p id="homePopupBody" style="color: #A0A0A0; font-size: 15px; line-height: 1.6; margin-bottom: 24px; white-space: pre-wrap;"></p>
     
-    <div id="homePopupInteractionZone" style="display:flex; gap:12px; margin-bottom:20px;"></div>
-    <button class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="dismissChangelogPopup()">Dismiss Announcement</button>
+    <div class="modal-scroll-area">
+      <h3 id="homePopupTitle" style="font-size: 24px; margin: 0 0 12px 0; color: #fff; font-weight: 700;"></h3>
+      <p id="homePopupBody" style="color: #A0A0A0; font-size: 15px; line-height: 1.6; margin: 0; white-space: pre-wrap;"></p>
+    </div>
+    
+    <div id="homePopupInteractionZone" style="display:flex; gap:12px; margin-bottom:16px; flex-shrink: 0;"></div>
+    <button class="btn btn-primary" style="width: 100%; padding: 14px; flex-shrink: 0;" onclick="dismissChangelogPopup()">Dismiss Announcement</button>
   </div>
 </div>
 
@@ -253,10 +305,9 @@
     isLocalhostEnvironment = true;
   }
 
-  // --- TRIGGER CHANGELOG ON STARTUP ---
   window.addEventListener('DOMContentLoaded', () => {
     initializeAuthenticationProcedures();
-    fetchLatestChangelogData(); // Pulled out so it runs immediately for everyone
+    fetchLatestChangelogData(); 
   });
 
   function initializeAuthenticationProcedures() {
@@ -321,7 +372,6 @@
     } else if (user) {
       workspaceUsername = user.displayName || "User";
     }
-    // Removed duplicate fetchLatestChangelogData() here so it doesn't fire twice
   }
 
   function fillPrompt(text) {
