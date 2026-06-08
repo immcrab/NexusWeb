@@ -18,7 +18,6 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A sleek visual preview showcase of the ScribbleAI software dashboard interface.">
 <link rel="icon" href="assets/logo.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +38,17 @@
 <link rel="stylesheet" href="assets/home.css">
 
 <style>
-  /* Extra Auth Overlay Styles from chat.html */
+  /* --- STARTUP ANIMATION --- */
+  @keyframes startupFade {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  body {
+    animation: startupFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Extra Auth Overlay Styles */
   .auth-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: #000; display: none; align-items: center; justify-content: center;
@@ -66,7 +75,7 @@
   .google-sign-in-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
   .google-sign-in-btn:not(:disabled):hover { background: #e5e5e5; }
 
-  /* Notification Box Container (Imported from changelog.html) */
+  /* Notification Box Container */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 10002; padding: 20px; }
   .modal-overlay.active { display: flex; }
   .modal { width: 100%; max-width: 460px; background: #242424; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 36px; position: relative; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); font-family: 'Inter', sans-serif; }
@@ -77,6 +86,18 @@
   
   .vote-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 500; color: #A0A0A0; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; flex: 1; }
   .vote-btn:hover { color: #fff; border-color: rgba(255, 255, 255, 0.2); background: rgba(255,255,255,0.08); }
+
+  .nav-changelog-link {
+    color: #A0A0A0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 16px;
+    transition: color 0.2s;
+  }
+  .nav-changelog-link:hover {
+    color: #fff;
+  }
 </style>
 </head>
 <body>
@@ -97,6 +118,7 @@
   </a>
 </div>
   <div class="nav-cta" id="navCta">
+    <a href="/changelog" class="nav-changelog-link">Changelog</a>
     <button class="btn btn-ghost" onclick="openModal('login')">Sign in</button>
     <button class="btn btn-primary" onclick="window.location.href='/chat/chat.html'">Get started</button>
   </div>
@@ -206,7 +228,7 @@
 </div>
 
 <script>
-  // FIREBASE SYSTEM INTEGRATION FROM CHAT.HTML
+  // FIREBASE SYSTEM INTEGRATION
   const firebaseConfig = {
     apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
     authDomain: "sitedropio.firebaseapp.com",
@@ -231,9 +253,10 @@
     isLocalhostEnvironment = true;
   }
 
-  // RUN SEQUENTIAL INTRO ANIMATION ON WINDOW CONTENT READY
+  // --- TRIGGER CHANGELOG ON STARTUP ---
   window.addEventListener('DOMContentLoaded', () => {
     initializeAuthenticationProcedures();
+    fetchLatestChangelogData(); // Pulled out so it runs immediately for everyone
   });
 
   function initializeAuthenticationProcedures() {
@@ -298,16 +321,14 @@
     } else if (user) {
       workspaceUsername = user.displayName || "User";
     }
-    fetchLatestChangelogData();
+    // Removed duplicate fetchLatestChangelogData() here so it doesn't fire twice
   }
 
-  // ORIGINAL INDEX.HTML SCRIPTING ARCHITECTURE
   function fillPrompt(text) {
     document.getElementById('promptArea').value = text;
   }
 
   document.addEventListener("DOMContentLoaded", function() {
-     // Fix for the button link inside suggestions block pointing to the wrong subdirectory
      const makeScribbleBetterBtn = document.querySelector('a[href="msb/index.html"]');
      if (makeScribbleBetterBtn) {
          makeScribbleBetterBtn.setAttribute('href', 'changelog.html');
@@ -361,7 +382,7 @@
         <button class="vote-btn" onclick="voteLog('${liveData.id}', 'likes')">👍 Like (${liveData.likes || 0})</button>
         <button class="vote-btn" onclick="voteLog('${liveData.id}', 'dislikes')">👎 Dislike (${liveData.dislikes || 0})</button>
       `;
-      popupElement.classList.add('active'); // Activates the modal overlay display
+      popupElement.classList.add('active'); 
 
       window.dismissChangelogPopup = () => {
         popupElement.classList.remove('active');
