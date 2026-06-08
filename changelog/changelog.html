@@ -28,6 +28,7 @@
     color: var(--text);
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
   }
   
   body::before {
@@ -70,6 +71,7 @@
   .changelog-item { background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; padding: 32px; position: relative; }
   .changelog-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .changelog-date { font-size: 14px; color: var(--accent); font-weight: 600; letter-spacing: 0.05em; }
+  .changelog-admin-actions { display: flex; gap: 8px; margin-left: auto; }
   .changelog-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
   .changelog-body { color: var(--muted); font-size: 15px; line-height: 1.6; white-space: pre-wrap; margin-bottom: 24px; }
   
@@ -84,8 +86,12 @@
   .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
   .btn-outline { border: 1px solid var(--border-strong); color: #fff; background: transparent; }
   .btn-outline:hover { background: var(--surface); }
-  .btn-danger { background: rgba(255, 122, 122, 0.1); color: #ff7a7a; border: 1px solid rgba(255, 122, 122, 0.2); font-size: 12px; padding: 6px 12px; border-radius: 6px; margin-left: auto; }
+  .btn-danger { background: rgba(255, 122, 122, 0.1); color: #ff7a7a; border: 1px solid rgba(255, 122, 122, 0.2); font-size: 12px; padding: 6px 12px; border-radius: 6px; }
   .btn-danger:hover { background: #ff7a7a; color: #fff; }
+  .btn-warn { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); font-size: 12px; padding: 6px 12px; border-radius: 6px; }
+  .btn-warn:hover { background: #f59e0b; color: #fff; }
+  .btn-info { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); font-size: 12px; padding: 6px 12px; border-radius: 6px; }
+  .btn-info:hover { background: #3b82f6; color: #fff; }
 
   /* Notification Box Container */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
@@ -99,8 +105,10 @@
 <body>
 
 <nav>
-  <a href="index.html" class="logo">
-    <div class="logo-mark">S</div>
+  <a href="../index.html" class="logo">
+    <div class="logo-mark">
+      <img src="../assets/logo.png" alt="ScribbleAI logo" onerror="this.src='assets/logo.png'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+    </div>
     <span>ScribbleAI</span>
   </a>
   <div id="navCta">
@@ -115,8 +123,9 @@
   </div>
 
   <div class="admin-box" id="adminPanel">
-    <h3>Publish New Changelog</h3>
+    <h3 id="panelFormTitle">Publish New Changelog</h3>
     <form id="changelogForm">
+      <input type="hidden" id="editLogId" value="" />
       <div class="form-group">
         <label>Update Title</label>
         <input type="text" id="titleInput" placeholder="e.g., Real-time Postgres databases are live" required />
@@ -125,7 +134,10 @@
         <label>Details & Feature Log</label>
         <textarea id="descInput" rows="5" placeholder="Describe what changed..." required></textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Publish Changelog</button>
+      <div style="display:flex; gap:12px;">
+        <button type="submit" class="btn btn-primary" id="submitFormBtn">Publish Changelog</button>
+        <button type="button" class="btn btn-outline" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
+      </div>
     </form>
   </div>
 
@@ -151,7 +163,8 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getDatabase, ref, push, set, onValue, remove, increment, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  import { getDatabase, ref, push, set, onValue, remove, increment, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getDatabase as getFbDatabase, ref as dbRef, push as dbPush, set as dbSet, onValue as dbOnValue, remove as dbRemove, increment as dbIncrement, update as dbUpdate } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
@@ -166,7 +179,7 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getDatabase(app);
+  const db = getFbDatabase(app);
   const provider = new GoogleAuthProvider();
 
   const ADMIN_EMAIL = "imcrabfr@gmail.com";
@@ -184,7 +197,10 @@
           <span style="font-size:14px;color:var(--muted)">${user.email}</span>
           <button class="btn btn-outline" id="signOutBtn">Sign out</button>
         </div>`;
-      document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
+      document.getElementById('signOutBtn').addEventListener('click', () => {
+        resetFormState();
+        signOut(auth);
+      });
       
       // Strict Email Filter Conditional Guard
       adminPanel.style.display = (user.email === ADMIN_EMAIL) ? "block" : "none";
@@ -192,11 +208,12 @@
       navCta.innerHTML = `<button class="btn btn-primary" id="loginBtn">Sign in with Google</button>`;
       document.getElementById('loginBtn').addEventListener('click', () => signInWithPopup(auth, provider));
       adminPanel.style.display = "none";
+      resetFormState();
     }
     renderLogsFeed();
   });
 
-  // Action Routine: Dispatching New Entries
+  // Action Routine: Dispatching New Entries or Updating Existing Ones
   const changelogForm = document.getElementById('changelogForm');
   changelogForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -204,21 +221,48 @@
 
     const title = document.getElementById('titleInput').value.trim();
     const desc = document.getElementById('descInput').value.trim();
-    const newLogRef = push(ref(db, 'changelogs'));
+    const editLogId = document.getElementById('editLogId').value;
     
-    const payload = {
-      id: newLogRef.key,
-      title: title,
-      description: desc,
-      timestamp: Date.now(),
-      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      likes: 0,
-      dislikes: 0
-    };
+    if (editLogId) {
+      // Update pipeline
+      const targetRef = dbRef(db, `changelogs/${editLogId}`);
+      dbOnValue(targetRef, async (snap) => {
+        if (snap.exists()) {
+          const currentData = snap.val();
+          const payload = {
+            ...currentData,
+            title: title,
+            description: desc
+          };
+          await dbSet(targetRef, payload);
+          
+          // Sync with the announcement modal if it is active
+          dbOnValue(dbRef(db, 'latest_update'), async (lSnap) => {
+            if (lSnap.exists() && lSnap.val().id === editLogId) {
+              await dbSet(dbRef(db, 'latest_update'), payload);
+            }
+          }, { onlyOnce: true });
+        }
+      }, { onlyOnce: true });
+      
+      resetFormState();
+    } else {
+      // Creation pipeline
+      const newLogRef = dbPush(dbRef(db, 'changelogs'));
+      const payload = {
+        id: newLogRef.key,
+        title: title,
+        description: desc,
+        timestamp: Date.now(),
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        likes: 0,
+        dislikes: 0
+      };
 
-    await set(newLogRef, payload);
-    await set(ref(db, 'latest_update'), payload);
-    changelogForm.reset();
+      await dbSet(newLogRef, payload);
+      await dbSet(dbRef(db, 'latest_update'), payload);
+      changelogForm.reset();
+    }
   });
 
   // Action Routine: Increment Feedback Mechanics
@@ -228,13 +272,13 @@
       return;
     }
     const nodes = {};
-    nodes[`changelogs/${id}/${type}`] = increment(1);
+    nodes[`changelogs/${id}/${type}`] = dbIncrement(1);
     
-    onValue(ref(db, 'latest_update'), async (snap) => {
+    dbOnValue(dbRef(db, 'latest_update'), async (snap) => {
       if (snap.exists() && snap.val().id === id) {
-        nodes[`latest_update/${type}`] = increment(1);
+        nodes[`latest_update/${type}`] = dbIncrement(1);
       }
-      await update(ref(db), nodes);
+      await dbUpdate(dbRef(db), nodes);
       localStorage.setItem(`voted_${id}`, type);
     }, { onlyOnce: true });
   };
@@ -244,17 +288,65 @@
     if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
     if (!confirm("Are you sure you want to permanently delete this release log entry?")) return;
 
-    await remove(ref(db, `changelogs/${id}`));
-    onValue(ref(db, 'latest_update'), async (snap) => {
+    await dbRemove(dbRef(db, `changelogs/${id}`));
+    dbOnValue(dbRef(db, 'latest_update'), async (snap) => {
       if (snap.exists() && snap.val().id === id) {
-        await remove(ref(db, 'latest_update'));
+        await dbRemove(dbRef(db, 'latest_update'));
+      }
+    }, { onlyOnce: true });
+    
+    if(document.getElementById('editLogId').value === id) {
+      resetFormState();
+    }
+  };
+
+  // Action Routine: Prepare layout for update changes
+  window.setupEditLog = function(id, title, desc) {
+    if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+    
+    document.getElementById('editLogId').value = id;
+    document.getElementById('titleInput').value = title;
+    document.getElementById('descInput').value = desc;
+    
+    document.getElementById('panelFormTitle').textContent = "Modify Changelog Entry";
+    document.getElementById('submitFormBtn').textContent = "Save Changes";
+    document.getElementById('cancelEditBtn').style.display = "inline-flex";
+    
+    document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Action Routine: Force reannounce payload downstream
+  window.reannounceLog = function(id) {
+    if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+    if (!confirm("Reannounce this update to all users? This will trigger the notification modal again.")) return;
+
+    dbOnValue(dbRef(db, `changelogs/${id}`), async (snap) => {
+      if (snap.exists()) {
+        const payload = snap.val();
+        // Modify the id inside localstorage verification loop by mapping an operational iteration
+        const operationalPayload = {
+          ...payload,
+          id: payload.id + "_" + Date.now() // Appending unique string allows bypassing the 'seen_changelog_id' check
+        };
+        await dbSet(dbRef(db, 'latest_update'), operationalPayload);
       }
     }, { onlyOnce: true });
   };
 
+  // UI Engine: Reset Management State Elements
+  function resetFormState() {
+    changelogForm.reset();
+    document.getElementById('editLogId').value = "";
+    document.getElementById('panelFormTitle').textContent = "Publish New Changelog";
+    document.getElementById('submitFormBtn').textContent = "Publish Changelog";
+    document.getElementById('cancelEditBtn').style.display = "none";
+  }
+  
+  document.getElementById('cancelEditBtn').addEventListener('click', resetFormState);
+
   // UI Engine: Core Log Rendering
   function renderLogsFeed() {
-    onValue(ref(db, 'changelogs'), (snapshot) => {
+    dbOnValue(dbRef(db, 'changelogs'), (snapshot) => {
       const container = document.getElementById('changelogContainer');
       if (!snapshot.exists()) {
         container.innerHTML = `<p style="text-align: center; color: var(--muted);">No platform updates published yet.</p>`;
@@ -264,11 +356,22 @@
       const list = Object.values(snapshot.val()).sort((a, b) => b.timestamp - a.timestamp);
       const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
 
-      container.innerHTML = list.map(log => `
+      container.innerHTML = list.map(log => {
+        // Safe string extraction handling to prevent breaking HTML rendering injections
+        const cleanTitle = log.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        const cleanDesc = log.description.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        
+        return `
         <div class="changelog-item">
           <div class="changelog-meta">
             <span class="changelog-date">${log.date}</span>
-            ${isAdmin ? `<button class="btn btn-danger" onclick="deleteLog('${log.id}')">Delete Entry</button>` : ''}
+            ${isAdmin ? `
+              <div class="changelog-admin-actions">
+                <button class="btn btn-info" onclick="reannounceLog('${log.id}')">📢 Reannounce</button>
+                <button class="btn btn-warn" onclick="setupEditLog('${log.id}', '${cleanTitle}', '${cleanDesc}')">✏️ Edit</button>
+                <button class="btn btn-danger" onclick="deleteLog('${log.id}')">Delete Entry</button>
+              </div>
+            ` : ''}
           </div>
           <h2 class="changelog-title">${log.title}</h2>
           <p class="changelog-body">${log.description}</p>
@@ -277,13 +380,13 @@
             <button class="vote-btn" onclick="voteLog('${log.id}', 'dislikes')">👎 Dislike (${log.dislikes || 0})</button>
           </div>
         </div>
-      `).join('');
+      `}).join('');
     });
   }
 
   // UI Engine: Announcement Banner Activation Tracker
   const popup = document.getElementById('announcementPopup');
-  onValue(ref(db, 'latest_update'), (snapshot) => {
+  dbOnValue(dbRef(db, 'latest_update'), (snapshot) => {
     if (snapshot.exists()) {
       const updateData = snapshot.val();
       const localCacheId = localStorage.getItem('seen_changelog_id');
@@ -292,9 +395,12 @@
         document.getElementById('popupTitle').textContent = updateData.title;
         document.getElementById('popupBody').textContent = updateData.description;
         
+        // Extract authentic structural id in case it contains our administrative reannounce modifier hash
+        const functionalId = updateData.id.split('_')[0];
+        
         document.getElementById('popupInteractionZone').innerHTML = `
-          <button class="vote-btn" style="flex:1; justify-content:center;" onclick="voteLog('${updateData.id}', 'likes')">👍 Like (${updateData.likes || 0})</button>
-          <button class="vote-btn" style="flex:1; justify-content:center;" onclick="voteLog('${updateData.id}', 'dislikes')">👎 Dislike (${updateData.dislikes || 0})</button>
+          <button class="vote-btn" style="flex:1; justify-content:center;" onclick="voteLog('${functionalId}', 'likes')">👍 Like (${updateData.likes || 0})</button>
+          <button class="vote-btn" style="flex:1; justify-content:center;" onclick="voteLog('${functionalId}', 'dislikes')">👎 Dislike (${updateData.dislikes || 0})</button>
         `;
         popup.classList.add('active');
 
