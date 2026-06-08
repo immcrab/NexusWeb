@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#1A1A1A" />
+<title>ScribbleAI | Build better</title>
+<meta name="description" content="ScribbleAI builder lets you build modern websites and apps by chatting with AI. Login, deploy, and ship faster.">
+<meta name="robots" content="index, follow">
+<meta property="og:site_name" content="ScribbleAI Studio">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://scribbleai.dev/">
+<meta property="og:title" content="Transform Your Workflow with ScribbleAI Studio">
+<meta property="og:description" content="Discover the tools and framework configurations built to optimize efficiency and upgrade interface scalability.">
+<meta property="og:image" content="https://scribbleai.dev/assets/logo.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A sleek visual preview showcase of the ScribbleAI software dashboard interface.">
+<link rel="icon" href="assets/logo.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@1&family=Instrument+Serif&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TFZPC07B0B"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-TFZPC07B0B');
+</script>
+<link rel="stylesheet" href="assets/home.css">
+
+<style>
+  /* Extra Auth Overlay Styles from chat.html */
+  .auth-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; display: none; align-items: center; justify-content: center;
+    z-index: 10001; opacity: 0; transition: opacity 0.4s ease;
+  }
+  .auth-card {
+    background: #111; padding: 40px; border-radius: 16px; border: 1px solid #222;
+    text-align: center; max-width: 400px; width: 90%; font-family: 'Inter', sans-serif;
+  }
+  .auth-logo { font-size: 24px; font-weight: 800; margin-bottom: 8px; color: #fff; }
+  .auth-logo .serif { font-family: 'Instrument Serif', serif; font-style: italic; }
+  .auth-subtitle { color: #888; font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+  .legal-checkbox-container {
+    display: flex; gap: 10px; text-align: left; font-size: 12px; color: #aaa;
+    line-height: 1.5; margin-bottom: 24px; align-items: flex-start;
+  }
+  .legal-checkbox-container input { margin-top: 3px; }
+  .legal-checkbox-container a { color: #fff; text-decoration: underline; }
+  .google-sign-in-btn {
+    width: 100%; padding: 12px; background: #fff; color: #000; border: none;
+    border-radius: 8px; font-weight: 600; display: flex; align-items: center;
+    justify-content: center; gap: 10px; cursor: pointer; transition: all 0.2s;
+  }
+  .google-sign-in-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+  .google-sign-in-btn:not(:disabled):hover { background: #e5e5e5; }
+
+  /* Notification Box Container (Imported from changelog.html) */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 10002; padding: 20px; }
+  .modal-overlay.active { display: flex; }
+  .modal { width: 100%; max-width: 460px; background: #242424; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 36px; position: relative; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); font-family: 'Inter', sans-serif; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #A0A0A0; cursor: pointer; }
+  .modal-close:hover { color: #fff; }
+  .modal-badge { display:inline-block; padding:4px 12px; background:rgba(39, 118, 245, 0.1); color:#2776F5; font-size:12px; font-weight:700; border-radius:999px; margin-bottom:16px; border:1px solid rgba(39, 118, 245, 0.3); }
+  
+  .vote-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 500; color: #A0A0A0; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; flex: 1; }
+  .vote-btn:hover { color: #fff; border-color: rgba(255, 255, 255, 0.2); background: rgba(255,255,255,0.08); }
+</style>
+</head>
+<body>
+
+<nav>
+   <a href="" class="logo">
+    <div class="logo-mark">
+      <img src="assets/logo.png" alt="ScribbleAI logo" onerror="this.src='assets/logo.png'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+    </div>
+    <span>ScribbleAI</span>
+  </a>
+  <div class="nav-links">
+  <a href="#">Enterprise</a>
+  <a href="#">Docs</a>
+  <a href="https://discord.gg/MqxDBjFrab" target="_blank" rel="noopener noreferrer" class="nav-discord-link">
+    <svg width="16" height="16" viewBox="0 0 127.14 96.36" fill="currentColor" style="vertical-align: middle; margin-right: 4px;"><path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a77.7,77.7,0,0,0,6.63-10.85,68.43,68.43,0,0,1-10.5-5c.88-.65,1.72-1.34,2.51-2a75.58,75.58,0,0,0,73,0c.79.7,1.63,1.39,2.51,2a68.43,68.43,0,0,1-10.5,5,77.7,77.7,0,0,0,6.63,10.85,105.73,105.73,0,0,0,31-18.83C129.87,48.64,123.65,25.83,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.87,46,53.87,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.11,46,96.11,53,91,65.69,84.69,65.69Z"/></svg>
+    Discord
+  </a>
+</div>
+  <div class="nav-cta" id="navCta">
+    <button class="btn btn-ghost" onclick="openModal('login')">Sign in</button>
+    <button class="btn btn-primary" onclick="window.location.href='/chat/chat.html'">Get started</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="new-chat-container">
+    <a href="/chat/chat.html" class="btn btn-primary btn-massive">
+      Start New Chat
+    </a>
+  </div>
+  <h1>Build your <span class="serif">DREAMS</span></h1>
+  <p class="sub">ScribbleAI, Build Anything.</p>
+
+  <div class="prompt-wrap">
+    <div class="prompt-inner">
+      <textarea id="promptArea" placeholder="Describe the site you want to build…"></textarea>
+      <div class="prompt-tools">
+        <div class="chip-row">
+          <button class="chip">＋ Attach</button>
+          <button class="chip">◇ Templates</button>
+          <button class="chip">◎ Public</button>
+        </div>
+        <button class="send-btn" onclick="submitToBuilder()" aria-label="Generate">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="suggestions">
+    <button class="suggestion" onclick="fillPrompt('A SaaS landing page for an AI scheduling assistant')">SaaS landing page</button>
+    <button class="suggestion" onclick="fillPrompt('A portfolio site for an interior designer')">Designer portfolio</button>
+    <button class="suggestion" onclick="fillPrompt('An e-commerce store for handmade ceramics')">Ceramics shop</button>
+    <button class="suggestion" onclick="fillPrompt('A community forum with login and posts')">Community forum</button>
+    <div style="margin-top: 24px; text-align: center; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+  <a href="msb" class="btn btn-outline">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09(14)c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+    Make Scribble Better
+  </a>
+  <a href="https://discord.gg/MqxDBjFrab" target="_blank" rel="noopener noreferrer" class="btn btn-discord">
+    <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor" style="vertical-align: middle; margin-right: 4px;"><path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a77.7,77.7,0,0,0,6.63-10.85,68.43,68.43,0,0,1-10.5-5c.88-.65,1.72-1.34,2.51-2a75.58,75.58,0,0,0,73,0c.79.7,1.63,1.39,2.51,2a68.43,68.43,0,0,1-10.5,5,77.7,77.7,0,0,0,6.63,10.85,105.73,105.73,0,0,0,31-18.83C129.87,48.64,123.65,25.83,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.87,46,53.87,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.11,46,96.11,53,91,65.69,84.69,65.69Z"/></svg>
+    Join our Discord Community
+  </a>
+</div>
+  </div>
+</header>
+
+<div class="cta-section">
+  <div class="cta-box">
+    <div class="section-eyebrow">Start building</div>
+    <h2>Bring your ideas to life <span class="serif">in seconds.</span></h2>
+    <p class="section-sub" style="margin-top:16px;margin-bottom:32px">Be one of the first to build with ScribbleAI.</p>
+    <button class="btn btn-primary btn-lg" onclick="window.location.href='/chat/chat.html'">Get started — it's free</button>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-wrap">
+    <div>
+      <a href="" class="logo">
+        <div class="logo-mark">
+          <img src="assets/logo.png" alt="ScribbleAI logo" onerror="this.src='assets/logo.png'" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+        </div>
+        <span>ScribbleAI</span>
+      </a>
+      <p style="max-width:280px;line-height:1.6;margin-top:20px">Web development, reimagined. Build, deploy, and scale modern websites with a single conversation.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul><li><a href="changelog.html">Changelog</a></li></ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul>
+    </div>
+    <div>
+      <h4>Resources</h4>
+      <ul><li><a href="#">Docs</a></li><li><a href="#">Templates</a></li><li><a href="#">Community</a></li><li><a href="#">Support</a></li></ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 ScribbleAI. All rights reserved.</div>
+    <div>Build Anything.</div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="changelogGatePopup">
+  <div class="modal">
+    <button class="modal-close" onclick="dismissChangelogPopup()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-badge">✨ LATEST PATCH</div>
+    <h3 id="homePopupTitle" style="font-size: 24px; margin: 0 0 12px 0; color: #fff; font-weight: 700;"></h3>
+    <p id="homePopupBody" style="color: #A0A0A0; font-size: 15px; line-height: 1.6; margin-bottom: 24px; white-space: pre-wrap;"></p>
+    
+    <div id="homePopupInteractionZone" style="display:flex; gap:12px; margin-bottom:20px;"></div>
+    <button class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="dismissChangelogPopup()">Dismiss Announcement</button>
+  </div>
+</div>
+
+<script>
+  // FIREBASE SYSTEM INTEGRATION FROM CHAT.HTML
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
+    authDomain: "sitedropio.firebaseapp.com",
+    databaseURL: "https://sitedropio-default-rtdb.firebaseio.com",
+    projectId: "sitedropio",
+    storageBucket: "sitedropio.firebasestorage.app",
+    messagingSenderId: "950561906473",
+    appId: "1:950561906473:web:45822a85f188c28b20e138",
+    measurementId: "G-BY119K5RS2"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const authSystem = firebase.auth();
+  const dbSystem = firebase.database();
+
+  let isLocalhostEnvironment = false;
+  let workspaceUsername = "User";
+  let hasBypassedGateLocally = false;
+
+  const hostname = window.location.hostname;
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '') {
+    isLocalhostEnvironment = true;
+  }
+
+  // RUN SEQUENTIAL INTRO ANIMATION ON WINDOW CONTENT READY
+  window.addEventListener('DOMContentLoaded', () => {
+    initializeAuthenticationProcedures();
+  });
+
+  function initializeAuthenticationProcedures() {
+    const persistentTermsAgreement = localStorage.getItem('scribble_studio_agreed_terms');
+    if (persistentTermsAgreement === 'true') {
+      if (isLocalhostEnvironment) {
+        handleAuthorizedStateInit();
+      } else {
+        authSystem.onAuthStateChanged(user => {
+          if (user) handleAuthorizedStateInit(user);
+          else showAuthScreen();
+        });
+      }
+    } else {
+      showAuthScreen();
+    }
+  }
+
+  if (isLocalhostEnvironment) {
+    const googleIcon = document.getElementById('googleIconSvg');
+    if(googleIcon) googleIcon.style.display = 'none';
+    const authText = document.getElementById('authBtnText');
+    if (authText) authText.innerText = "Enter Local Dev Workspace";
+  }
+
+  function toggleAuthBtnState() {
+    const isChecked = document.getElementById('legalGateCheck').checked;
+    document.getElementById('authSubmitBtn').disabled = !isChecked;
+  }
+
+  function triggerGateSubmission() {
+    localStorage.setItem('scribble_studio_agreed_terms', 'true');
+    if (isLocalhostEnvironment) {
+      hasBypassedGateLocally = true;
+      handleAuthorizedStateInit();
+    } else {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      authSystem.signInWithPopup(provider)
+        .then(res => handleAuthorizedStateInit(res.user))
+        .catch(err => alert("Auth execution failure: " + err.message));
+    }
+  }
+
+  function showAuthScreen() {
+    const overlay = document.getElementById('authScreen');
+    if(overlay) {
+      overlay.style.display = 'flex';
+      setTimeout(() => overlay.style.opacity = '1', 10);
+    }
+  }
+
+  function handleAuthorizedStateInit(user = null) {
+    const overlay = document.getElementById('authScreen');
+    if (overlay) {
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.style.display = 'none', 400);
+    }
+    
+    if (isLocalhostEnvironment) {
+      const savedUser = localStorage.getItem('scribble_studio_username') || "Developer";
+      workspaceUsername = savedUser;
+    } else if (user) {
+      workspaceUsername = user.displayName || "User";
+    }
+    fetchLatestChangelogData();
+  }
+
+  // ORIGINAL INDEX.HTML SCRIPTING ARCHITECTURE
+  function fillPrompt(text) {
+    document.getElementById('promptArea').value = text;
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+     // Fix for the button link inside suggestions block pointing to the wrong subdirectory
+     const makeScribbleBetterBtn = document.querySelector('a[href="msb/index.html"]');
+     if (makeScribbleBetterBtn) {
+         makeScribbleBetterBtn.setAttribute('href', 'changelog.html');
+     }
+  });
+
+  function submitToBuilder() {
+    const val = document.getElementById('promptArea').value;
+    if(!val.trim()) return alert("Please enter a valid description string.");
+    window.location.href = `/chat/chat.html?prompt=${encodeURIComponent(val)}`;
+  }
+
+  function openModal(type) {
+    const modal = document.getElementById('authModal');
+    const body = document.getElementById('modalBody');
+    modal.style.display = 'flex';
+    if(type === 'login') {
+      body.innerHTML = `<h3>Welcome Back</h3><p style="color:#888;font-size:14px;margin-bottom:20px">Sign in to sync your active sandboxes.</p><button class="btn btn-primary" style="width:100%" onclick="triggerGateSubmission()">Continue with Google</button>`;
+    } else {
+      body.innerHTML = `<h3>Create Account</h3><p style="color:#888;font-size:14px;margin-bottom:20px">Get started building apps inside minutes.</p><button class="btn btn-primary" style="width:100%" onclick="triggerGateSubmission()">Register via Google Auth</button>`;
+    }
+  }
+
+  function closeModal() {
+    document.getElementById('authModal').style.display = 'none';
+  }
+
+  function fetchLatestChangelogData() {
+    dbSystem.ref('latest_update').on('value', snapshot => {
+        const liveData = snapshot.val();
+        const popupElement = document.getElementById('changelogGatePopup');
+        
+        if (liveData && liveData.id) {
+          const seenId = localStorage.getItem('seen_changelog_id');
+          if (seenId !== liveData.id) {
+            triggerChangelogNotificationPopup(liveData);
+          } else {
+            if(popupElement) popupElement.classList.remove('active');
+          }
+        }
+    }, err => console.error("Error matching runtime snapshot context:", err));
+  }
+
+  function triggerChangelogNotificationPopup(liveData) {
+    const popupElement = document.getElementById('changelogGatePopup');
+    if (liveData && liveData.id) {
+      document.getElementById('homePopupTitle').textContent = liveData.title;
+      document.getElementById('homePopupBody').textContent = liveData.description;
+      
+      document.getElementById('homePopupInteractionZone').innerHTML = `
+        <button class="vote-btn" onclick="voteLog('${liveData.id}', 'likes')">👍 Like (${liveData.likes || 0})</button>
+        <button class="vote-btn" onclick="voteLog('${liveData.id}', 'dislikes')">👎 Dislike (${liveData.dislikes || 0})</button>
+      `;
+      popupElement.classList.add('active'); // Activates the modal overlay display
+
+      window.dismissChangelogPopup = () => {
+        popupElement.classList.remove('active');
+        localStorage.setItem('seen_changelog_id', liveData.id);
+      };
+    }
+  }
+
+  function voteLog(logId, type) {
+    const votedBefore = localStorage.getItem(`voted_${logId}`);
+    if (votedBefore) return alert("You already evaluated this runtime adjustment instance.");
+    
+    const updates = {};
+    updates[`changelogs/${logId}/${type}`] = firebase.database.ServerValue.increment(1);
+    updates[`latest_update/${type}`] = firebase.database.ServerValue.increment(1);
+
+    dbSystem.ref().update(updates)
+      .then(() => {
+        localStorage.setItem(`voted_${logId}`, type);
+        alert("Thank you for syncing response metric arrays!");
+      })
+      .catch(err => alert("Error syncing feedback metric payload: " + err.message));
+  }
+</script>
+</body>
+</html>
