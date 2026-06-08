@@ -65,33 +65,21 @@
   }
   .google-sign-in-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
   .google-sign-in-btn:not(:disabled):hover { background: #e5e5e5; }
+
+  /* Notification Box Container (Imported from changelog.html) */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 10002; padding: 20px; }
+  .modal-overlay.active { display: flex; }
+  .modal { width: 100%; max-width: 460px; background: #242424; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 36px; position: relative; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); font-family: 'Inter', sans-serif; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: #A0A0A0; cursor: pointer; }
+  .modal-close:hover { color: #fff; }
+  .modal-badge { display:inline-block; padding:4px 12px; background:rgba(39, 118, 245, 0.1); color:#2776F5; font-size:12px; font-weight:700; border-radius:999px; margin-bottom:16px; border:1px solid rgba(39, 118, 245, 0.3); }
+  
+  .vote-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 500; color: #A0A0A0; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; flex: 1; }
+  .vote-btn:hover { color: #fff; border-color: rgba(255, 255, 255, 0.2); background: rgba(255,255,255,0.08); }
 </style>
 </head>
 <body>
-
-<div class="splash-screen" id="splashScreen">
-  <div class="splash-logo" id="splashLogoContainer"></div>
-</div>
-
-<div class="auth-overlay" id="authScreen">
-  <div class="auth-card">
-    <div class="auth-logo">ScribbleAI <span class="serif">Chat</span></div>
-    <div class="auth-subtitle">Unlock advanced architectural generation workspaces and sandboxes.</div>
-    
-    <div class="legal-checkbox-container">
-      <input type="checkbox" id="legalGateCheck" onchange="toggleAuthBtnState()" />
-      <label for="legalGateCheck">
-        By checking this box, I explicitly verify that I read, understand, and agree to the ScribbleAI binding 
-        <a href="legal" target="_blank">Privacy Framework &amp; Terms of Service Architecture</a>.
-      </label>
-    </div>
-
-    <button class="google-sign-in-btn" id="authSubmitBtn" onclick="triggerGateSubmission()" disabled>
-      <svg width="18" height="18" viewBox="0 0 24 24" id="googleIconSvg"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22c-.22-.67-.35-1.37-.35-2.09z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      <span id="authBtnText">Continue with Google</span>
-    </button>
-  </div>
-</div>
 
 <nav>
    <a href="" class="logo">
@@ -148,8 +136,8 @@
     <button class="suggestion" onclick="fillPrompt('An e-commerce store for handmade ceramics')">Ceramics shop</button>
     <button class="suggestion" onclick="fillPrompt('A community forum with login and posts')">Community forum</button>
     <div style="margin-top: 24px; text-align: center; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-  <a href="msb/index.html" class="btn btn-outline">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+  <a href="changelog.html" class="btn btn-outline">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09(14)c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
     Make Scribble Better
   </a>
   <a href="https://discord.gg/MqxDBjFrab" target="_blank" rel="noopener noreferrer" class="btn btn-discord">
@@ -314,15 +302,17 @@
   </div>
 </div>
 
-<div class="home-popup-overlay" id="changelogGatePopup" style="display:none;">
-  <div class="home-popup-card">
-    <div class="home-popup-header">
-      <div class="home-popup-icon">⚡</div>
-      <h3 id="homePopupTitle" style="margin:0;font-size:16px;font-weight:700;color:#FFF">Latest Platform Updates</h3>
-    </div>
-    <p id="homePopupBody" style="margin:12px 0 20px 0;font-size:13px;color:#A0A0A0;line-height:1.5"></p>
-    <div id="homePopupInteractionZone" style="display:flex;gap:10px"></div>
-    <button class="home-popup-close-bar" onclick="dismissChangelogPopup()">Acknowledge & Dismiss</button>
+<div class="modal-overlay" id="changelogGatePopup">
+  <div class="modal">
+    <button class="modal-close" onclick="dismissChangelogPopup()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-badge">✨ LATEST PATCH</div>
+    <h3 id="homePopupTitle" style="font-size: 24px; margin: 0 0 12px 0; color: #fff; font-weight: 700;"></h3>
+    <p id="homePopupBody" style="color: #A0A0A0; font-size: 15px; line-height: 1.6; margin-bottom: 24px; white-space: pre-wrap;"></p>
+    
+    <div id="homePopupInteractionZone" style="display:flex; gap:12px; margin-bottom:20px;"></div>
+    <button class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="dismissChangelogPopup()">Dismiss Announcement</button>
   </div>
 </div>
 
@@ -354,23 +344,7 @@
 
   // RUN SEQUENTIAL INTRO ANIMATION ON WINDOW CONTENT READY
   window.addEventListener('DOMContentLoaded', () => {
-    const splashContainer = document.getElementById('splashLogoContainer');
-    const letters = ['S','c','r','i','b','b','l','e','A','I'];
-    letters.forEach((char, idx) => {
-      const span = document.createElement('span');
-      span.className = 'splash-letter';
-      span.innerText = char;
-      span.style.animationDelay = `${idx * 0.06}s`;
-      if(char === 'A' || char === 'I') span.className += ' serif';
-      splashContainer.appendChild(span);
-    });
-
-    setTimeout(() => {
-      const splash = document.getElementById('splashScreen');
-      splash.style.opacity = '0';
-      setTimeout(() => splash.style.display = 'none', 500);
-      initializeAuthenticationProcedures();
-    }, 1100);
+    initializeAuthenticationProcedures();
   });
 
   function initializeAuthenticationProcedures() {
@@ -392,7 +366,8 @@
   if (isLocalhostEnvironment) {
     const googleIcon = document.getElementById('googleIconSvg');
     if(googleIcon) googleIcon.style.display = 'none';
-    document.getElementById('authBtnText').innerText = "Enter Local Dev Workspace";
+    const authText = document.getElementById('authBtnText');
+    if (authText) authText.innerText = "Enter Local Dev Workspace";
   }
 
   function toggleAuthBtnState() {
@@ -415,14 +390,18 @@
 
   function showAuthScreen() {
     const overlay = document.getElementById('authScreen');
-    overlay.style.display = 'flex';
-    setTimeout(() => overlay.style.opacity = '1', 10);
+    if(overlay) {
+      overlay.style.display = 'flex';
+      setTimeout(() => overlay.style.opacity = '1', 10);
+    }
   }
 
   function handleAuthorizedStateInit(user = null) {
     const overlay = document.getElementById('authScreen');
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.style.display = 'none', 400);
+    if (overlay) {
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.style.display = 'none', 400);
+    }
     
     if (isLocalhostEnvironment) {
       const savedUser = localStorage.getItem('scribble_studio_username') || "Developer";
@@ -430,7 +409,6 @@
     } else if (user) {
       workspaceUsername = user.displayName || "User";
     }
-    // Check and trigger the standard changelog popup after authorization
     fetchLatestChangelogData();
   }
 
@@ -438,6 +416,14 @@
   function fillPrompt(text) {
     document.getElementById('promptArea').value = text;
   }
+
+  document.addEventListener("DOMContentLoaded", function() {
+     // Fix for the button link inside suggestions block pointing to the wrong subdirectory
+     const makeScribbleBetterBtn = document.querySelector('a[href="msb/index.html"]');
+     if (makeScribbleBetterBtn) {
+         makeScribbleBetterBtn.setAttribute('href', 'changelog.html');
+     }
+  });
 
   function submitToBuilder() {
     const val = document.getElementById('promptArea').value;
@@ -461,16 +447,19 @@
   }
 
   function fetchLatestChangelogData() {
-    dbSystem.ref('scribble_changelog_live').once('value')
-      .then(snapshot => {
+    dbSystem.ref('latest_update').on('value', snapshot => {
         const liveData = snapshot.val();
+        const popupElement = document.getElementById('changelogGatePopup');
+        
         if (liveData && liveData.id) {
           const seenId = localStorage.getItem('seen_changelog_id');
           if (seenId !== liveData.id) {
             triggerChangelogNotificationPopup(liveData);
+          } else {
+            if(popupElement) popupElement.classList.remove('active');
           }
         }
-      }).catch(err => console.error("Error matching runtime snapshot context:", err));
+    }, err => console.error("Error matching runtime snapshot context:", err));
   }
 
   function triggerChangelogNotificationPopup(liveData) {
@@ -480,13 +469,13 @@
       document.getElementById('homePopupBody').textContent = liveData.description;
       
       document.getElementById('homePopupInteractionZone').innerHTML = `
-        <button style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; background:rgba(255,255,255,0.05); padding:10px; border-radius:6px; font-size:13px; font-weight:500; color:#A0A0A0; border:1px solid transparent; cursor:pointer;" onclick="voteLog('${liveData.id}', 'likes')">👍 Like (${liveData.likes || 0})</button>
-        <button style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; background:rgba(255,255,255,0.05); padding:10px; border-radius:6px; font-size:13px; font-weight:500; color:#A0A0A0; border:1px solid transparent; cursor:pointer;" onclick="voteLog('${liveData.id}', 'dislikes')">👎 Dislike (${liveData.dislikes || 0})</button>
+        <button class="vote-btn" onclick="voteLog('${liveData.id}', 'likes')">👍 Like (${liveData.likes || 0})</button>
+        <button class="vote-btn" onclick="voteLog('${liveData.id}', 'dislikes')">👎 Dislike (${liveData.dislikes || 0})</button>
       `;
-      popupElement.style.display = 'flex';
+      popupElement.classList.add('active'); // Activates the modal overlay display
 
       window.dismissChangelogPopup = () => {
-        popupElement.style.display = 'none';
+        popupElement.classList.remove('active');
         localStorage.setItem('seen_changelog_id', liveData.id);
       };
     }
@@ -496,13 +485,16 @@
     const votedBefore = localStorage.getItem(`voted_${logId}`);
     if (votedBefore) return alert("You already evaluated this runtime adjustment instance.");
     
-    dbSystem.ref(`scribble_changelog_live/${type}`).transaction(current => (current || 0) + 1)
+    const updates = {};
+    updates[`changelogs/${logId}/${type}`] = firebase.database.ServerValue.increment(1);
+    updates[`latest_update/${type}`] = firebase.database.ServerValue.increment(1);
+
+    dbSystem.ref().update(updates)
       .then(() => {
-        localStorage.setItem(`voted_${logId}`, 'true');
+        localStorage.setItem(`voted_${logId}`, type);
         alert("Thank you for syncing response metric arrays!");
-        // Refresh component context
-        dbSystem.ref('scribble_changelog_live').once('value').then(snap => triggerChangelogNotificationPopup(snap.val()));
-      });
+      })
+      .catch(err => alert("Error syncing feedback metric payload: " + err.message));
   }
 </script>
 </body>
