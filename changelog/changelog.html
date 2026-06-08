@@ -163,8 +163,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getDatabase, ref, push, set, onValue, remove, increment, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getDatabase as getFbDatabase, ref as dbRef, push as dbPush, set as dbSet, onValue as dbOnValue, remove as dbRemove, increment as dbIncrement, update as dbUpdate } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  import { getDatabase, ref, push, set, onValue, remove, increment, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
@@ -179,7 +178,7 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getFbDatabase(app);
+  const db = getDatabase(app);
   const provider = new GoogleAuthProvider();
 
   const ADMIN_EMAIL = "imcrabfr@gmail.com";
@@ -225,8 +224,8 @@
     
     if (editLogId) {
       // Update pipeline
-      const targetRef = dbRef(db, `changelogs/${editLogId}`);
-      dbOnValue(targetRef, async (snap) => {
+      const targetRef = ref(db, `changelogs/${editLogId}`);
+      onValue(targetRef, async (snap) => {
         if (snap.exists()) {
           const currentData = snap.val();
           const payload = {
@@ -234,12 +233,12 @@
             title: title,
             description: desc
           };
-          await dbSet(targetRef, payload);
+          await set(targetRef, payload);
           
           // Sync with the announcement modal if it is active
-          dbOnValue(dbRef(db, 'latest_update'), async (lSnap) => {
+          onValue(ref(db, 'latest_update'), async (lSnap) => {
             if (lSnap.exists() && lSnap.val().id === editLogId) {
-              await dbSet(dbRef(db, 'latest_update'), payload);
+              await set(ref(db, 'latest_update'), payload);
             }
           }, { onlyOnce: true });
         }
@@ -248,7 +247,7 @@
       resetFormState();
     } else {
       // Creation pipeline
-      const newLogRef = dbPush(dbRef(db, 'changelogs'));
+      const newLogRef = push(ref(db, 'changelogs'));
       const payload = {
         id: newLogRef.key,
         title: title,
@@ -259,8 +258,8 @@
         dislikes: 0
       };
 
-      await dbSet(newLogRef, payload);
-      await dbSet(dbRef(db, 'latest_update'), payload);
+      await set(newLogRef, payload);
+      await set(ref(db, 'latest_update'), payload);
       changelogForm.reset();
     }
   });
@@ -272,13 +271,13 @@
       return;
     }
     const nodes = {};
-    nodes[`changelogs/${id}/${type}`] = dbIncrement(1);
+    nodes[`changelogs/${id}/${type}`] = increment(1);
     
-    dbOnValue(dbRef(db, 'latest_update'), async (snap) => {
+    onValue(ref(db, 'latest_update'), async (snap) => {
       if (snap.exists() && snap.val().id === id) {
-        nodes[`latest_update/${type}`] = dbIncrement(1);
+        nodes[`latest_update/${type}`] = increment(1);
       }
-      await dbUpdate(dbRef(db), nodes);
+      await update(ref(db), nodes);
       localStorage.setItem(`voted_${id}`, type);
     }, { onlyOnce: true });
   };
@@ -288,10 +287,10 @@
     if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
     if (!confirm("Are you sure you want to permanently delete this release log entry?")) return;
 
-    await dbRemove(dbRef(db, `changelogs/${id}`));
-    dbOnValue(dbRef(db, 'latest_update'), async (snap) => {
+    await remove(ref(db, `changelogs/${id}`));
+    onValue(ref(db, 'latest_update'), async (snap) => {
       if (snap.exists() && snap.val().id === id) {
-        await dbRemove(dbRef(db, 'latest_update'));
+        await remove(ref(db, 'latest_update'));
       }
     }, { onlyOnce: true });
     
@@ -320,7 +319,7 @@
     if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
     if (!confirm("Reannounce this update to all users? This will trigger the notification modal again.")) return;
 
-    dbOnValue(dbRef(db, `changelogs/${id}`), async (snap) => {
+    onValue(ref(db, `changelogs/${id}`), async (snap) => {
       if (snap.exists()) {
         const payload = snap.val();
         // Modify the id inside localstorage verification loop by mapping an operational iteration
@@ -328,7 +327,7 @@
           ...payload,
           id: payload.id + "_" + Date.now() // Appending unique string allows bypassing the 'seen_changelog_id' check
         };
-        await dbSet(dbRef(db, 'latest_update'), operationalPayload);
+        await set(ref(db, 'latest_update'), operationalPayload);
       }
     }, { onlyOnce: true });
   };
@@ -346,7 +345,7 @@
 
   // UI Engine: Core Log Rendering
   function renderLogsFeed() {
-    dbOnValue(dbRef(db, 'changelogs'), (snapshot) => {
+    onValue(ref(db, 'changelogs'), (snapshot) => {
       const container = document.getElementById('changelogContainer');
       if (!snapshot.exists()) {
         container.innerHTML = `<p style="text-align: center; color: var(--muted);">No platform updates published yet.</p>`;
@@ -386,7 +385,7 @@
 
   // UI Engine: Announcement Banner Activation Tracker
   const popup = document.getElementById('announcementPopup');
-  dbOnValue(dbRef(db, 'latest_update'), (snapshot) => {
+  onValue(ref(db, 'latest_update'), (snapshot) => {
     if (snapshot.exists()) {
       const updateData = snapshot.val();
       const localCacheId = localStorage.getItem('seen_changelog_id');
