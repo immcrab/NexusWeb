@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make Scribble Better</title>
+  <link rel="stylesheet" href="../assets/home.css">
+  <link rel="icon" href="../assets/logo.png" type="image/x-icon">
+  <style>
+    .msb-container { max-width: 600px; margin: 120px auto 60px; padding: 40px; background: var(--bg-2); border: 1px solid var(--border-strong); border-radius: 16px; }
+    .auth-warning { background: rgba(255, 122, 122, 0.1); border: 1px solid #ff7a7a; color: #ff7a7a; padding: 16px; border-radius: 8px; margin-bottom: 24px; text-align: center; }
+    textarea { width: 100%; background: var(--bg); border: 1px solid var(--border-strong); border-radius: 8px; padding: 14px; color: var(--text); font-family: inherit; font-size: 15px; resize: vertical; min-height: 120px; outline: none; margin-top: 8px; }
+    textarea:focus { border-color: var(--accent); }
+    #submitBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+<nav>
+   <a href="../index.html" class="logo">
+    <div class="logo-mark"><img src="../assets/logo.png" alt="Logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" /></div>
+    <span>ScribbleAI</span>
+  </a>
+  <div class="nav-cta" id="navCta"></div>
+</nav>
+
+<div class="msb-container">
+  <h2>Make Scribble <span class="serif">Better.</span></h2>
+  <p class="section-sub" style="margin-bottom: 32px; font-size: 15px;">Have an idea? Let us know what features or improvements you'd like to see.</p>
+
+  <div id="authWarning" class="auth-warning" style="display: none;">
+    You must be logged in to submit an idea. <br><br>
+    <button class="btn btn-primary" id="loginBtn">Sign in with Google</button>
+  </div>
+
+  <form id="msbForm" onsubmit="event.preventDefault(); submitIdea();">
+    <div class="field">
+      <label>Idea Title</label>
+      <input type="text" id="ideaTitle" placeholder="e.g., Add dark mode toggle" required disabled />
+    </div>
+    <div class="field" style="margin-bottom: 24px;">
+      <label>Details & Use Case</label>
+      <textarea id="ideaDetails" placeholder="Describe how this feature would help you..." required disabled></textarea>
+    </div>
+    <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" style="width: 100%;" disabled>Submit Idea</button>
+    <p id="statusMsg" style="text-align: center; margin-top: 16px; font-size: 14px;"></p>
+  </form>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
+    authDomain: "sitedropio.firebaseapp.com",
+    databaseURL: "https://sitedropio-default-rtdb.firebaseio.com",
+    projectId: "sitedropio",
+    storageBucket: "sitedropio.firebasestorage.app",
+    messagingSenderId: "950561906473",
+    appId: "1:950561906473:web:45822a85f188c28b20e138"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
+  let currentUser = null;
+
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    const authWarning = document.getElementById('authWarning');
+    const inputs = [document.getElementById('ideaTitle'), document.getElementById('ideaDetails'), document.getElementById('submitBtn')];
+    const nav = document.getElementById('navCta');
+
+    if (user) {
+      authWarning.style.display = 'none';
+      inputs.forEach(el => el.disabled = false);
+      nav.innerHTML = `<button class="btn btn-outline" id="signOutBtn">Sign out</button>`;
+      document.getElementById('signOutBtn').onclick = () => signOut(auth);
+    } else {
+      authWarning.style.display = 'block';
+      inputs.forEach(el => el.disabled = true);
+      nav.innerHTML = ``;
+    }
+  });
+
+  document.getElementById('loginBtn').onclick = () => {
+    signInWithPopup(auth, new GoogleAuthProvider()).catch(err => console.error(err));
+  };
+
+  window.submitIdea = async function() {
+    if (!currentUser) return;
+    const btn = document.getElementById('submitBtn');
+    const title = document.getElementById('ideaTitle').value.trim();
+    const details = document.getElementById('ideaDetails').value.trim();
+    const msg = document.getElementById('statusMsg');
+
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
+
+    try {
+      await push(ref(db, 'msb_feedback'), {
+        uid: currentUser.uid,
+        name: currentUser.displayName || 'Anonymous',
+        email: currentUser.email,
+        title: title,
+        details: details,
+        status: 'unreviewed',
+        timestamp: serverTimestamp()
+      });
+      msg.style.color = '#4ade80';
+      msg.textContent = 'Idea submitted successfully! Thank you.';
+      document.getElementById('msbForm').reset();
+    } catch (e) {
+      msg.style.color = '#ff7a7a';
+      msg.textContent = 'Error submitting idea. Please try again.';
+      console.error(e);
+    } finally {
+      btn.textContent = 'Submit Idea';
+      btn.disabled = false;
+    }
+  };
+</script>
+</body>
+</html>

@@ -284,3 +284,50 @@
   text-decoration: none;
   /* This ensures it uses the same styles as your existing .btn-primary */
 }
+
+/* Splash Screen Overlay Containers */
+.splash-screen {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  background: #0a0a0a; /* Dark background matching the app theme */
+  display: flex; 
+  align-items: center;
+  justify-content: center; 
+  z-index: 100000; /* Keeps overlay above all other elements */
+  opacity: 1; 
+  transition: opacity 0.5s ease;
+}
+
+.splash-logo {
+  display: flex;
+  gap: 1px;
+}
+
+/* Individual Animating Letters */
+.splash-letter {
+  font-family: 'Inter', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInLetter 0.5s cubic-bezier(0.215, 0.610, 0.355, 1) forwards;
+}
+
+/* Serif font style override for 'A' and 'I' */
+.splash-letter.serif {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Letter entry keyframes */
+@keyframes slideInLetter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
