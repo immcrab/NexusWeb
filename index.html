@@ -89,9 +89,6 @@
     <span>ScribbleAI</span>
   </a>
   <div class="nav-links">
-  <a href="#features">Features</a>
-  <a href="#showcase">Showcase</a>
-  <a href="#pricing">Pricing</a>
   <a href="#">Enterprise</a>
   <a href="#">Docs</a>
   <a href="https://discord.gg/MqxDBjFrab" target="_blank" rel="noopener noreferrer" class="nav-discord-link">
@@ -101,13 +98,13 @@
 </div>
   <div class="nav-cta" id="navCta">
     <button class="btn btn-ghost" onclick="openModal('login')">Sign in</button>
-    <button class="btn btn-primary" onclick="openModal('signup')">Get started</button>
+    <button class="btn btn-primary" onclick="window.location.href='/chat/chat.html'">Get started</button>
   </div>
 </nav>
 
 <header class="hero">
   <div class="new-chat-container">
-    <a href="/chat" class="btn btn-primary btn-massive">
+    <a href="/chat/chat.html" class="btn btn-primary btn-massive">
       Start New Chat
     </a>
   </div>
@@ -148,120 +145,12 @@
   </div>
 </header>
 
-<section id="features">
-  <div class="section-head">
-    <div class="section-eyebrow">Platform</div>
-    <h2>Everything you need to <span class="serif">ship.</span></h2>
-    <p class="section-sub">From the first prompt to a live URL with paying customers. No setup, no glue code, no compromises.</p>
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5 12 2"/></svg></div>
-      <h3>AI that ships</h3>
-      <p>Multi-step agents that plan, build, and self-correct until your site actually works in production.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <h3>Auth, baked in</h3>
-      <p>Email, Google, magic links — wire up sign-in for your users in a single sentence.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></div>
-      <h3>Managed database</h3>
-      <p>A serverless Postgres comes with every project. Query it from the chat, no migrations required.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-      <h3>One-click deploy</h3>
-      <p>Every change goes live on a global edge network in under three seconds. Custom domains included.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-      <h3>Your code, your repo</h3>
-      <p>Two-way GitHub sync. Edit in ScribbleAI, edit in your IDE — both stay in perfect lockstep.</p>
-    </div>
-    <div class="card">
-      <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg></div>
-      <h3>Built for teams</h3>
-      <p>Real-time multiplayer editing, granular roles, SSO, and audit logs. Enterprise from day one.</p>
-    </div>
-  </div>
-</section>
-
-<section id="showcase">
-  <div class="section-head">
-    <div class="section-eyebrow">Showcase</div>
-    <h2>Made with <span class="serif">ScribbleAI.</span></h2>
-    <p class="section-sub">A glimpse of what teams shipped last week — from prompt to production in hours, not months.</p>
-  </div>
-
-  <div class="showcase">
-    <div class="show-card"><div class="label"><strong></strong><span></span></div></div>
-    <div class="show-card"><div class="label"><strong></strong><span></span></div></div>
-    <div class="show-card"><div class="label"><strong></strong><span></span></div></div>
-    <div class="show-card"><div class="label"><strong></strong><span></span></div></div>
-    <div class="show-card"><div class="label"><strong></strong><span></span></div></div>
-    <div class="show-card"><div class="label"><strong></strong><span></span></div></div>
-  </div>
-</section>
-
-<section id="pricing">
-  <div class="section-head">
-    <div class="section-eyebrow">Pricing</div>
-    <h2>Plans for every <span class="serif">ambition.</span></h2>
-    <p class="section-sub">Start free. Upgrade when your project starts paying for itself.</p>
-  </div>
-
-  <div class="pricing">
-    <div class="price-card">
-      <div class="tier">Free</div>
-      <div class="price">$0<span> / month</span></div>
-      <p class="price-desc">For tinkerers and weekend ideas.</p>
-      <ul class="price-features">
-        <li>5 daily AI generations</li>
-        <li>1 deployed project</li>
-        <li>Community support</li>
-        <li>ScribbleAI subdomain</li>
-      </ul>
-      <button class="btn btn-outline btn-lg" style="width:100%" onclick="openModal('signup')">Start free</button>
-    </div>
-
-    <div class="price-card featured">
-      <div class="tier">Pro</div>
-      <div class="price">$25<span> / month</span></div>
-      <p class="price-desc">For founders shipping real product.</p>
-      <ul class="price-features">
-        <li>Unlimited AI generations</li>
-        <li>Unlimited projects</li>
-        <li>Custom domains &amp; SSL</li>
-        <li>GitHub two-way sync</li>
-        <li>Priority support</li>
-      </ul>
-      <button class="btn btn-primary btn-lg" style="width:100%" onclick="openModal('signup')">Start 14-day trial</button>
-    </div>
-
-    <div class="price-card">
-      <div class="tier">Enterprise</div>
-      <div class="price">Custom</div>
-      <p class="price-desc">For teams with audit and security needs.</p>
-      <ul class="price-features">
-        <li>SSO &amp; SCIM</li>
-        <li>Dedicated capacity</li>
-        <li>SOC 2 &amp; HIPAA</li>
-        <li>Solutions engineer</li>
-      </ul>
-      <button class="btn btn-outline btn-lg" style="width:100%">Contact sales</button>
-    </div>
-  </div>
-</section>
-
 <div class="cta-section">
   <div class="cta-box">
     <div class="section-eyebrow">Start building</div>
-    <h2>Your next site is <span class="serif">one prompt away.</span></h2>
+    <h2>Bring your ideas to life <span class="serif">in seconds.</span></h2>
     <p class="section-sub" style="margin-top:16px;margin-bottom:32px">Be one of the first to build with ScribbleAI.</p>
-    <button class="btn btn-primary btn-lg" onclick="openModal('signup')">Get started — it's free</button>
+    <button class="btn btn-primary btn-lg" onclick="window.location.href='/chat/chat.html'">Get started — it's free</button>
   </div>
 </div>
 
@@ -278,7 +167,7 @@
     </div>
     <div>
       <h4>Product</h4>
-      <ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#showcase">Showcase</a></li><li><a href="changelog.html">Changelog</a></li></ul>
+      <ul><li><a href="changelog">Changelog</a></li></ul>
     </div>
     <div>
       <h4>Company</h4>
@@ -428,7 +317,7 @@
   function submitToBuilder() {
     const val = document.getElementById('promptArea').value;
     if(!val.trim()) return alert("Please enter a valid description string.");
-    window.location.href = `/chat?prompt=${encodeURIComponent(val)}`;
+    window.location.href = `/chat/chat.html?prompt=${encodeURIComponent(val)}`;
   }
 
   function openModal(type) {
