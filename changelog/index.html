@@ -77,6 +77,7 @@
   .interaction-row { display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--border); padding-top: 16px; }
   .vote-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--muted); border: 1px solid transparent; cursor: pointer; transition: all 0.2s; }
   .vote-btn:hover { color: #fff; border-color: var(--border-strong); background: rgba(255,255,255,0.08); }
+  .vote-btn.active { background: rgba(39, 118, 245, 0.15); color: var(--accent); border-color: rgba(39, 118, 245, 0.3); }
   
   /* UI Buttons */
   .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; color: inherit; }
@@ -84,7 +85,7 @@
   .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
   .btn-outline { border: 1px solid var(--border-strong); color: #fff; background: transparent; }
   .btn-outline:hover { background: var(--surface); }
-  .btn-danger { background: rgba(255, 122, 122, 0.1); color: #ff7a7a; border: 1px solid rgba(255, 122, 122, 0.2); font-size: 12px; padding: 6px 12px; border-radius: 6px; margin-left: auto; }
+  .btn-danger { background: rgba(255, 122, 122, 0.1); color: #ff7a7a; border: 1px solid rgba(255, 122, 122, 0.2); }
   .btn-danger:hover { background: #ff7a7a; color: #fff; }
 
   /* Notification Box Container */
@@ -94,6 +95,11 @@
   @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .modal-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--muted); cursor: pointer; }
   .modal-close:hover { color: #fff; }
+
+  /* Toast Notifications */
+  #toastContainer { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 12px; z-index: 9999; }
+  .toast { background: rgba(26, 26, 26, 0.95); border: 1px solid var(--border-strong); backdrop-filter: blur(8px); color: #fff; padding: 16px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; }
+  .toast.show { transform: translateX(0); }
 </style>
 </head>
 <body>
@@ -150,10 +156,23 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal" style="max-width: 400px; padding: 28px;">
+    <h3 id="confirmTitle" style="font-size: 20px; margin-bottom: 12px;"></h3>
+    <p id="confirmBody" style="color: var(--muted); font-size: 15px; line-height: 1.5; margin-bottom: 24px;"></p>
+    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+      <button class="btn btn-outline" id="confirmCancelBtn">Cancel</button>
+      <button class="btn btn-danger" id="confirmActionBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer"></div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getDatabase, ref, push, set, onValue, remove, increment, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  import { getDatabase, ref, push, set, onValue, remove, increment, update, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
@@ -174,7 +193,46 @@
   const ADMIN_EMAIL = "imcrabfr@gmail.com";
   let currentUser = null;
 
-  // Identity State Pipeline Lifecycle
+  // --- UI HELPER FUNCTIONS ---
+
+  // Toast Notification Engine
+  window.showToast = function(msg) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<span>${msg}</span>`;
+    container.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Cleanup
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  };
+
+  // Custom Confirm Modal Engine
+  window.showConfirm = function(title, msg, onConfirm, isDanger = true) {
+    const modal = document.getElementById('confirmModal');
+    const actionBtn = document.getElementById('confirmActionBtn');
+    
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmBody').textContent = msg;
+    
+    actionBtn.className = isDanger ? 'btn btn-danger' : 'btn btn-primary';
+    modal.classList.add('active');
+    
+    document.getElementById('confirmCancelBtn').onclick = () => modal.classList.remove('active');
+    actionBtn.onclick = () => {
+      modal.classList.remove('active');
+      onConfirm();
+    };
+  };
+
+  // --- IDENTITY STATE LIFECYCLE ---
+
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
     const navCta = document.getElementById('navCta');
@@ -186,9 +244,11 @@
           <span style="font-size:14px;color:var(--muted)">${user.email}</span>
           <button class="btn btn-outline" id="signOutBtn">Sign out</button>
         </div>`;
-      document.getElementById('signOutBtn').addEventListener('click', () => signOut(auth));
+      document.getElementById('signOutBtn').addEventListener('click', () => {
+        signOut(auth);
+        showToast("Signed out successfully.");
+      });
       
-      // Strict Email Filter Conditional Guard
       adminPanel.style.display = (user.email === ADMIN_EMAIL) ? "block" : "none";
     } else {
       navCta.innerHTML = `<button class="btn btn-primary" id="loginBtn">Sign in with Google</button>`;
@@ -198,7 +258,8 @@
     renderLogsFeed();
   });
 
-  // Action Routine: Dispatching New Entries
+  // --- ADMIN ACTIONS ---
+
   const changelogForm = document.getElementById('changelogForm');
   changelogForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -221,40 +282,121 @@
     await set(newLogRef, payload);
     await set(ref(db, 'latest_update'), payload);
     changelogForm.reset();
+    showToast("Update published successfully!");
   });
 
-  // Action Routine: Increment Feedback Mechanics
-  window.voteLog = async function(id, type) {
-    if (localStorage.getItem(`voted_${id}`)) {
-      alert("You have already submitted feedback for this update item!");
-      return;
-    }
-    const nodes = {};
-    nodes[`changelogs/${id}/${type}`] = increment(1);
+  window.editLog = async function(id) {
+    if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
     
-    onValue(ref(db, 'latest_update'), async (snap) => {
-      if (snap.exists() && snap.val().id === id) {
-        nodes[`latest_update/${type}`] = increment(1);
+    const logRef = ref(db, `changelogs/${id}`);
+    const snapshot = await get(logRef);
+    
+    if (snapshot.exists()) {
+      const currentData = snapshot.val();
+      const newTitle = prompt("Edit Title:", currentData.title);
+      if (newTitle === null) return; 
+      
+      const newDesc = prompt("Edit Description:", currentData.description);
+      if (newDesc === null) return; 
+
+      await update(logRef, { title: newTitle, description: newDesc });
+
+      const latestSnap = await get(ref(db, 'latest_update'));
+      if (latestSnap.exists() && latestSnap.val().id === id) {
+        await update(ref(db, 'latest_update'), { title: newTitle, description: newDesc });
       }
-      await update(ref(db), nodes);
-      localStorage.setItem(`voted_${id}`, type);
-    }, { onlyOnce: true });
+      showToast("Changelog edited successfully.");
+    }
   };
 
-  // Action Routine: Core Node Deletion
+  window.reannounceLog = async function(id) {
+    if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+
+    showConfirm(
+      "Re-announce Update?", 
+      "Are you sure you want to push this update to everyone's screen again? This will trigger the popup for all users.",
+      async () => {
+        const logRef = ref(db, `changelogs/${id}`);
+        const snapshot = await get(logRef);
+        
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const reannouncePayload = { ...data, id: `${data.id}_reannounced_${Date.now()}` };
+          await set(ref(db, 'latest_update'), reannouncePayload);
+          showToast("Update successfully re-announced.");
+        }
+      },
+      false // Use primary button color, not danger
+    );
+  };
+
   window.deleteLog = async function(id) {
     if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
-    if (!confirm("Are you sure you want to permanently delete this release log entry?")) return;
 
-    await remove(ref(db, `changelogs/${id}`));
-    onValue(ref(db, 'latest_update'), async (snap) => {
-      if (snap.exists() && snap.val().id === id) {
-        await remove(ref(db, 'latest_update'));
+    showConfirm(
+      "Delete Entry?", 
+      "Are you sure you want to permanently delete this release log? This cannot be undone.",
+      async () => {
+        await remove(ref(db, `changelogs/${id}`));
+        
+        const latestSnap = await get(ref(db, 'latest_update'));
+        if (latestSnap.exists() && latestSnap.val().id.includes(id)) {
+          await remove(ref(db, 'latest_update'));
+        }
+        showToast("Entry permanently deleted.");
       }
-    }, { onlyOnce: true });
+    );
   };
 
-  // UI Engine: Core Log Rendering
+  // --- TOGGLEABLE VOTING ENGINE ---
+
+  window.voteLog = async function(id, type) {
+    const prevVote = localStorage.getItem(`voted_${id}`);
+    const nodes = {};
+    let latestNodes = {};
+    let message = "";
+
+    if (prevVote === type) {
+      // User clicked the same button again -> Remove their vote
+      nodes[`changelogs/${id}/${type}`] = increment(-1);
+      latestNodes[`latest_update/${type}`] = increment(-1);
+      localStorage.removeItem(`voted_${id}`);
+      message = "Feedback removed.";
+    } else if (prevVote) {
+      // User had a previous vote, but clicked the opposite button -> Switch vote
+      nodes[`changelogs/${id}/${prevVote}`] = increment(-1);
+      nodes[`changelogs/${id}/${type}`] = increment(1);
+      
+      latestNodes[`latest_update/${prevVote}`] = increment(-1);
+      latestNodes[`latest_update/${type}`] = increment(1);
+      
+      localStorage.setItem(`voted_${id}`, type);
+      message = "Feedback changed.";
+    } else {
+      // First time voting on this item
+      nodes[`changelogs/${id}/${type}`] = increment(1);
+      latestNodes[`latest_update/${type}`] = increment(1);
+      localStorage.setItem(`voted_${id}`, type);
+      message = "Feedback submitted. Thank you!";
+    }
+
+    // Apply the updates to the main log
+    await update(ref(db), nodes);
+
+    // Apply updates to the latest_update banner if it matches
+    const snap = await get(ref(db, 'latest_update'));
+    if (snap.exists() && snap.val().id.includes(id)) {
+      await update(ref(db), latestNodes);
+    }
+    
+    showToast(message);
+    
+    // Since Firebase real-time listeners (onValue) update the UI automatically,
+    // the buttons will refresh their active state immediately.
+  };
+
+  // --- CORE UI RENDERING ---
+
   function renderLogsFeed() {
     onValue(ref(db, 'changelogs'), (snapshot) => {
       const container = document.getElementById('changelogContainer');
@@ -266,24 +408,37 @@
       const list = Object.values(snapshot.val()).sort((a, b) => b.timestamp - a.timestamp);
       const isAdmin = currentUser && currentUser.email === ADMIN_EMAIL;
 
-      container.innerHTML = list.map(log => `
-        <div class="changelog-item">
-          <div class="changelog-meta">
-            <span class="changelog-date">${log.date}</span>
-            ${isAdmin ? `<button class="btn btn-danger" onclick="deleteLog('${log.id}')">Delete Entry</button>` : ''}
+      container.innerHTML = list.map(log => {
+        const userVote = localStorage.getItem(`voted_${log.id}`);
+        const likeActive = userVote === 'likes' ? 'active' : '';
+        const dislikeActive = userVote === 'dislikes' ? 'active' : '';
+
+        return `
+          <div class="changelog-item">
+            <div class="changelog-meta">
+              <span class="changelog-date">${log.date}</span>
+              ${isAdmin ? `
+                <div style="display:flex; gap: 8px;">
+                  <button class="btn btn-outline" style="font-size: 12px; padding: 6px 12px;" onclick="editLog('${log.id}')">Edit</button>
+                  <button class="btn btn-outline" style="font-size: 12px; padding: 6px 12px;" onclick="reannounceLog('${log.id}')">Reannounce</button>
+                  <button class="btn btn-danger" style="font-size: 12px; padding: 6px 12px;" onclick="deleteLog('${log.id}')">Delete</button>
+                </div>
+              ` : ''}
+            </div>
+            <h2 class="changelog-title">${log.title}</h2>
+            <p class="changelog-body">${log.description}</p>
+            <div class="interaction-row">
+              <button class="vote-btn ${likeActive}" onclick="voteLog('${log.id}', 'likes')">👍 Like (${log.likes || 0})</button>
+              <button class="vote-btn ${dislikeActive}" onclick="voteLog('${log.id}', 'dislikes')">👎 Dislike (${log.dislikes || 0})</button>
+            </div>
           </div>
-          <h2 class="changelog-title">${log.title}</h2>
-          <p class="changelog-body">${log.description}</p>
-          <div class="interaction-row">
-            <button class="vote-btn" onclick="voteLog('${log.id}', 'likes')">👍 Like (${log.likes || 0})</button>
-            <button class="vote-btn" onclick="voteLog('${log.id}', 'dislikes')">👎 Dislike (${log.dislikes || 0})</button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     });
   }
 
-  // UI Engine: Announcement Banner Activation Tracker
+  // --- POPUP ANNOUNCEMENT BANNER ---
+
   const popup = document.getElementById('announcementPopup');
   onValue(ref(db, 'latest_update'), (snapshot) => {
     if (snapshot.exists()) {
@@ -294,9 +449,14 @@
         document.getElementById('popupTitle').textContent = updateData.title;
         document.getElementById('popupBody').textContent = updateData.description;
         
+        const realDatabaseId = updateData.id.split('_reannounced_')[0];
+        const userVote = localStorage.getItem(`voted_${realDatabaseId}`);
+        const likeActive = userVote === 'likes' ? 'active' : '';
+        const dislikeActive = userVote === 'dislikes' ? 'active' : '';
+
         document.getElementById('popupInteractionZone').innerHTML = `
-          <button class="vote-btn" style="flex:1; justify-content:center;" onclick="voteLog('${updateData.id}', 'likes')">👍 Like (${updateData.likes || 0})</button>
-          <button class="vote-btn" style="flex:1; justify-content:center;" onclick="voteLog('${updateData.id}', 'dislikes')">👎 Dislike (${updateData.dislikes || 0})</button>
+          <button class="vote-btn ${likeActive}" style="flex:1; justify-content:center;" onclick="voteLog('${realDatabaseId}', 'likes')">👍 Like (${updateData.likes || 0})</button>
+          <button class="vote-btn ${dislikeActive}" style="flex:1; justify-content:center;" onclick="voteLog('${realDatabaseId}', 'dislikes')">👎 Dislike (${updateData.dislikes || 0})</button>
         `;
         popup.classList.add('active');
 
