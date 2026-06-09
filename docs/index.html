@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Documentation & FAQ | ScribbleAI</title>
+<link rel="icon" href="../assets/logo.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@1&family=Instrument+Serif&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../assets/home.css">
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<style>
+  /* Single Page App Documentation Layout */
+  .docs-wrapper {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 73px; 
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Sticky Navigation Sidebar */
+  .docs-sidebar {
+    width: 300px;
+    position: sticky;
+    top: 73px;
+    height: calc(100vh - 73px);
+    overflow-y: auto;
+    padding: 40px 24px;
+    border-right: 1px solid var(--border);
+    background: rgba(26, 26, 26, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .sidebar-group {
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .sidebar-heading-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .sidebar-heading {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+
+  .sidebar-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sidebar-link-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sidebar-links a {
+    font-size: 14px;
+    color: var(--muted);
+    transition: color 0.2s ease;
+    display: block;
+    padding: 4px 0;
+    cursor: pointer;
+    flex: 1;
+  }
+
+  .sidebar-links a:hover, .sidebar-links a.active {
+    color: var(--text);
+  }
+
+  /* Admin Delete Buttons */
+  .btn-delete-small {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 11px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    opacity: 0.6;
+    transition: opacity 0.2s, background 0.2s;
+    display: none; 
+  }
+
+  .btn-delete-small:hover {
+    opacity: 1;
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  /* Main Document Display Canvas */
+  .docs-content {
+    flex: 1;
+    padding: 40px 60px 100px;
+    overflow-y: auto;
+  }
+
+  /* Visibility Panels Management */
+  .route-view {
+    display: none;
+    animation: fadeIn 0.2s ease-in-out forwards;
+  }
+
+  .route-view.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .docs-section h2 {
+    font-size: 32px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+
+  .docs-section p {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 16px;
+    margin-bottom: 20px;
+    white-space: pre-wrap; 
+  }
+
+  /* Callout box structural formatting */
+  .solution-callout {
+    background: rgba(39, 118, 245, 0.05);
+    border-left: 4px solid var(--accent);
+    padding: 24px;
+    border-radius: 0 12px 12px 0;
+    margin: 24px 0;
+  }
+
+  /* Admin Management Form Panel Dashboard */
+  .admin-dashboard-panel {
+    display: none; 
+    background: var(--bg-2);
+    border: 1px solid #ef4444; 
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 40px;
+  }
+
+  .admin-dashboard-panel h3 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .admin-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .admin-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .admin-input, .admin-select, .admin-textarea {
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 10px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .admin-textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  /* Bottom Actions & Buttons */
+  .sidebar-feedback-box {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: auto;
+  }
+
+  .admin-badge-indicator {
+    display: none;
+    font-size: 11px;
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+
+  .user-profile-display {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-strong);
+  }
+
+  @media (max-width: 900px) {
+    .docs-wrapper { flex-direction: column; }
+    .docs-sidebar { width: 100%; height: auto; position: relative; top: 0; border-right: none; border-bottom: 1px solid var(--border); padding: 24px; }
+    .docs-content { padding: 40px 20px; }
+    .admin-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">
+    <div class="logo-mark">
+      <img src="../assets/logo.png" alt="ScribbleAI logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;" />
+    </div>
+    <span>ScribbleAI</span>
+  </a>
+  <div class="nav-links">
+    <a href="#">Enterprise</a>
+    <a href="#" class="active">Docs</a>
+    <a href="https://discord.gg/MqxDBjFrab" target="_blank" rel="noopener noreferrer">Discord</a>
+  </div>
+  <div class="nav-cta">
+    <span class="admin-badge-indicator" id="adminBadge">ADMIN</span>
+    
+    <div class="user-profile-display" id="userProfileDisplay">
+      <img src="" class="user-avatar" id="userProfileAvatar" alt="User Profile" />
+      <span id="userProfileName" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">User</span>
+    </div>
+
+    <button class="btn btn-ghost" id="loginBtn" onclick="triggerGoogleAuthSequence()">Login</button>
+    <button class="btn btn-ghost" id="logoutBtn" onclick="triggerSignOutSequence()" style="display: none;">Logout</button>
+    <button class="btn btn-primary" onclick="window.location.href='/chat/chat.html'">Get started</button>
+  </div>
+</nav>
+
+<div class="docs-wrapper">
+  
+  <aside class="docs-sidebar">
+    <div id="sidebarDynamicContainer">
+      <p style="color: var(--muted); font-size: 14px;">Loading documentation schema...</p>
+    </div>
+
+    <div class="sidebar-feedback-box">
+      <p style="font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.4;">Have ideas or experiencing structural issues?</p>
+      <a href="../msb" class="btn btn-outline" style="width: 100%; font-size: 13px; padding: 8px 12px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Give Feedback
+      </a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+    
+    <div class="admin-dashboard-panel" id="adminPanelArea">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        ScribbleAI Docs Admin Console Panel
+      </h3>
+      
+      <div class="admin-grid">
+        <div class="admin-field">
+          <label>Category Group Placement</label>
+          <select class="admin-select" id="adminCategorySelect" onchange="evaluateCategorySelectionDropdown()">
+            </select>
+        </div>
+        <div class="admin-field" id="customCategoryField" style="display: none;">
+          <label>New Custom Category Name</label>
+          <input type="text" class="admin-input" id="adminCustomCategoryInput" placeholder="e.g., Extended Framework Setup" />
+        </div>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-field">
+          <label>Document / Problem Title</label>
+          <input type="text" class="admin-input" id="adminDocTitle" placeholder="e.g., Photo Uploading Status" />
+        </div>
+        <div class="admin-field">
+          <label>Clean Target URL String (Autofilled)</label>
+          <input type="text" class="admin-input" id="adminDocSlug" placeholder="e.g., photo-uploading" readonly />
+        </div>
+      </div>
+
+      <div class="admin-field" style="margin-bottom: 20px;">
+        <label>Solution Text Context Structure</label>
+        <textarea class="admin-textarea" id="adminDocContent" placeholder="Provide complete instruction logs or solution step listings here..."></textarea>
+      </div>
+
+      <button class="btn btn-primary" style="background:#ef4444; box-shadow:none;" onclick="saveDocumentItemToFirebaseDatabase()">Compile & Append Document</button>
+    </div>
+    
+    <div id="contentDynamicArea">
+      </div>
+
+  </main>
+</div>
+
+<script>
+  // Core Database Parameters Integration Sync 
+  const firebaseConfig = {
+    apiKey: "AIzaSyD5xI8GOG1lEKXBCunwq6qekg3QQOSijZ8",
+    authDomain: "sitedropio.firebaseapp.com",
+    databaseURL: "https://sitedropio-default-rtdb.firebaseio.com",
+    projectId: "sitedropio",
+    storageBucket: "sitedropio.firebasestorage.app",
+    messagingSenderId: "950561906473",
+    appId: "1:950561906473:web:45822a85f188c28b20e138",
+    measurementId: "G-BY119K5RS2"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const authSystem = firebase.auth();
+  const dbSystem = firebase.database();
+
+  let schemaMasterDataset = {};
+  let isAdminAuthenticated = false;
+  const targetAdminEmail = "imcrabfr@gmail.com";
+
+  // Native Schema Seed Data Backup Matrix (Loaded if Firebase Node is empty)
+  const defaultPreloadedSchemaSeed = {
+    "categories": {
+      "cat_1": { "name": "Introduction", "order": 10 },
+      "cat_2": { "name": "System Troubleshooting", "order": 20 },
+      "cat_3": { "name": "Information", "order": 30 }
+    },
+    "articles": {
+      "art_1": {
+        "categoryId": "cat_1",
+        "title": "Welcome to ScribbleAI Docs",
+        "slug": "docs",
+        "content": "Select an option from the sidebar directory matrix to troubleshoot build states, change configuration flags, or configure workspace tools."
+      },
+      "art_2": {
+        "categoryId": "cat_2",
+        "title": "Problem with generating website solution",
+        "slug": "generating-website-solution",
+        "content": "If you keep getting errors on your web builder AI, then you might have to switch your provider of the AI.\n\nTo do this, you need to go to the top right and into settings (little gear icon) and then scroll down and choose from the dropdown 'Mistral' then choose any model you want. Then go out of settings and continue with your project and upgrade that prompt."
+      },
+      "art_3": {
+        "categoryId": "cat_2",
+        "title": "Photo Uploading Status",
+        "slug": "photo-uploading",
+        "content": "We are currently fixing that subsystem pipeline array. Asset rendering layers are being upgraded for faster data transfers. Thank you for your patience!"
+      },
+      "art_4": {
+        "categoryId": "cat_3",
+        "title": "General FAQ Overview",
+        "slug": "faq",
+        "content": "Frequently Asked Questions:\n\nQ: What should I do if my generative execution frames stall out?\nA: See our 'AI Generation Errors' guide section to learn how to alter runtime processing options or switch AI processing platforms."
+      }
+    }
+  };
+
+  // Window Initialization Hooks
+  window.addEventListener('DOMContentLoaded', () => {
+    initializeRealtimeSchemaListener();
+    
+    // Monitor global login states for all regular and administrative users
+    authSystem.onAuthStateChanged(user => {
+      syncAuthenticationUserStateUI(user);
+    });
+
+    // Handle automated slug binding operations
+    document.getElementById('adminDocTitle').addEventListener('input', function() {
+      const computedSlug = this.value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+      document.getElementById('adminDocSlug').value = computedSlug;
+    });
+  });
+
+  // Global Authentication Login Flow Actions
+  function triggerGoogleAuthSequence() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    authSystem.signInWithPopup(provider)
+      .then(res => syncAuthenticationUserStateUI(res.user))
+      .catch(err => alert("Sign-in verification interface encountered errors: " + err.message));
+  }
+
+  // Global Logout Action
+  function triggerSignOutSequence() {
+    authSystem.signOut()
+      .then(() => {
+        isAdminAuthenticated = false;
+        syncAuthenticationUserStateUI(null);
+        navigateTo('/docs');
+      });
+  }
+
+  // Synchronize Interface Elements Depending on Auth Credentials
+  function syncAuthenticationUserStateUI(user) {
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const profileBox = document.getElementById('userProfileDisplay');
+    const avatarImg = document.getElementById('userProfileAvatar');
+    const nameSpan = document.getElementById('userProfileName');
+    const adminPanel = document.getElementById('adminPanelArea');
+    const adminBadge = document.getElementById('adminBadge');
+
+    if (user) {
+      // Show general login state controls for any generic google account holder
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'inline-block';
+      profileBox.style.display = 'flex';
+      avatarImg.src = user.photoURL || '';
+      nameSpan.textContent = user.displayName || user.email;
+
+      // Conditional evaluations to check for exact administrator email matches
+      if (user.email && user.email.toLowerCase() === targetAdminEmail.toLowerCase()) {
+        isAdminAuthenticated = true;
+        adminPanel.style.display = 'block';
+        adminBadge.style.display = 'inline-block';
+      } else {
+        isAdminAuthenticated = false;
+        adminPanel.style.display = 'none';
+        adminBadge.style.display = 'none';
+      }
+    } else {
+      // Default Logged-out state defaults
+      loginBtn.style.display = 'inline-block';
+      logoutBtn.style.display = 'none';
+      profileBox.style.display = 'none';
+      adminPanel.style.display = 'none';
+      adminBadge.style.display = 'none';
+      isAdminAuthenticated = false;
+    }
+
+    // Refresh display matrix layout components to safely hide or inject deletion flags
+    renderDocumentationInterfaceComponents();
+    handleRouteRendering(window.location.pathname);
+  }
+
+  // Real-Time Sync Database Systems Engine Loop
+  function initializeRealtimeSchemaListener() {
+    dbSystem.ref('docs_schema_storage').on('value', snapshot => {
+      const serverPayload = snapshot.val();
+      if (!serverPayload || !serverPayload.categories) {
+        dbSystem.ref('docs_schema_storage').set(defaultPreloadedSchemaSeed);
+        schemaMasterDataset = defaultPreloadedSchemaSeed;
+      } else {
+        schemaMasterDataset = serverPayload;
+      }
+      
+      hydrateCategoryManagementDropdownOptions();
+      renderDocumentationInterfaceComponents();
+      handleRouteRendering(window.location.pathname);
+    });
+  }
+
+  // Hydrate Control Fields Dropdowns
+  function hydrateCategoryManagementDropdownOptions() {
+    const selector = document.getElementById('adminCategorySelect');
+    if (!selector) return;
+    
+    let htmlMarkupString = `<option value="CHOSEN_EXISTING" disabled selected>-- Select target placement --</option>`;
+    
+    if (schemaMasterDataset.categories) {
+      Object.keys(schemaMasterDataset.categories).forEach(catId => {
+        htmlMarkupString += `<option value="${catId}">${schemaMasterDataset.categories[catId].name}</option>`;
+      });
+    }
+    
+    htmlMarkupString += `<option value="CREATE_NEW_GROUP" style="color:var(--accent); font-weight:700;">[+ Create New Custom Category Group]</option>`;
+    selector.innerHTML = htmlMarkupString;
+    evaluateCategorySelectionDropdown();
+  }
+
+  function evaluateCategorySelectionDropdown() {
+    const selector = document.getElementById('adminCategorySelect');
+    const customFieldBlock = document.getElementById('customCategoryField');
+    if(selector && selector.value === 'CREATE_NEW_GROUP') {
+      customFieldBlock.style.display = 'flex';
+    } else if (customFieldBlock) {
+      customFieldBlock.style.display = 'none';
+    }
+  }
+
+  // Write Document Data Frame Instance To Firebase Realtime Database
+  function saveDocumentItemToFirebaseDatabase() {
+    if (!isAdminAuthenticated) return alert("Operation unauthorized.");
+    
+    const selectedCategoryValue = document.getElementById('adminCategorySelect').value;
+    const customCategoryName = document.getElementById('adminCustomCategoryInput').value.trim();
+    const documentTitle = document.getElementById('adminDocTitle').value.trim();
+    const computedSlug = document.getElementById('adminDocSlug').value.trim();
+    const coreContentText = document.getElementById('adminDocContent').value.trim();
+
+    if (!selectedCategoryValue) return alert("Select or configure a target category layout container node.");
+    if (selectedCategoryValue === 'CREATE_NEW_GROUP' && !customCategoryName) return alert("Input a valid string configuration label for the new custom group category.");
+    if (!documentTitle || !computedSlug || !coreContentText) return alert("All text asset mapping input parameters must be valid.");
+
+    let finalCategoryId = selectedCategoryValue;
+
+    if (selectedCategoryValue === 'CREATE_NEW_GROUP') {
+      const generatedCatReferenceId = 'cat_' + Date.now();
+      dbSystem.ref(`docs_schema_storage/categories/${generatedCatReferenceId}`).set({
+        name: customCategoryName,
+        order: 50
+      });
+      finalCategoryId = generatedCatReferenceId;
+    }
+
+    const generatedArticleReferenceId = 'art_' + Date.now();
+    dbSystem.ref(`docs_schema_storage/articles/${generatedArticleReferenceId}`).set({
+      categoryId: finalCategoryId,
+      title: documentTitle,
+      slug: computedSlug,
+      content: coreContentText
+    }).then(() => {
+      document.getElementById('adminCustomCategoryInput').value = '';
+      document.getElementById('adminDocTitle').value = '';
+      document.getElementById('adminDocSlug').value = '';
+      document.getElementById('adminDocContent').value = '';
+      document.getElementById('adminCategorySelect').selectedIndex = 0;
+      evaluateCategorySelectionDropdown();
+      
+      navigateTo(`/docs/${computedSlug}`);
+    }).catch(err => alert("Failed to commit document change logs to database: " + err.message));
+  }
+
+  // Wipe Single Content Node Asset
+  function deleteArticleNodeAssetInstance(articleId, event) {
+    if(event) event.stopPropagation();
+    if (!isAdminAuthenticated) return alert("Operation unauthorized.");
+    if (!confirm("Are you sure you want to permanently delete this document item?")) return;
+    
+    dbSystem.ref(`docs_schema_storage/articles/${articleId}`).remove()
+      .then(() => navigateTo('/docs'))
+      .catch(err => alert("Error erasing targeting reference item: " + err.message));
+  }
+
+  // Wipe Category Group Layout Container Node
+  function deleteCategoryGroupNodeContainerInstance(categoryId, event) {
+    if(event) event.stopPropagation();
+    if (!isAdminAuthenticated) return alert("Operation unauthorized.");
+    if (!confirm("Are you sure you want to delete this category group container? WARNING: All connected nested items will be unlinked.")) return;
+    
+    dbSystem.ref(`docs_schema_storage/categories/${categoryId}`).remove()
+      .then(() => {
+        if (schemaMasterDataset.articles) {
+          Object.keys(schemaMasterDataset.articles).forEach(artId => {
+            if (schemaMasterDataset.articles[artId].categoryId === categoryId) {
+              dbSystem.ref(`docs_schema_storage/articles/${artId}`).remove();
+            }
+          });
+        }
+        navigateTo('/docs');
+      }).catch(err => alert("Error executing deletion mapping sequences: " + err.message));
+  }
+
+  // Compile Interface Layout Templates Dynamically
+  function renderDocumentationInterfaceComponents() {
+    const sidebarWrapper = document.getElementById('sidebarDynamicContainer');
+    const contentWrapper = document.getElementById('contentDynamicArea');
+    
+    if (!schemaMasterDataset || !schemaMasterDataset.categories) return;
+
+    let computedSidebarHtml = "";
+    let computedContentViewsHtml = "";
+
+    const categoryCollection = schemaMasterDataset.categories;
+    const articleCollection = schemaMasterDataset.articles || {};
+
+    Object.keys(categoryCollection).forEach(catId => {
+      const categoryData = categoryCollection[catId];
+      
+      const adminCategoryDeleteButton = isAdminAuthenticated 
+        ? `<button class="btn-delete-small" style="display:inline-block;" onclick="deleteCategoryGroupNodeContainerInstance('${catId}', event)">🗑️ Delete Cat</button>` 
+        : '';
+
+      computedSidebarHtml += `
+        <div class="sidebar-group">
+          <div class="sidebar-heading-wrap">
+            <div class="sidebar-heading">${categoryData.name}</div>
+            ${adminCategoryDeleteButton}
+          </div>
+          <ul class="sidebar-links">
+      `;
+
+      Object.keys(articleCollection).forEach(artId => {
+        const articleData = articleCollection[artId];
+        if (articleData.categoryId === catId) {
+          
+          const adminArticleDeleteButton = isAdminAuthenticated 
+            ? `<button class="btn-delete-small" style="display:inline-block;" onclick="deleteArticleNodeAssetInstance('${artId}', event)">🗑️</button>` 
+            : '';
+
+          computedSidebarHtml += `
+            <li class="sidebar-link-item">
+              <a data-route="/docs/${articleData.slug}">${articleData.title}</a>
+              ${adminArticleDeleteButton}
+            </li>
+          `;
+
+          computedContentViewsHtml += `
+            <div id="view-${articleData.slug}" class="route-view docs-section">
+              <div class="section-eyebrow">${categoryData.name}</div>
+              <h2>${articleData.title}</h2>
+              <div class="solution-callout">
+                <p style="margin:0; font-size:16px; color:var(--text);">${articleData.content}</p>
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      computedSidebarHtml += `
+          </ul>
+        </div>
+      `;
+    });
+
+    if (sidebarWrapper) sidebarWrapper.innerHTML = computedSidebarHtml;
+    if (contentWrapper) contentWrapper.innerHTML = computedContentViewsHtml;
+  }
+
+  // Pure Client-Side Single Page Router Logic Matrix
+  function navigateTo(routePath) {
+    window.history.pushState(null, '', routePath);
+    handleRouteRendering(routePath);
+  }
+
+  function handleRouteRendering(currentPath) {
+    const cleanSegment = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+    
+    let activeRouteId = (cleanSegment === 'docs' || cleanSegment === '' || cleanSegment === 'docs.html') 
+      ? 'docs' 
+      : cleanSegment;
+
+    let targetViewPanel = document.getElementById(`view-${activeRouteId}`);
+    
+    if (!targetViewPanel && schemaMasterDataset.articles) {
+      const keys = Object.keys(schemaMasterDataset.articles);
+      if(keys.length > 0) {
+        activeRouteId = schemaMasterDataset.articles[keys[0]].slug;
+        targetViewPanel = document.getElementById(`view-${activeRouteId}`);
+      }
+    }
+
+    document.querySelectorAll('.route-view').forEach(view => {
+      view.classList.remove('active');
+    });
+    
+    if (targetViewPanel) {
+      targetViewPanel.classList.add('active');
+    }
+
+    document.querySelectorAll('.sidebar-links a').forEach(link => {
+      link.classList.remove('active');
+      const dataRouteAttributeValue = link.getAttribute('data-route');
+      if (dataRouteAttributeValue === `/docs/${activeRouteId}` || (activeRouteId === 'docs' && dataRouteAttributeValue === '/docs')) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  // Capture user routing tracking events 
+  document.addEventListener('click', event => {
+    const routingTargetElement = event.target.closest('[data-route]');
+    if (routingTargetElement) {
+      event.preventDefault();
+      const targetUrlPathString = routingTargetElement.getAttribute('data-route');
+      navigateTo(targetUrlPathString);
+    }
+  });
+
+  window.addEventListener('popstate', () => {
+    handleRouteRendering(window.location.pathname);
+  });
+</script>
+
+</body>
+</html>
